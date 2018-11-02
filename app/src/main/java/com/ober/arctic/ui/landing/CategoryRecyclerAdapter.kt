@@ -30,7 +30,7 @@ class CategoryRecyclerAdapter(private val categoryClickedListener: CategoryClick
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.view.delete_button.visibility = View.GONE
         holder.view.category_text_view.text = categories[position].name
-        holder.view.setOnClickListener {
+        holder.view.card_root.setOnClickListener {
             if (holder.view.delete_button.visibility == View.VISIBLE) {
                 holder.view.delete_button.visibility = View.GONE
             } else {
@@ -46,7 +46,7 @@ class CategoryRecyclerAdapter(private val categoryClickedListener: CategoryClick
     inner class CategoryViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         init {
-            view.setOnLongClickListener {
+            view.card_root.setOnLongClickListener {
                 if (view.delete_button.visibility == View.GONE) {
                     view.delete_button.startAnimation(AnimationUtils.loadAnimation(view.context, R.anim.fade_in))
                     view.delete_button.visibility = View.VISIBLE
