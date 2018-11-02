@@ -6,9 +6,9 @@ import javax.inject.Inject
 
 class UnlockViewModel @Inject constructor(private val dataRepository: DataRepository) : ViewModel() {
 
-    val domainCollectionLiveData = dataRepository.getDomainCollectionLiveData()
+    val domainCollectionLiveData = dataRepository.getCategoryCollectionLiveData()
 
     fun loadDomainCollection() {
-        dataRepository.loadDomainCollection(false)
+        dataRepository.loadCategoryCollection(false)
     }
 }

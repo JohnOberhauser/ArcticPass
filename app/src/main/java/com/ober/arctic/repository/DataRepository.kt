@@ -6,8 +6,8 @@ import com.google.gson.reflect.TypeToken
 import com.ober.arctic.App
 import com.ober.arctic.data.cache.LiveDataHolder
 import com.ober.arctic.data.database.MainDatabase
-import com.ober.arctic.data.model.Domain
-import com.ober.arctic.data.model.DomainCollection
+import com.ober.arctic.data.model.Category
+import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
@@ -23,54 +23,54 @@ class DataRepository @Inject constructor(
     private var appExecutors: AppExecutors
 ) {
 
-    fun saveDomainCollection(domainCollection: DomainCollection) {
-        val encryptedDataHolder = encryption.encryptString(gson.toJson(domainCollection), keyManager.getCombinedKey()!!)
+    fun saveCategoryCollection(categoryCollection: CategoryCollection) {
+        val encryptedDataHolder = encryption.encryptString(gson.toJson(categoryCollection), keyManager.getCombinedKey()!!)
         appExecutors.diskIO().execute {
             mainDatabase.encryptedDataHolderDao().insert(encryptedDataHolder)
             appExecutors.mainThread().execute {
-                liveDataHolder.setDomainCollection(domainCollection)
+                liveDataHolder.setCategoryCollection(categoryCollection)
             }
         }
     }
 
-    fun loadDomainCollection(createDefaultsIfNecessary: Boolean) {
-        if (liveDataHolder.getDomainCollection().value == null) {
+    fun loadCategoryCollection(createDefaultsIfNecessary: Boolean) {
+        if (liveDataHolder.getCategoryCollection().value == null) {
             val source = mainDatabase.encryptedDataHolderDao().getEncryptedDataHolder()
-            liveDataHolder.getDomainCollectionLiveData().addSource(source) { encryptedDataHolder ->
-                liveDataHolder.getDomainCollectionLiveData().removeSource(source)
+            liveDataHolder.getCategoryCollectionLiveData().addSource(source) { encryptedDataHolder ->
+                liveDataHolder.getCategoryCollectionLiveData().removeSource(source)
                 when {
                     encryptedDataHolder != null -> {
                         appExecutors.miscellaneousThread().execute {
-                            val domainCollection: DomainCollection = gson.fromJson(
+                            val categoryCollection: CategoryCollection = gson.fromJson(
                                 encryption.decryptString(
                                     encryptedDataHolder.encryptedJson,
                                     encryptedDataHolder.salt,
                                     keyManager.getCombinedKey()!!
                                 ),
-                                genericType<DomainCollection>()
+                                genericType<CategoryCollection>()
                             )
                             appExecutors.mainThread().execute {
-                                liveDataHolder.setDomainCollection(domainCollection)
+                                liveDataHolder.setCategoryCollection(categoryCollection)
                             }
                         }
                     }
                     createDefaultsIfNecessary -> {
-                        val domainList = arrayListOf<Domain>()
-                        domainList.add(Domain(App.app!!.getString(R.string.business), arrayListOf()))
-                        domainList.add(Domain(App.app!!.getString(R.string.personal), arrayListOf()))
-                        val domainCollection = DomainCollection(domainList)
-                        saveDomainCollection(domainCollection)
+                        val domainList = arrayListOf<Category>()
+                        domainList.add(Category(App.app!!.getString(R.string.business), arrayListOf()))
+                        domainList.add(Category(App.app!!.getString(R.string.personal), arrayListOf()))
+                        val domainCollection = CategoryCollection(domainList)
+                        saveCategoryCollection(domainCollection)
                     }
                     else -> appExecutors.mainThread().execute {
-                        liveDataHolder.setDomainCollection(null)
+                        liveDataHolder.setCategoryCollection(null)
                     }
                 }
             }
         }
     }
 
-    fun getDomainCollectionLiveData(): LiveData<DomainCollection> {
-        return liveDataHolder.getDomainCollection()
+    fun getCategoryCollectionLiveData(): LiveData<CategoryCollection> {
+        return liveDataHolder.getCategoryCollection()
     }
 
     private inline fun <reified T> genericType() = object : TypeToken<T>() {}.type

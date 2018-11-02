@@ -8,4 +8,7 @@
     <string name="unlock">Unlock</string>
     <string name="business">Business</string>
     <string name="personal">Personal</string>
+    <string name="new_category_name">New Category Name</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
 </resources>
