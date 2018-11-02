@@ -18,13 +18,15 @@ import com.ober.arctic.BaseFragment
 import com.ober.arctic.data.model.Category
 import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.data.model.CategoryComparator
+import com.ober.arctic.ui.DataViewModel
+import com.ober.arctic.util.BundleConstants
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_landing.*
 import java.util.*
 
 class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener {
 
-    private lateinit var landingViewModel: LandingViewModel
+    private lateinit var dataViewModel: DataViewModel
 
     private var categoryAdapter: CategoryRecyclerAdapter? = null
 
@@ -32,7 +34,7 @@ class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedL
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
-        landingViewModel = ViewModelProviders.of(this, viewModelFactory)[LandingViewModel::class.java]
+        dataViewModel = ViewModelProviders.of(this, viewModelFactory)[DataViewModel::class.java]
         return setAndBindContentView(inflater, container!!, R.layout.fragment_landing)
     }
 
@@ -49,12 +51,12 @@ class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedL
     }
 
     private fun setupObserver() {
-        landingViewModel.domainCollectionLiveData.observe(this, Observer {
+        dataViewModel.domainCollectionLiveData.observe(this, Observer {
             progress_bar.visibility = View.GONE
             categoryAdapter?.categories = it.categories
             categoryCollection = CategoryCollection(it.categories)
         })
-        landingViewModel.loadDomainCollection()
+        dataViewModel.loadDomainCollection()
     }
 
     @SuppressLint("InflateParams")
@@ -70,7 +72,7 @@ class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedL
                 val domain = Category(addField.text.toString().trim(), arrayListOf())
                 categoryCollection?.categories?.add(domain)
                 Collections.sort(categoryCollection?.categories, CategoryComparator())
-                landingViewModel.saveDomainCollection(categoryCollection)
+                dataViewModel.saveDomainCollection(categoryCollection)
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -92,7 +94,9 @@ class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedL
     }
 
     override fun onCategoryClicked(category: Category) {
-        navController?.navigate(R.id.action_landingFragment_to_categoryFragment)
+        val bundle = Bundle()
+        bundle.putString(BundleConstants.CATEGORY, category.name)
+        navController?.navigate(R.id.action_landingFragment_to_categoryFragment, bundle)
     }
 
     override fun onDeleteCategory(category: Category) {
@@ -100,7 +104,7 @@ class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedL
             .setMessage(R.string.are_you_sure_you_want_to_delete)
             .setPositiveButton(R.string.delete) { _, _ ->
                 categoryCollection?.categories?.remove(category)
-                landingViewModel.saveDomainCollection(categoryCollection)
+                dataViewModel.saveDomainCollection(categoryCollection)
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()

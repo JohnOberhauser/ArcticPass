@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProviders
 import com.ober.arctic.App
 import com.ober.arctic.BaseFragment
 import com.ober.arctic.util.security.KeyManager
@@ -19,11 +18,8 @@ class SplashFragment : BaseFragment() {
     @Inject
     lateinit var keyManager: KeyManager
 
-    private lateinit var splashViewModel: SplashViewModel
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
-        splashViewModel = ViewModelProviders.of(this, viewModelFactory)[SplashViewModel::class.java]
         return setAndBindContentView(inflater, container!!, R.layout.fragment_splash)
     }
 

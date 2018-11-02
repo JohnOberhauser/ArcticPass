@@ -2,10 +2,7 @@ package com.ober.arctic.injection
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.ober.arctic.ui.init.InitViewModel
-import com.ober.arctic.ui.landing.LandingViewModel
-import com.ober.arctic.ui.splash.SplashViewModel
-import com.ober.arctic.ui.unlock.UnlockViewModel
+import com.ober.arctic.ui.DataViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module
@@ -23,23 +20,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(InitViewModel::class)
-    internal abstract fun bindInitViewModel(viewModel: InitViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SplashViewModel::class)
-    internal abstract fun bindSplashViewModel(viewModel: SplashViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(UnlockViewModel::class)
-    internal abstract fun bindUnlockViewModel(viewModel: UnlockViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(LandingViewModel::class)
-    internal abstract fun bindLandingViewModel(viewModel: LandingViewModel): ViewModel
+    @ViewModelKey(DataViewModel::class)
+    internal abstract fun bindDataViewModel(viewModel: DataViewModel): ViewModel
 
 }
 

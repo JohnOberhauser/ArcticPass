@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="1dp">
+
+    <FrameLayout
+        android:id="@+id/card_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground">
+
+        <TextView
+            android:id="@+id/category_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:padding="15dp"
+            android:elevation="5dp"
+            tools:text="Business"/>
+
+        <ImageView
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_delete_forever_black_24dp"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:tint="@android:color/holo_red_dark"
+            android:visibility="gone"
+            android:layout_gravity="end|center_vertical"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/delete" />
+
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

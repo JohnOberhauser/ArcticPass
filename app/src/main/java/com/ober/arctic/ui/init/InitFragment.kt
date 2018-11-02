@@ -25,11 +25,8 @@ class InitFragment : BaseFragment() {
     @Inject
     lateinit var keyManager: KeyManager
 
-    private lateinit var initViewModel: InitViewModel
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
-        initViewModel = ViewModelProviders.of(this, viewModelFactory)[InitViewModel::class.java]
         return setAndBindContentView(inflater, container!!, R.layout.fragment_init)
     }
 

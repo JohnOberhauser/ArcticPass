@@ -27,11 +27,8 @@ class UnlockFragment : BaseFragment() {
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private lateinit var unlockViewModel: UnlockViewModel
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
-        unlockViewModel = ViewModelProviders.of(this, viewModelFactory)[UnlockViewModel::class.java]
         return setAndBindContentView(inflater, container!!, R.layout.fragment_unlock)
     }
 
