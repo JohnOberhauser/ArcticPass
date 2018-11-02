@@ -34,6 +34,14 @@
             android:id="@+id/landingFragment"
             android:name="com.ober.arctic.ui.landing.LandingFragment"
             android:label="LandingFragment"
-            tools:layout="@layout/fragment_landing"/>
+            tools:layout="@layout/fragment_landing">
+        <action android:id="@+id/action_landingFragment_to_categoryFragment" app:destination="@id/categoryFragment"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/categoryFragment"
+            android:name="com.ober.arctic.ui.category.CategoryFragment"
+            android:label="CategoryFragment"
+            tools:layout="@layout/fragment_category"/>
 
 </navigation>

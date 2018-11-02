@@ -22,7 +22,7 @@ import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_landing.*
 import java.util.*
 
-class LandingFragment : BaseFragment() {
+class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener {
 
     private lateinit var landingViewModel: LandingViewModel
 
@@ -43,7 +43,7 @@ class LandingFragment : BaseFragment() {
     }
 
     private fun setupRecyclerView() {
-        categoryAdapter = CategoryRecyclerAdapter()
+        categoryAdapter = CategoryRecyclerAdapter(this)
         domain_recycler_view.adapter = categoryAdapter
         domain_recycler_view.layoutManager = LinearLayoutManager(context)
     }
@@ -66,13 +66,13 @@ class LandingFragment : BaseFragment() {
 
         val dialog = AlertDialog.Builder(context!!)
             .setView(inflatedView)
-            .setPositiveButton(getString(R.string.add)) { _, _ ->
+            .setPositiveButton(R.string.add) { _, _ ->
                 val domain = Category(addField.text.toString().trim(), arrayListOf())
                 categoryCollection?.categories?.add(domain)
                 Collections.sort(categoryCollection?.categories, CategoryComparator())
                 landingViewModel.saveDomainCollection(categoryCollection)
             }
-            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
             }
             .create()
@@ -89,5 +89,23 @@ class LandingFragment : BaseFragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+    }
+
+    override fun onCategoryClicked(category: Category) {
+        navController?.navigate(R.id.action_landingFragment_to_categoryFragment)
+    }
+
+    override fun onDeleteCategory(category: Category) {
+        AlertDialog.Builder(context!!)
+            .setMessage(R.string.are_you_sure_you_want_to_delete)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                categoryCollection?.categories?.remove(category)
+                landingViewModel.saveDomainCollection(categoryCollection)
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 }
