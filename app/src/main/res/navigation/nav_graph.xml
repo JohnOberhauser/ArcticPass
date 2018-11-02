@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/nav_graph"
+            app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.ober.arctic.ui.splash.SplashFragment"
+        tools:layout="@layout/fragment_splash">
+        <action
+                android:id="@+id/action_splashFragment_to_initFragment"
+                app:destination="@id/initFragment"/>
+        <action android:id="@+id/action_splashFragment_to_unlockFragment" app:destination="@id/unlockFragment"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/initFragment"
+            android:name="com.ober.arctic.ui.init.InitFragment"
+            android:label="InitFragment"
+            tools:layout="@layout/fragment_init">
+        <action android:id="@+id/action_initFragment_to_landingFragment" app:destination="@id/landingFragment"/>
+    </fragment>
+
+    <fragment android:id="@+id/unlockFragment"
+              android:name="com.ober.arctic.ui.unlock.UnlockFragment"
+              android:label="UnlockFragment"
+              tools:layout="@layout/fragment_unlock">
+        <action android:id="@+id/action_unlockFragment_to_landingFragment" app:destination="@id/landingFragment"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/landingFragment"
+            android:name="com.ober.arctic.ui.landing.LandingFragment"
+            android:label="LandingFragment"
+            tools:layout="@layout/fragment_landing"/>
+
+</navigation>
