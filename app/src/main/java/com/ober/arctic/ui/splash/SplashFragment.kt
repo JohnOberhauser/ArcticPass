@@ -26,7 +26,6 @@ class SplashFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         GlobalScope.launch {
-            delay(1000L)
             if (keyManager.getPartialRecoveryKey() != null) {
                 navController?.navigate(R.id.action_splashFragment_to_unlockFragment)
             } else {
