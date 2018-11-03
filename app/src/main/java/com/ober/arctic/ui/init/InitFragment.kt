@@ -37,7 +37,7 @@ class InitFragment : BaseFragment() {
 
     @OnClick(R.id.generate_button)
     fun generate() {
-        recovery_field.setText(encryption.generateRandomKey())
+        recovery_field.setText(encryption.generateRandomKey(24))
     }
 
     @OnClick(R.id.done_button)

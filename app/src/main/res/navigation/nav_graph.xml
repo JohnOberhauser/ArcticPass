@@ -11,8 +11,10 @@
         tools:layout="@layout/fragment_splash">
         <action
                 android:id="@+id/action_splashFragment_to_initFragment"
-                app:destination="@id/initFragment"/>
-        <action android:id="@+id/action_splashFragment_to_unlockFragment" app:destination="@id/unlockFragment"/>
+                app:destination="@id/initFragment" app:popUpTo="@+id/splashFragment" app:popUpToInclusive="true"/>
+        <action
+                android:id="@+id/action_splashFragment_to_unlockFragment"
+                app:destination="@id/unlockFragment" app:popUpToInclusive="true" app:popUpTo="@+id/splashFragment"/>
     </fragment>
 
     <fragment
@@ -20,14 +22,18 @@
             android:name="com.ober.arctic.ui.init.InitFragment"
             android:label="InitFragment"
             tools:layout="@layout/fragment_init">
-        <action android:id="@+id/action_initFragment_to_landingFragment" app:destination="@id/landingFragment"/>
+        <action
+                android:id="@+id/action_initFragment_to_landingFragment"
+                app:destination="@id/landingFragment" app:popUpTo="@+id/initFragment" app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment android:id="@+id/unlockFragment"
               android:name="com.ober.arctic.ui.unlock.UnlockFragment"
               android:label="UnlockFragment"
               tools:layout="@layout/fragment_unlock">
-        <action android:id="@+id/action_unlockFragment_to_landingFragment" app:destination="@id/landingFragment"/>
+        <action
+                android:id="@+id/action_unlockFragment_to_landingFragment"
+                app:destination="@id/landingFragment" app:popUpToInclusive="true" app:popUpTo="@+id/unlockFragment"/>
     </fragment>
 
     <fragment

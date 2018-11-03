@@ -18,15 +18,21 @@ interface Encryption {
     fun decryptString(data: String): String?
     fun encrypt(data: ByteArray): String
     fun decrypt(encryptedDataString: String): ByteArray?
-    fun generateRandomKey(): String
+    fun generateRandomKey(length: Int): String
     fun encryptString(data: String, password: String): EncryptedDataHolder
     fun decryptString(data: String, salt: String, password: String): String
 }
 
 class EncryptionImpl(private val context: Context) : Encryption {
 
-    override fun generateRandomKey(): String {
-        return Base64.encodeToString(AesCbcWithIntegrity.generateIv(), Base64.DEFAULT)
+    override fun generateRandomKey(length: Int): String {
+        AesCbcWithIntegrity.generateIv() // calling this just to fix prng
+        val keyBuilder = StringBuilder()
+        val secureRandom = SecureRandom()
+        for (i in 1..length) {
+            keyBuilder.append(CHARACTERS[secureRandom.nextInt(CHARACTERS.length)])
+        }
+        return keyBuilder.toString()
     }
 
     override fun encryptString(data: String, password: String): EncryptedDataHolder {
@@ -164,5 +170,6 @@ class EncryptionImpl(private val context: Context) : Encryption {
         private const val KEYSTORE_SECRET_KEY = BuildConfig.APPLICATION_ID + ":secret"
         private const val KEYSTORE_INTEGRITY_KEY = BuildConfig.APPLICATION_ID + ":integrity"
         private const val KEYSTORE_FILENAME = BuildConfig.APPLICATION_ID + ":file"
+        private const val CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[{]}\\;:<>/?"
     }
 }
