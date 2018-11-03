@@ -42,6 +42,13 @@
             android:id="@+id/categoryFragment"
             android:name="com.ober.arctic.ui.category.CategoryFragment"
             android:label="CategoryFragment"
-            tools:layout="@layout/fragment_category"/>
+            tools:layout="@layout/fragment_category">
+        <action android:id="@+id/action_categoryFragment_to_credentialsFragment" app:destination="@id/credentialsFragment"/>
+    </fragment>
+    <fragment
+            android:id="@+id/credentialsFragment"
+            android:name="com.ober.arctic.ui.credentials.CredentialsFragment"
+            android:label="CredentialsFragment"
+            tools:layout="@layout/fragment_credentials"/>
 
 </navigation>

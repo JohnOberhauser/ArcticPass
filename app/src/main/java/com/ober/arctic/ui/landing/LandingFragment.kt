@@ -46,8 +46,8 @@ class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedL
 
     private fun setupRecyclerView() {
         categoryAdapter = CategoryRecyclerAdapter(this)
-        domain_recycler_view.adapter = categoryAdapter
-        domain_recycler_view.layoutManager = LinearLayoutManager(context)
+        category_recycler_view.adapter = categoryAdapter
+        category_recycler_view.layoutManager = LinearLayoutManager(context)
     }
 
     private fun setupObserver() {
@@ -69,8 +69,8 @@ class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedL
         val dialog = AlertDialog.Builder(context!!)
             .setView(inflatedView)
             .setPositiveButton(R.string.add) { _, _ ->
-                val domain = Category(addField.text.toString().trim(), arrayListOf())
-                categoryCollection?.categories?.add(domain)
+                val category = Category(addField.text.toString().trim(), arrayListOf())
+                categoryCollection?.categories?.add(category)
                 Collections.sort(categoryCollection?.categories, CategoryComparator())
                 dataViewModel.saveDomainCollection(categoryCollection)
             }

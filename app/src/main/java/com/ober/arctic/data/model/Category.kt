@@ -2,7 +2,7 @@ package com.ober.arctic.data.model
 
 class Category(
     val name: String,
-    val credentialsList: List<Credentials>
+    val credentialsList: ArrayList<Credentials>
 )
 
 class CategoryComparator : Comparator<Category> {
