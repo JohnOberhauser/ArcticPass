@@ -102,10 +102,10 @@ class CredentialsFragment : BaseFragment() {
         password_text_view.visibility = View.GONE
         notes_text_view.visibility = View.GONE
 
-        description_field.visibility = View.VISIBLE
-        website_field.visibility = View.VISIBLE
-        username_field.visibility = View.VISIBLE
-        password_field.visibility = View.VISIBLE
+        description_field_layout.visibility = View.VISIBLE
+        website_field_layout.visibility = View.VISIBLE
+        username_field_layout.visibility = View.VISIBLE
+        password_field_layout.visibility = View.VISIBLE
         notes_field.visibility = View.VISIBLE
 
         username_layout.setOnLongClickListener(null)
@@ -124,10 +124,10 @@ class CredentialsFragment : BaseFragment() {
         password_text_view.visibility = View.VISIBLE
         notes_text_view.visibility = View.VISIBLE
 
-        description_field.visibility = View.GONE
-        website_field.visibility = View.GONE
-        username_field.visibility = View.GONE
-        password_field.visibility = View.GONE
+        description_field_layout.visibility = View.GONE
+        website_field_layout.visibility = View.GONE
+        username_field_layout.visibility = View.GONE
+        password_field_layout.visibility = View.GONE
         notes_field.visibility = View.GONE
 
         username_layout.setOnLongClickListener(this::onUserNameLongClick)
