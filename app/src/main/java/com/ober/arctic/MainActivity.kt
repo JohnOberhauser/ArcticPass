@@ -1,8 +1,10 @@
 package com.ober.arctic
 
 import android.animation.ObjectAnimator
+import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.core.content.ContextCompat
@@ -38,7 +40,13 @@ class MainActivity : AppCompatActivity() {
                 disableEditButton()
                 disableSaveButton()
             }
+            hideKeyboard()
         }
+    }
+
+    private fun hideKeyboard() {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(window.decorView.windowToken, 0)
     }
 
     private fun enableBackButton() {
@@ -69,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         save_button.setOnClickListener(onSaveClickedListener)
     }
 
-    fun disableSaveButton() {
+    private fun disableSaveButton() {
         save_button.visibility = View.GONE
         save_button.setOnClickListener(null)
     }
@@ -80,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         edit_button.setOnClickListener(onEditClickedListener)
     }
 
-    fun disableEditButton() {
+    private fun disableEditButton() {
         edit_button.visibility = View.GONE
         edit_button.setOnClickListener(null)
     }

@@ -63,7 +63,6 @@ class UnlockFragment : BaseFragment() {
         appExecutors.miscellaneousThread().execute {
             if (keyManager.isMasterKeyCorrect()) {
                 appExecutors.mainThread().execute {
-                    hideKeyboard()
                     navController?.navigate(R.id.action_unlockFragment_to_landingFragment)
                 }
             } else {

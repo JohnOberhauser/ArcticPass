@@ -1,5 +1,7 @@
 package com.ober.arctic.ui.credentials
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +14,16 @@ import com.ober.arctic.BaseFragment
 import com.ober.arctic.data.model.Category
 import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.data.model.Credentials
+import com.ober.arctic.data.model.CredentialsComparator
 import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.BundleConstants
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_credentials.*
+import java.util.*
+import android.content.Context.CLIPBOARD_SERVICE
+import androidx.core.content.ContextCompat.getSystemService
+
+
 
 class CredentialsFragment : BaseFragment() {
 
@@ -26,6 +34,8 @@ class CredentialsFragment : BaseFragment() {
     private var category: Category? = null
 
     private var credentials: Credentials = Credentials()
+
+    private var inEditMode = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
@@ -57,6 +67,11 @@ class CredentialsFragment : BaseFragment() {
                 this.credentials = credentials
             }
 
+            if (inEditMode) {
+                showEditView()
+            } else {
+                showSavedView()
+            }
             setText()
         })
         dataViewModel.loadDomainCollection()
@@ -76,6 +91,7 @@ class CredentialsFragment : BaseFragment() {
     }
 
     private fun showEditView() {
+        inEditMode = true
         mainActivity?.enableSaveButton(View.OnClickListener {
             onSaveClicked()
         })
@@ -91,9 +107,13 @@ class CredentialsFragment : BaseFragment() {
         username_field.visibility = View.VISIBLE
         password_field.visibility = View.VISIBLE
         notes_field.visibility = View.VISIBLE
+
+        username_layout.setOnLongClickListener(null)
+        password_layout.setOnLongClickListener(null)
     }
 
     private fun showSavedView() {
+        inEditMode = false
         mainActivity?.enableEditButton(View.OnClickListener {
             onEditClicked()
         })
@@ -109,9 +129,27 @@ class CredentialsFragment : BaseFragment() {
         username_field.visibility = View.GONE
         password_field.visibility = View.GONE
         notes_field.visibility = View.GONE
+
+        username_layout.setOnLongClickListener(this::onUserNameLongClick)
+        password_layout.setOnLongClickListener(this::onPasswordLongClick)
+    }
+
+    private fun onUserNameLongClick(view: View): Boolean {
+        val clipboard = getSystemService(context!!, ClipboardManager::class.java)
+        clipboard?.primaryClip = ClipData.newPlainText("", username_text_view.text)
+        Toast.makeText(context, R.string.username_copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        return true
+    }
+
+    private fun onPasswordLongClick(view: View): Boolean {
+        val clipboard = getSystemService(context!!, ClipboardManager::class.java)
+        clipboard?.primaryClip = ClipData.newPlainText("", password_text_view.text)
+        Toast.makeText(context, R.string.password_copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        return true
     }
 
     private fun onSaveClicked() {
+        hideKeyboard()
         val enteredDescriptionText = description_field.text.toString().trim()
         val credentialsWithWantedDescription =
             categoryCollection?.getCredentialsByCategoryAndDescription(category?.name, enteredDescriptionText)
@@ -133,9 +171,11 @@ class CredentialsFragment : BaseFragment() {
                 credentials = newCredentials
                 category!!.credentialsList.add(credentials)
 
-                dataViewModel.saveDomainCollection(categoryCollection)
+                Collections.sort(category!!.credentialsList, CredentialsComparator())
 
-                showSavedView()
+                inEditMode = false
+
+                dataViewModel.saveDomainCollection(categoryCollection)
             }
         } else {
             Toast.makeText(context, R.string.description_already_exists, Toast.LENGTH_LONG).show()

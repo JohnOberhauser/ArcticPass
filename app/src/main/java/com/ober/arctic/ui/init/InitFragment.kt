@@ -44,7 +44,6 @@ class InitFragment : BaseFragment() {
     fun onDoneClicked() {
         keyManager.savePartialRecoveryKey(recovery_field.text.toString().trim())
         keyManager.setMasterKey(master_password_field.text.toString().trim(), true)
-        hideKeyboard()
         navController?.navigate(R.id.action_initFragment_to_landingFragment)
     }
 

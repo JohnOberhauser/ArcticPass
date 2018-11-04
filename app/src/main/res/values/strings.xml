@@ -22,4 +22,6 @@
     <string name="save">Save</string>
     <string name="description_already_exists">Description already exists</string>
     <string name="description_must_not_be_blank">Description must not be blank</string>
+    <string name="username_copied_to_clipboard">Username copied to clipboard</string>
+    <string name="password_copied_to_clipboard">Password copied to clipboard</string>
 </resources>
