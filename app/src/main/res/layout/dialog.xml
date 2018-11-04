@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:paddingStart="15dp"
               android:paddingEnd="15dp"
-              android:background="@android:color/white">
+              android:background="?colorBackground">
 
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

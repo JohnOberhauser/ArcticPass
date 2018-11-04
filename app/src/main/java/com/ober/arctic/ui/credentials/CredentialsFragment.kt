@@ -22,10 +22,10 @@ import kotlinx.android.synthetic.main.fragment_credentials.*
 import java.util.*
 import android.content.Context.CLIPBOARD_SERVICE
 import androidx.core.content.ContextCompat.getSystemService
+import com.ober.arctic.OnBackPressedListener
 
 
-
-class CredentialsFragment : BaseFragment() {
+class CredentialsFragment : BaseFragment(), OnBackPressedListener {
 
     private lateinit var dataViewModel: DataViewModel
 
@@ -94,7 +94,7 @@ class CredentialsFragment : BaseFragment() {
         inEditMode = true
         mainActivity?.enableSaveButton(View.OnClickListener {
             onSaveClicked()
-        })
+        }, this)
 
         description_text_view.visibility = View.GONE
         website_text_view.visibility = View.GONE
@@ -180,6 +180,14 @@ class CredentialsFragment : BaseFragment() {
         } else {
             Toast.makeText(context, R.string.description_already_exists, Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun onBackPressed(): Boolean {
+        if (arguments?.getString(BundleConstants.CREDENTIALS_DESCRIPTION) != null) {
+            showSavedView()
+            return true
+        }
+        return false
     }
 
     private fun onEditClicked() {

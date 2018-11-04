@@ -14,16 +14,19 @@ import com.ober.arctic.ui.category.CategoryFragment
 import com.ober.arctic.ui.landing.LandingFragment
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.nav_header.view.*
 
 class MainActivity : AppCompatActivity() {
 
     private var drawerIcon: DrawerArrowDrawable? = null
+    private var onBackPressedListener: OnBackPressedListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.AppTheme)
         setContentView(R.layout.activity_main)
         setupToolbar()
+        setupThemeSwitch()
     }
 
     private fun setupToolbar() {
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity() {
                 enableBackButton()
                 disableEditButton()
                 disableSaveButton()
+                onBackPressedListener = null
             }
             hideKeyboard()
         }
@@ -66,12 +70,13 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawers()
-        } else {
+        } else if (onBackPressedListener == null || !onBackPressedListener!!.onBackPressed()) {
             super.onBackPressed()
         }
     }
 
-    fun enableSaveButton(onSaveClickedListener: View.OnClickListener?) {
+    fun enableSaveButton(onSaveClickedListener: View.OnClickListener?, onBackPressedListener: OnBackPressedListener) {
+        this.onBackPressedListener = onBackPressedListener
         disableEditButton()
         save_button.visibility = View.VISIBLE
         save_button.setOnClickListener(onSaveClickedListener)
@@ -83,6 +88,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun enableEditButton(onEditClickedListener: View.OnClickListener?) {
+        this.onBackPressedListener = null
         disableSaveButton()
         edit_button.visibility = View.VISIBLE
         edit_button.setOnClickListener(onEditClickedListener)
@@ -93,5 +99,21 @@ class MainActivity : AppCompatActivity() {
         edit_button.setOnClickListener(null)
     }
 
+    private fun setupThemeSwitch() {
+//        nav_view.getHeaderView(0).theme_switch.setOnCheckedChangeListener { _, isChecked ->
+//            if (isChecked) {
+//                theme.applyStyle(R.style.AppThemeDark, true)
+//                recreate()
+//            } else {
+//                theme.applyStyle(R.style.AppTheme, true)
+//                recreate()
+//            }
+//        }
+    }
+
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()
+}
+
+interface OnBackPressedListener {
+    fun onBackPressed(): Boolean
 }
