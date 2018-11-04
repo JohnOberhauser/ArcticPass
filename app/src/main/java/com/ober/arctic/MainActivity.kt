@@ -1,14 +1,20 @@
 package com.ober.arctic
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.navigation.Navigation.findNavController
+import com.ober.arctic.ui.category.CategoryFragment
+import com.ober.arctic.ui.landing.LandingFragment
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private var drawerIcon: DrawerArrowDrawable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,21 +25,38 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
-        supportActionBar.apply {
-            this!!
-            setDisplayHomeAsUpEnabled(true)
-            setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
-
+        drawerIcon = DrawerArrowDrawable(this)
+        drawerIcon?.color = ContextCompat.getColor(this, android.R.color.white)
+        toolbar?.navigationIcon = drawerIcon
+        enableDrawer()
+        findNavController(this, R.id.nav_host_fragment).addOnNavigatedListener { _, destination ->
+            if (destination.label == LandingFragment::class.java.simpleName) {
+                enableDrawer()
+            } else if (destination.label == CategoryFragment::class.java.simpleName) {
+                enableBackButton()
+            }
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
-            android.R.id.home -> {
-                drawer.openDrawer(GravityCompat.START)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+    private fun enableBackButton() {
+        ObjectAnimator.ofFloat(drawerIcon!!, "progress", 1f).start()
+        toolbar?.setNavigationOnClickListener {
+            onBackPressed()
+        }
+    }
+
+    private fun enableDrawer() {
+        ObjectAnimator.ofFloat(drawerIcon!!, "progress", 0f).start()
+        toolbar?.setNavigationOnClickListener {
+            drawer.openDrawer(GravityCompat.START)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (drawer != null && drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawers()
+        } else {
+            super.onBackPressed()
         }
     }
 
