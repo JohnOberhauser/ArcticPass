@@ -59,7 +59,10 @@ class CategoryFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsC
     }
 
     override fun onCredentialClicked(credentials: Credentials) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val bundle = Bundle()
+        bundle.putString(BundleConstants.CATEGORY, categoryName)
+        bundle.putString(BundleConstants.CREDENTIALS_DESCRIPTION, credentials.description)
+        navController?.navigate(R.id.action_categoryFragment_to_credentialsFragment, bundle)
     }
 
     override fun onDeleteCredential(credentials: Credentials) {
@@ -80,6 +83,9 @@ class CategoryFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsC
 
     @OnClick(R.id.add_new_fab)
     fun onAddNewFabClicked() {
-        navController?.navigate(R.id.action_categoryFragment_to_credentialsFragment)
+        val bundle = Bundle()
+        bundle.putBoolean(BundleConstants.NEW_CREDENTIALS, true)
+        bundle.putString(BundleConstants.CATEGORY, categoryName)
+        navController?.navigate(R.id.action_categoryFragment_to_credentialsFragment, bundle)
     }
 }

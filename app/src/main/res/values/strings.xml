@@ -18,4 +18,8 @@
     <string name="username">Username:</string>
     <string name="password">Password:</string>
     <string name="notes">Notes:</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="description_already_exists">Description already exists</string>
+    <string name="description_must_not_be_blank">Description must not be blank</string>
 </resources>

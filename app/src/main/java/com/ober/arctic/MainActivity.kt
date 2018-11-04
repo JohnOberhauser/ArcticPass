@@ -2,6 +2,7 @@ package com.ober.arctic
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.core.content.ContextCompat
@@ -34,6 +35,8 @@ class MainActivity : AppCompatActivity() {
                 enableDrawer()
             } else if (destination.label == CategoryFragment::class.java.simpleName) {
                 enableBackButton()
+                disableEditButton()
+                disableSaveButton()
             }
         }
     }
@@ -58,6 +61,28 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+    }
+
+    fun enableSaveButton(onSaveClickedListener: View.OnClickListener?) {
+        disableEditButton()
+        save_button.visibility = View.VISIBLE
+        save_button.setOnClickListener(onSaveClickedListener)
+    }
+
+    fun disableSaveButton() {
+        save_button.visibility = View.GONE
+        save_button.setOnClickListener(null)
+    }
+
+    fun enableEditButton(onEditClickedListener: View.OnClickListener?) {
+        disableSaveButton()
+        edit_button.visibility = View.VISIBLE
+        edit_button.setOnClickListener(onEditClickedListener)
+    }
+
+    fun disableEditButton() {
+        edit_button.visibility = View.GONE
+        edit_button.setOnClickListener(null)
     }
 
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()
