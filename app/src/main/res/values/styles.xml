@@ -3,12 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimaryLight</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkLight</item>
-        <item name="colorAccent">@color/colorAccentLight</item>
+        <item name="colorPrimary">@color/teal8</item>
+        <item name="colorPrimaryDark">@color/teal5</item>
+        <item name="colorAccent">@color/teal6</item>
 
         <item name="colorBackground">@color/white</item>
-        <item name="colorForeground">@color/colorPrimaryLight</item>
+        <item name="colorForeground">@color/teal8</item>
         <item name="colorRed">@color/red</item>
         <item name="colorPrimaryText">@color/black</item>
 
@@ -18,17 +18,17 @@
     </style>
 
     <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowBackground">@color/colorPrimaryLight</item>
+        <item name="android:windowBackground">@color/teal8</item>
     </style>
 
     <style name="AppThemeDark" parent="ThemeOverlay.MaterialComponents.Dark">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkDark</item>
-        <item name="colorAccent">@color/colorAccentDark</item>
+        <item name="colorPrimary">@color/teal3</item>
+        <item name="colorPrimaryDark">@color/teal2</item>
+        <item name="colorAccent">@color/teal6</item>
 
         <item name="colorBackground">@color/dark_grey</item>
-        <item name="colorForeground">@color/light_grey</item>
+        <item name="colorForeground">@color/teal8</item>
         <item name="colorRed">@color/red</item>
         <item name="colorPrimaryText">@color/light_grey</item>
 

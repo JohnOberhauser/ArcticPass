@@ -2,6 +2,7 @@ package com.ober.arctic
 
 import android.animation.ObjectAnimator
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -15,18 +16,31 @@ import com.ober.arctic.ui.landing.LandingFragment
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.view.*
+import net.grandcentrix.tray.AppPreferences
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var appPreferences: AppPreferences
 
     private var drawerIcon: DrawerArrowDrawable? = null
     private var onBackPressedListener: OnBackPressedListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.AppTheme)
+        App.appComponent?.inject(this)
+        setTheme()
         setContentView(R.layout.activity_main)
         setupToolbar()
         setupThemeSwitch()
+    }
+
+    private fun setTheme() {
+        when (appPreferences.getString(THEME, LIGHT)) {
+            LIGHT -> setTheme(R.style.AppTheme)
+            DARK -> setTheme(R.style.AppThemeDark)
+        }
     }
 
     private fun setupToolbar() {
@@ -100,18 +114,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupThemeSwitch() {
-//        nav_view.getHeaderView(0).theme_switch.setOnCheckedChangeListener { _, isChecked ->
-//            if (isChecked) {
-//                theme.applyStyle(R.style.AppThemeDark, true)
-//                recreate()
-//            } else {
-//                theme.applyStyle(R.style.AppTheme, true)
-//                recreate()
-//            }
-//        }
+        val switch = nav_view.getHeaderView(0).theme_switch
+        when (appPreferences.getString(THEME, LIGHT)) {
+            LIGHT -> switch.isChecked = false
+            DARK -> switch.isChecked = true
+        }
+        switch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                appPreferences.put(THEME, DARK)
+            } else {
+                appPreferences.put(THEME, LIGHT)
+            }
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
     }
 
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()
+
+    companion object {
+        const val THEME = "theme"
+        const val DARK = "dark"
+        const val LIGHT = "light"
+    }
 }
 
 interface OnBackPressedListener {

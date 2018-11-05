@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimaryLight">#008577</color>
-    <color name="colorPrimaryDarkLight">#00574B</color>
-    <color name="colorAccentLight">#006666</color>
-
-    <color name="colorPrimaryDark">#003333</color>
-    <color name="colorPrimaryDarkDark">#002222</color>
-    <color name="colorAccentDark">#006666</color>
+    <color name="teal8">#008888</color>
+    <color name="teal6">#006666</color>
+    <color name="teal5">#005555</color>
+    <color name="teal3">#003333</color>
+    <color name="teal2">#002222</color>
 
 
     <color name="white">@android:color/white</color>
