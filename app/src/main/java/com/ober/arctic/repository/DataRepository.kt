@@ -8,6 +8,7 @@ import com.ober.arctic.data.cache.LiveDataHolder
 import com.ober.arctic.data.database.MainDatabase
 import com.ober.arctic.data.model.Category
 import com.ober.arctic.data.model.CategoryCollection
+import com.ober.arctic.data.model.EncryptedDataHolder
 import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
@@ -24,7 +25,8 @@ class DataRepository @Inject constructor(
 ) {
 
     fun saveCategoryCollection(categoryCollection: CategoryCollection) {
-        val encryptedDataHolder = encryption.encryptString(gson.toJson(categoryCollection), keyManager.getCombinedKey()!!)
+        val encryptedDataHolder: EncryptedDataHolder =
+            encryption.encryptString(gson.toJson(categoryCollection), keyManager.getCombinedKey()!!)
         appExecutors.diskIO().execute {
             mainDatabase.encryptedDataHolderDao().insert(encryptedDataHolder)
             appExecutors.mainThread().execute {

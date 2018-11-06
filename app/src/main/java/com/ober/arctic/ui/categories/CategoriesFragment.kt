@@ -1,5 +1,6 @@
 package com.ober.arctic.ui.categories
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
@@ -8,23 +9,45 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
+import com.google.gson.Gson
 import com.ober.arctic.App
 import com.ober.arctic.BaseFragment
 import com.ober.arctic.data.model.Category
 import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.data.model.CategoryComparator
+import com.ober.arctic.data.model.EncryptedDataHolder
 import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.BundleConstants
+import com.ober.arctic.util.FileUtil
+import com.ober.arctic.util.security.Encryption
+import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
+import kotlinx.android.synthetic.main.nav_header.view.*
 import kotlinx.android.synthetic.main.fragment_landing.*
 import java.util.*
+import javax.inject.Inject
+import android.Manifest.permission
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.pm.PackageManager
+import androidx.core.app.ActivityCompat
+
 
 class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener {
+
+    @Inject
+    lateinit var encryption: Encryption
+
+    @Inject
+    lateinit var gson: Gson
+
+    @Inject
+    lateinit var keyManager: KeyManager
 
     private lateinit var dataViewModel: DataViewModel
 
@@ -42,6 +65,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         setupObserver()
+        setupDrawerClickListeners()
     }
 
     private fun setupRecyclerView() {
@@ -111,5 +135,46 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
             }
             .create()
             .show()
+    }
+
+    private fun setupDrawerClickListeners() {
+        mainActivity?.getDrawerView()?.export_file_layout?.setOnClickListener {
+            exportFile()
+        }
+    }
+
+    private fun exportFile() {
+        if (hasStoragePermissions()) {
+            if (FileUtil.isExternalStorageWritable()) {
+                val encryptedDataHolder: EncryptedDataHolder =
+                    encryption.encryptString(gson.toJson(categoryCollection), keyManager.getCombinedKey()!!)
+                val fileContent = gson.toJson(encryptedDataHolder)
+                FileUtil.writeStringToFile(getString(R.string.file_name) + ".json", fileContent)
+            } else {
+                Toast.makeText(context, getString(R.string.failed_to_write_file), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun hasStoragePermissions(): Boolean {
+        val permission = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
+                STORAGE_REQUEST_CODE
+            )
+            return false
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == STORAGE_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            exportFile()
+        }
+    }
+
+    companion object {
+        const val STORAGE_REQUEST_CODE = 345
     }
 }

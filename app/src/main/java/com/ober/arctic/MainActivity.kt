@@ -150,6 +150,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun getDrawerView(): View {
+        return nav_view.getHeaderView(0)
+    }
+
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()
 
     companion object {

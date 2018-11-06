@@ -31,4 +31,6 @@
     <string name="credentials">Credentials</string>
     <string name="import_file">Import File</string>
     <string name="export_file">Export File</string>
+    <string name="failed_to_write_file">Failed to write file</string>
+    <string name="file_name">arcticPass</string>
 </resources>
