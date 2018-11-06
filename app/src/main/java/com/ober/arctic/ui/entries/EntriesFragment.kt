@@ -1,4 +1,4 @@
-package com.ober.arctic.ui.category
+package com.ober.arctic.ui.entries
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,7 +18,7 @@ import com.ober.arctic.util.BundleConstants
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_category.*
 
-class CategoryFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsClickedListener {
+class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsClickedListener {
 
     private lateinit var dataViewModel: DataViewModel
 
@@ -62,7 +62,7 @@ class CategoryFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsC
         val bundle = Bundle()
         bundle.putString(BundleConstants.CATEGORY, categoryName)
         bundle.putString(BundleConstants.CREDENTIALS_DESCRIPTION, credentials.description)
-        navController?.navigate(R.id.action_categoryFragment_to_credentialsFragment, bundle)
+        navController?.navigate(R.id.action_entryFragment_to_credentialsFragment, bundle)
     }
 
     override fun onDeleteCredential(credentials: Credentials) {
@@ -86,6 +86,6 @@ class CategoryFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsC
         val bundle = Bundle()
         bundle.putBoolean(BundleConstants.NEW_CREDENTIALS, true)
         bundle.putString(BundleConstants.CATEGORY, categoryName)
-        navController?.navigate(R.id.action_categoryFragment_to_credentialsFragment, bundle)
+        navController?.navigate(R.id.action_entryFragment_to_credentialsFragment, bundle)
     }
 }

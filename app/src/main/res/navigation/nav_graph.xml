@@ -23,8 +23,8 @@
             android:label="InitFragment"
             tools:layout="@layout/fragment_init">
         <action
-                android:id="@+id/action_initFragment_to_landingFragment"
-                app:destination="@id/landingFragment" app:popUpTo="@+id/initFragment" app:popUpToInclusive="true"/>
+                android:id="@+id/action_initFragment_to_categoriesFragment"
+                app:destination="@id/categoriesFragment" app:popUpTo="@+id/initFragment" app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment android:id="@+id/unlockFragment"
@@ -32,24 +32,24 @@
               android:label="UnlockFragment"
               tools:layout="@layout/fragment_unlock">
         <action
-                android:id="@+id/action_unlockFragment_to_landingFragment"
-                app:destination="@id/landingFragment" app:popUpToInclusive="true" app:popUpTo="@+id/unlockFragment"/>
+                android:id="@+id/action_unlockFragment_to_categoriesFragment"
+                app:destination="@id/categoriesFragment" app:popUpToInclusive="true" app:popUpTo="@+id/unlockFragment"/>
     </fragment>
 
     <fragment
-            android:id="@+id/landingFragment"
-            android:name="com.ober.arctic.ui.landing.LandingFragment"
-            android:label="LandingFragment"
+            android:id="@+id/categoriesFragment"
+            android:name="com.ober.arctic.ui.categories.CategoriesFragment"
+            android:label="CategoriesFragment"
             tools:layout="@layout/fragment_landing">
-        <action android:id="@+id/action_landingFragment_to_categoryFragment" app:destination="@id/categoryFragment"/>
+        <action android:id="@+id/action_categoriesFragment_to_entryFragment" app:destination="@id/entriesFragment"/>
     </fragment>
 
     <fragment
-            android:id="@+id/categoryFragment"
-            android:name="com.ober.arctic.ui.category.CategoryFragment"
-            android:label="CategoryFragment"
+            android:id="@+id/entriesFragment"
+            android:name="com.ober.arctic.ui.entries.EntriesFragment"
+            android:label="EntriesFragment"
             tools:layout="@layout/fragment_category">
-        <action android:id="@+id/action_categoryFragment_to_credentialsFragment" app:destination="@id/credentialsFragment"/>
+        <action android:id="@+id/action_entryFragment_to_credentialsFragment" app:destination="@id/credentialsFragment"/>
     </fragment>
     <fragment
             android:id="@+id/credentialsFragment"

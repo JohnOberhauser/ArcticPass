@@ -11,6 +11,7 @@
         <item name="colorForeground">@color/teal8</item>
         <item name="colorRed">@color/red</item>
         <item name="colorPrimaryText">@color/black</item>
+        <item name="colorTextOnPrimaryBackground">@color/white</item>
 
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@android:color/white</item>
@@ -31,6 +32,7 @@
         <item name="colorForeground">@color/teal8</item>
         <item name="colorRed">@color/red</item>
         <item name="colorPrimaryText">@color/grey14</item>
+        <item name="colorTextOnPrimaryBackground">@color/grey14</item>
 
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@android:color/white</item>

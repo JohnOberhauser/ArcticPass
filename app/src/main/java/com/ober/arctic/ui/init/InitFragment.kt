@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import androidx.lifecycle.ViewModelProviders
 import butterknife.OnClick
 import com.ober.arctic.App
 import com.ober.arctic.BaseFragment
@@ -44,7 +43,7 @@ class InitFragment : BaseFragment() {
     fun onDoneClicked() {
         keyManager.savePartialRecoveryKey(recovery_field.text.toString().trim())
         keyManager.setMasterKey(master_password_field.text.toString().trim(), true)
-        navController?.navigate(R.id.action_initFragment_to_landingFragment)
+        navController?.navigate(R.id.action_initFragment_to_categoriesFragment)
     }
 
     private fun setupEditTextListeners() {

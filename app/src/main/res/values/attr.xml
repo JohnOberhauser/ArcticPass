@@ -7,4 +7,5 @@
     <attr name="colorForeground" format="reference|color"/>
     <attr name="colorRed" format="reference|color"/>
     <attr name="colorPrimaryText" format="reference|color"/>
+    <attr name="colorTextOnPrimaryBackground" format="reference|color"/>
 </resources>

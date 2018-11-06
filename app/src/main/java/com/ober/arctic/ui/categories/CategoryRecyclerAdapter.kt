@@ -1,4 +1,4 @@
-package com.ober.arctic.ui.landing
+package com.ober.arctic.ui.categories
 
 import android.view.LayoutInflater
 import android.view.View

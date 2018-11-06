@@ -1,11 +1,10 @@
-package com.ober.arctic.ui.category
+package com.ober.arctic.ui.entries
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
-import com.ober.arctic.data.model.Category
 import com.ober.arctic.data.model.Credentials
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.cell_category.view.*

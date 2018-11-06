@@ -11,8 +11,11 @@ import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.navigation.Navigation.findNavController
-import com.ober.arctic.ui.category.CategoryFragment
-import com.ober.arctic.ui.landing.LandingFragment
+import com.ober.arctic.ui.entries.EntriesFragment
+import com.ober.arctic.ui.categories.CategoriesFragment
+import com.ober.arctic.ui.credentials.CredentialsFragment
+import com.ober.arctic.ui.unlock.UnlockFragment
+import com.ober.arctic.util.AppExecutors
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.view.*
@@ -23,6 +26,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var appPreferences: AppPreferences
+
+    @Inject
+    lateinit var appExecutors: AppExecutors
 
     private var drawerIcon: DrawerArrowDrawable? = null
     private var onBackPressedListener: OnBackPressedListener? = null
@@ -48,17 +54,27 @@ class MainActivity : AppCompatActivity() {
         drawerIcon = DrawerArrowDrawable(this)
         drawerIcon?.color = ContextCompat.getColor(this, android.R.color.white)
         toolbar?.navigationIcon = drawerIcon
+        supportActionBar?.setDisplayShowTitleEnabled(true)
         enableDrawer()
         findNavController(this, R.id.nav_host_fragment).addOnNavigatedListener { _, destination ->
-            if (destination.label == LandingFragment::class.java.simpleName) {
-                enableDrawer()
-            } else if (destination.label == CategoryFragment::class.java.simpleName) {
-                enableBackButton()
-                disableEditButton()
-                disableSaveButton()
-                onBackPressedListener = null
+            appExecutors.mainThread().execute {
+                when (destination.label) {
+                    CategoriesFragment::class.java.simpleName -> {
+                        enableDrawer()
+                        toolbar_title.text = getString(R.string.categories)
+                    }
+                    EntriesFragment::class.java.simpleName -> {
+                        enableBackButton()
+                        disableEditButton()
+                        disableSaveButton()
+                        onBackPressedListener = null
+                        toolbar_title.text = getString(R.string.entries)
+                    }
+                    CredentialsFragment::class.java.simpleName -> toolbar_title.text = getString(R.string.credentials)
+                    UnlockFragment::class.java.simpleName -> toolbar_title.text = ""
+                }
+                hideKeyboard()
             }
-            hideKeyboard()
         }
     }
 

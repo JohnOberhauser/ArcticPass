@@ -6,7 +6,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProviders
 import butterknife.OnClick
 import com.ober.arctic.App
 import com.ober.arctic.BaseFragment
@@ -63,7 +62,7 @@ class UnlockFragment : BaseFragment() {
         appExecutors.miscellaneousThread().execute {
             if (keyManager.isMasterKeyCorrect()) {
                 appExecutors.mainThread().execute {
-                    navController?.navigate(R.id.action_unlockFragment_to_landingFragment)
+                    navController?.navigate(R.id.action_unlockFragment_to_categoriesFragment)
                 }
             } else {
                 appExecutors.mainThread().execute {

@@ -1,4 +1,4 @@
-package com.ober.arctic.ui.landing
+package com.ober.arctic.ui.categories
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -24,7 +24,7 @@ import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_landing.*
 import java.util.*
 
-class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener {
+class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener {
 
     private lateinit var dataViewModel: DataViewModel
 
@@ -96,7 +96,7 @@ class LandingFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedL
     override fun onCategoryClicked(category: Category) {
         val bundle = Bundle()
         bundle.putString(BundleConstants.CATEGORY, category.name)
-        navController?.navigate(R.id.action_landingFragment_to_categoryFragment, bundle)
+        navController?.navigate(R.id.action_categoriesFragment_to_entryFragment, bundle)
     }
 
     override fun onDeleteCategory(category: Category) {

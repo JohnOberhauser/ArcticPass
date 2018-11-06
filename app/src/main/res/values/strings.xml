@@ -26,4 +26,7 @@
     <string name="password_copied_to_clipboard">Password copied to clipboard</string>
     <string name="theme">Theme</string>
     <string name="password_length">Password Length</string>
+    <string name="categories">Categories</string>
+    <string name="entries">Entries</string>
+    <string name="credentials">Credentials</string>
 </resources>
