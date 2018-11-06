@@ -23,14 +23,14 @@
 
     <style name="AppThemeDark" parent="ThemeOverlay.MaterialComponents.Dark">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/teal3</item>
-        <item name="colorPrimaryDark">@color/teal2</item>
-        <item name="colorAccent">@color/teal6</item>
+        <item name="colorPrimary">@color/grey3</item>
+        <item name="colorPrimaryDark">@color/grey2</item>
+        <item name="colorAccent">@color/teal8</item>
 
-        <item name="colorBackground">@color/dark_grey</item>
+        <item name="colorBackground">@color/grey5</item>
         <item name="colorForeground">@color/teal8</item>
         <item name="colorRed">@color/red</item>
-        <item name="colorPrimaryText">@color/light_grey</item>
+        <item name="colorPrimaryText">@color/grey14</item>
 
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@android:color/white</item>

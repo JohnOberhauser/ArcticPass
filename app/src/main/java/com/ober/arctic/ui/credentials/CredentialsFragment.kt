@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -20,12 +21,17 @@ import com.ober.arctic.util.BundleConstants
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_credentials.*
 import java.util.*
-import android.content.Context.CLIPBOARD_SERVICE
 import androidx.core.content.ContextCompat.getSystemService
+import butterknife.OnClick
 import com.ober.arctic.OnBackPressedListener
+import com.ober.arctic.util.security.Encryption
+import javax.inject.Inject
 
 
 class CredentialsFragment : BaseFragment(), OnBackPressedListener {
+
+    @Inject
+    lateinit var encryption: Encryption
 
     private lateinit var dataViewModel: DataViewModel
 
@@ -50,6 +56,7 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
         } else {
             showSavedView()
         }
+        setupSeekBar()
         setupObserver()
     }
 
@@ -75,6 +82,26 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
             setText()
         })
         dataViewModel.loadDomainCollection()
+    }
+
+    private fun setupSeekBar() {
+        password_length_seek_bar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val text = "${progress + MINIMUM_PASSWORD_LENGTH}"
+                password_length_text_view.text = text
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+        password_length_seek_bar.progress = MINIMUM_PASSWORD_LENGTH
+        val text = "${password_length_seek_bar.progress + MINIMUM_PASSWORD_LENGTH}"
+        password_length_text_view.text = text
+    }
+
+    @OnClick(R.id.generate_button)
+    fun onGenerateClicked() {
+        password_field.setText(encryption.generateRandomKey(password_length_seek_bar.progress + MINIMUM_PASSWORD_LENGTH))
     }
 
     private fun setText() {
@@ -107,6 +134,7 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
         username_field_layout.visibility = View.VISIBLE
         password_field_layout.visibility = View.VISIBLE
         notes_field.visibility = View.VISIBLE
+        password_generator_layout.visibility = View.VISIBLE
 
         username_layout.setOnLongClickListener(null)
         password_layout.setOnLongClickListener(null)
@@ -129,6 +157,7 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
         username_field_layout.visibility = View.GONE
         password_field_layout.visibility = View.GONE
         notes_field.visibility = View.GONE
+        password_generator_layout.visibility = View.GONE
 
         username_layout.setOnLongClickListener(this::onUserNameLongClick)
         password_layout.setOnLongClickListener(this::onPasswordLongClick)
@@ -192,5 +221,9 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
 
     private fun onEditClicked() {
         showEditView()
+    }
+
+    companion object {
+        const val MINIMUM_PASSWORD_LENGTH = 8
     }
 }

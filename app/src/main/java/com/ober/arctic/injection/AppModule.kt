@@ -9,6 +9,7 @@ import com.ober.arctic.MainActivity
 import com.ober.arctic.data.cache.LiveDataHolder
 import com.ober.arctic.data.cache.LiveDataHolderImpl
 import com.ober.arctic.data.database.MainDatabase
+import com.ober.arctic.ui.credentials.CredentialsFragment
 import com.ober.arctic.ui.init.InitFragment
 import com.ober.arctic.ui.splash.SplashFragment
 import com.ober.arctic.ui.unlock.UnlockFragment
@@ -91,6 +92,7 @@ class AppModule(private val app: App) {
         fun inject(initFragment: InitFragment)
         fun inject(splashFragment: SplashFragment)
         fun inject(unlockFragment: UnlockFragment)
+        fun inject(credentialsFragment: CredentialsFragment)
 
         // Tools  ======================================
         fun gson(): Gson

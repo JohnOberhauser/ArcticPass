@@ -6,10 +6,14 @@
     <color name="teal3">#003333</color>
     <color name="teal2">#002222</color>
 
+    <color name="grey14">#eeeeee</color>
+    <color name="grey5">#555555</color>
+    <color name="grey4">#444444</color>
+    <color name="grey3">#333333</color>
+    <color name="grey2">#222222</color>
 
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
     <color name="red">@android:color/holo_red_dark</color>
-    <color name="dark_grey">#444444</color>
-    <color name="light_grey">#eeeeee</color>
+
 </resources>
