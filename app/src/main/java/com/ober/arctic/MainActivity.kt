@@ -39,7 +39,8 @@ class MainActivity : AppCompatActivity() {
         setTheme()
         setContentView(R.layout.activity_main)
         setupToolbar()
-        setupThemeSwitch()
+        setupDrawerClickListeners()
+        setupNavControllerListener()
     }
 
     private fun setTheme() {
@@ -53,13 +54,16 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         drawerIcon = DrawerArrowDrawable(this)
         drawerIcon?.color = ContextCompat.getColor(this, android.R.color.white)
-        toolbar?.navigationIcon = drawerIcon
         supportActionBar?.setDisplayShowTitleEnabled(true)
         enableDrawer()
+    }
+
+    private fun setupNavControllerListener() {
         findNavController(this, R.id.nav_host_fragment).addOnNavigatedListener { _, destination ->
             appExecutors.mainThread().execute {
                 when (destination.label) {
                     CategoriesFragment::class.java.simpleName -> {
+                        toolbar?.navigationIcon = drawerIcon
                         enableDrawer()
                         toolbar_title.text = getString(R.string.categories)
                     }
@@ -129,7 +133,7 @@ class MainActivity : AppCompatActivity() {
         edit_button.setOnClickListener(null)
     }
 
-    private fun setupThemeSwitch() {
+    private fun setupDrawerClickListeners() {
         val switch = nav_view.getHeaderView(0).theme_switch
         when (appPreferences.getString(THEME, LIGHT)) {
             LIGHT -> switch.isChecked = false

@@ -82,6 +82,9 @@ class KeyManagerImpl(
     }
 
     override fun isMasterKeyCorrect(): Boolean {
+        if (masterKey == null) {
+            return false
+        }
         return getMasterKeyHash()!! == Base64.encodeToString(
             AesCbcWithIntegrity.generateKeyFromPassword(
                 masterKey,

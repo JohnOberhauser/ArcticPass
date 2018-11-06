@@ -84,7 +84,6 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
             android:background="?colorBackground"
-            app:menu="@menu/drawer"
             app:headerLayout="@layout/nav_header"/>
 
 

@@ -29,4 +29,6 @@
     <string name="categories">Categories</string>
     <string name="entries">Entries</string>
     <string name="credentials">Credentials</string>
+    <string name="import_file">Import File</string>
+    <string name="export_file">Export File</string>
 </resources>

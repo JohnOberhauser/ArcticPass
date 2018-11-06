@@ -28,6 +28,9 @@ class UnlockFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
+        if (keyManager.isMasterKeyCorrect()) {
+            navController?.navigate(R.id.action_unlockFragment_to_categoriesFragment)
+        }
         return setAndBindContentView(inflater, container!!, R.layout.fragment_unlock)
     }
 

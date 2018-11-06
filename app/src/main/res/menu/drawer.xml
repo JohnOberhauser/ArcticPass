@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <group android:checkableBehavior="single">
         <item
-                android:id="@+id/nav_camera"
-                android:icon="@drawable/ic_launcher_background"
-                android:title="@string/done" />
+                android:id="@+id/import_file"
+                android:icon="@drawable/ic_arrow_downward"
+                android:title="@string/import_file"
+                android:iconTint="?colorForeground"/>
+        <item
+                android:id="@+id/export_file"
+                android:icon="@drawable/ic_arrow_upward"
+                android:title="@string/export_file" />
     </group>
 </menu>
