@@ -36,6 +36,9 @@
     <string name="bad_file_type">Import Failed: Bad File</string>
     <string name="file_encrypted_with_different_password">Import Failed: File encrypted with different password</string>
     <string name="merge_or_replace">Would you like to <b>merge</b> the entries from the imported file with the currently stored entries <b>OR</b> would you like to <b>replace all</b> currently stored entries with the imported entries?</string>
-    <string name="replace">Replace All</string>
+    <string name="replace_all">Replace All</string>
+    <string name="replace">Replace</string>
     <string name="merge">Merge</string>
+    <string name="merge_conflict">There is a merge conflict with this entry.  Would you like to <b>replace</b> the current entry with the new one, or <b>keep</b> the current entry?</string>
+    <string name="keep">Keep</string>
 </resources>

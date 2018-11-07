@@ -18,10 +18,6 @@ import butterknife.OnClick
 import com.google.gson.Gson
 import com.ober.arctic.App
 import com.ober.arctic.BaseFragment
-import com.ober.arctic.data.model.Category
-import com.ober.arctic.data.model.CategoryCollection
-import com.ober.arctic.data.model.CategoryComparator
-import com.ober.arctic.data.model.EncryptedDataHolder
 import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.BundleConstants
 import com.ober.arctic.util.FileUtil
@@ -38,8 +34,13 @@ import android.net.Uri
 import androidx.core.app.ActivityCompat
 import com.ober.arctic.MainActivity.Companion.READ_REQUEST_CODE
 import com.ober.arctic.OnImportFileListener
+import com.ober.arctic.data.model.*
+import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.TypeUtil
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.security.GeneralSecurityException
+import java.util.concurrent.CountDownLatch
 
 
 class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener, OnImportFileListener {
@@ -52,6 +53,9 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     @Inject
     lateinit var keyManager: KeyManager
+
+    @Inject
+    lateinit var appExecutors: AppExecutors
 
     private lateinit var dataViewModel: DataViewModel
 
@@ -193,7 +197,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
             .setPositiveButton(R.string.merge) { _, _ ->
                 merge(importedCategoryCollection)
             }
-            .setNegativeButton(R.string.replace) { _, _ ->
+            .setNegativeButton(R.string.replace_all) { _, _ ->
                 dataViewModel.saveDomainCollection(importedCategoryCollection)
             }
             .setNeutralButton(R.string.cancel) { dialog, _ ->
@@ -205,7 +209,44 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     private fun merge(importedCategoryCollection: CategoryCollection) {
-
+        GlobalScope.launch {
+            for (category in categoryCollection!!.categories) {
+                if (importedCategoryCollection.getCategoryByName(category.name) == null) {
+                    importedCategoryCollection.categories.add(category)
+                } else {
+                    val importedCategory = importedCategoryCollection.getCategoryByName(category.name)!!
+                    for (entry in category.credentialsList) {
+                        val importedEntry: Credentials? = importedCategoryCollection.getCredentialsByCategoryAndDescription(
+                            category.name,
+                            entry.description
+                        )
+                        if (importedEntry == null) {
+                            importedCategory.credentialsList.add(entry)
+                        } else {
+                            val countDownLatch = CountDownLatch(1)
+                            appExecutors.mainThread().execute {
+                                AlertDialog.Builder(context!!)
+                                    .setTitle(entry.description)
+                                    .setMessage(R.string.merge_conflict)
+                                    .setPositiveButton(R.string.keep) { _, _ ->
+                                        importedCategory.credentialsList.remove(importedEntry)
+                                        importedCategory.credentialsList.add(entry)
+                                        countDownLatch.countDown()
+                                    }
+                                    .setNegativeButton(R.string.replace) { _, _ ->
+                                        countDownLatch.countDown()
+                                    }
+                                    .setCancelable(false)
+                                    .create()
+                                    .show()
+                            }
+                            countDownLatch.await()
+                        }
+                    }
+                }
+            }
+            dataViewModel.saveDomainCollection(importedCategoryCollection)
+        }
     }
 
     private fun exportFile() {
