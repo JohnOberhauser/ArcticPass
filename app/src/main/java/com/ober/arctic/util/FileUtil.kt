@@ -1,8 +1,12 @@
 package com.ober.arctic.util
 
+import android.content.Context
+import android.net.Uri
 import android.os.Environment
+import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
+import java.io.InputStreamReader
 
 object FileUtil {
 
@@ -22,5 +26,19 @@ object FileUtil {
         FileOutputStream(file).use {
             it.write(content.toByteArray())
         }
+    }
+
+    fun readTextFromUri(uri: Uri, context: Context): String {
+        val stringBuilder = StringBuilder()
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                var line: String? = reader.readLine()
+                while (line != null) {
+                    stringBuilder.append(line)
+                    line = reader.readLine()
+                }
+            }
+        }
+        return stringBuilder.toString()
     }
 }

@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.cell_category.view.*
 class CategoryRecyclerAdapter(private val categoryClickedListener: CategoryClickedListener) :
     RecyclerView.Adapter<CategoryRecyclerAdapter.CategoryViewHolder>() {
 
-    var categories: List<Category> = arrayListOf()
+    var categories: ArrayList<Category> = arrayListOf()
         set(value) {
             field = value
             notifyDataSetChanged()

@@ -3,6 +3,7 @@ package com.ober.arctic
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation.findNavController
 import com.ober.arctic.ui.entries.EntriesFragment
 import com.ober.arctic.ui.categories.CategoriesFragment
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private var drawerIcon: DrawerArrowDrawable? = null
     private var onBackPressedListener: OnBackPressedListener? = null
+    var onImportFileListener: OnImportFileListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +69,7 @@ class MainActivity : AppCompatActivity() {
                         toolbar?.navigationIcon = drawerIcon
                         enableDrawer()
                         toolbar_title.text = getString(R.string.categories)
+                        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                     }
                     EntriesFragment::class.java.simpleName -> {
                         enableBackButton()
@@ -73,9 +77,13 @@ class MainActivity : AppCompatActivity() {
                         disableSaveButton()
                         onBackPressedListener = null
                         toolbar_title.text = getString(R.string.entries)
+                        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     }
                     CredentialsFragment::class.java.simpleName -> toolbar_title.text = getString(R.string.credentials)
-                    UnlockFragment::class.java.simpleName -> toolbar_title.text = ""
+                    UnlockFragment::class.java.simpleName -> {
+                        toolbar_title.text = ""
+                        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                    }
                 }
                 hideKeyboard()
             }
@@ -154,15 +162,29 @@ class MainActivity : AppCompatActivity() {
         return nav_view.getHeaderView(0)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.also { uri ->
+                onImportFileListener?.onFileSelected(uri)
+            }
+        }
+
+    }
+
     override fun onSupportNavigateUp() = findNavController(this, R.id.nav_host_fragment).navigateUp()
 
     companion object {
         const val THEME = "theme"
         const val DARK = "dark"
         const val LIGHT = "light"
+        const val READ_REQUEST_CODE = 32
     }
 }
 
 interface OnBackPressedListener {
     fun onBackPressed(): Boolean
+}
+
+interface OnImportFileListener {
+    fun onFileSelected(uri: Uri)
 }

@@ -33,4 +33,9 @@
     <string name="export_file">Export File</string>
     <string name="failed_to_write_file">Failed to write file</string>
     <string name="file_name">arcticPass</string>
+    <string name="bad_file_type">Import Failed: Bad File</string>
+    <string name="file_encrypted_with_different_password">Import Failed: File encrypted with different password</string>
+    <string name="merge_or_replace">Would you like to <b>merge</b> the entries from the imported file with the currently stored entries <b>OR</b> would you like to <b>replace all</b> currently stored entries with the imported entries?</string>
+    <string name="replace">Replace All</string>
+    <string name="merge">Merge</string>
 </resources>

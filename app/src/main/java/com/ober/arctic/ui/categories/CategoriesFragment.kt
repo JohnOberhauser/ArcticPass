@@ -32,13 +32,17 @@ import kotlinx.android.synthetic.main.nav_header.view.*
 import kotlinx.android.synthetic.main.fragment_landing.*
 import java.util.*
 import javax.inject.Inject
-import android.Manifest.permission
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.core.app.ActivityCompat
+import com.ober.arctic.MainActivity.Companion.READ_REQUEST_CODE
+import com.ober.arctic.OnImportFileListener
+import com.ober.arctic.util.TypeUtil
+import java.security.GeneralSecurityException
 
 
-class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener {
+class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener, OnImportFileListener {
 
     @Inject
     lateinit var encryption: Encryption
@@ -141,10 +145,71 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         mainActivity?.getDrawerView()?.export_file_layout?.setOnClickListener {
             exportFile()
         }
+        mainActivity?.onImportFileListener = this
+        mainActivity?.getDrawerView()?.import_file_layout?.setOnClickListener {
+            importFile()
+        }
+    }
+
+    private fun importFile() {
+        if (hasStoragePermissions(IMPORT_STORAGE_REQUEST_CODE)) {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "*/*" // mime type
+            }
+
+            activity?.startActivityForResult(intent, READ_REQUEST_CODE)
+        }
+
+    }
+
+    override fun onFileSelected(uri: Uri) {
+        val jsonString: String = FileUtil.readTextFromUri(uri, context!!)
+        try {
+            val encryptedDataHolder: EncryptedDataHolder = gson.fromJson(jsonString, TypeUtil.genericType<EncryptedDataHolder>())
+            val importedCategoryCollection: CategoryCollection = gson.fromJson(
+                encryption.decryptString(
+                    encryptedDataHolder.encryptedJson,
+                    encryptedDataHolder.salt,
+                    keyManager.getCombinedKey()!!
+                ), TypeUtil.genericType<CategoryCollection>()
+            )
+            showMergeOrReplaceDialog(importedCategoryCollection)
+        } catch (e: Exception) {
+            when (e) {
+                is GeneralSecurityException -> {
+                    Toast.makeText(context, getString(R.string.file_encrypted_with_different_password), Toast.LENGTH_LONG).show()
+                }
+                else -> {
+                    Toast.makeText(context, getString(R.string.bad_file_type), Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun showMergeOrReplaceDialog(importedCategoryCollection: CategoryCollection) {
+        AlertDialog.Builder(context!!)
+            .setMessage(R.string.merge_or_replace)
+            .setPositiveButton(R.string.merge) { _, _ ->
+                merge(importedCategoryCollection)
+            }
+            .setNegativeButton(R.string.replace) { _, _ ->
+                dataViewModel.saveDomainCollection(importedCategoryCollection)
+            }
+            .setNeutralButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .create()
+            .show()
+    }
+
+    private fun merge(importedCategoryCollection: CategoryCollection) {
+
     }
 
     private fun exportFile() {
-        if (hasStoragePermissions()) {
+        if (hasStoragePermissions(EXPORT_STORAGE_REQUEST_CODE)) {
             if (FileUtil.isExternalStorageWritable()) {
                 val encryptedDataHolder: EncryptedDataHolder =
                     encryption.encryptString(gson.toJson(categoryCollection), keyManager.getCombinedKey()!!)
@@ -156,12 +221,12 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         }
     }
 
-    private fun hasStoragePermissions(): Boolean {
+    private fun hasStoragePermissions(requestCode: Int): Boolean {
         val permission = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (permission != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE),
-                STORAGE_REQUEST_CODE
+                requestCode
             )
             return false
         }
@@ -169,12 +234,17 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode == STORAGE_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            exportFile()
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == EXPORT_STORAGE_REQUEST_CODE) {
+                exportFile()
+            } else if (requestCode == IMPORT_STORAGE_REQUEST_CODE) {
+                importFile()
+            }
         }
     }
 
     companion object {
-        const val STORAGE_REQUEST_CODE = 345
+        const val EXPORT_STORAGE_REQUEST_CODE = 345
+        const val IMPORT_STORAGE_REQUEST_CODE = 346
     }
 }
