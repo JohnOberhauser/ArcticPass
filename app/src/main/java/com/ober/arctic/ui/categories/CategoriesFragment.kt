@@ -222,7 +222,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                         )
                         if (importedEntry == null) {
                             importedCategory.credentialsList.add(entry)
-                        } else {
+                        } else if (importedEntry != entry) {
                             val countDownLatch = CountDownLatch(1)
                             appExecutors.mainThread().execute {
                                 AlertDialog.Builder(context!!)

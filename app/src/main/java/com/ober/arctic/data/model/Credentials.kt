@@ -6,6 +6,22 @@ class Credentials {
     var username: String? = null
     var password: String? = null
     var notes: String? = null
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Credentials
+            && description == other.description
+            && website == other.website
+            && username == other.username
+            && notes == other.notes
+        ) {
+            return true
+        }
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return super.hashCode()
+    }
 }
 
 class CredentialsComparator : Comparator<Credentials> {
