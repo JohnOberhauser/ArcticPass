@@ -16,8 +16,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
 import com.google.gson.Gson
-import com.ober.arctic.App
-import com.ober.arctic.BaseFragment
 import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.BundleConstants
 import com.ober.arctic.util.FileUtil
@@ -32,8 +30,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.core.app.ActivityCompat
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.drive.Drive
+import com.ober.arctic.*
 import com.ober.arctic.MainActivity.Companion.READ_REQUEST_CODE
-import com.ober.arctic.OnImportFileListener
 import com.ober.arctic.data.model.*
 import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.TypeUtil
@@ -43,7 +44,7 @@ import java.security.GeneralSecurityException
 import java.util.concurrent.CountDownLatch
 
 
-class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener, OnImportFileListener {
+class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener, OnImportFileListener, OnSyncWithGoogleListener {
 
     @Inject
     lateinit var encryption: Encryption
@@ -74,6 +75,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         setupRecyclerView()
         setupObserver()
         setupDrawerClickListeners()
+        setupGoogleSync()
     }
 
     private fun setupRecyclerView() {
@@ -152,6 +154,10 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         mainActivity?.onImportFileListener = this
         mainActivity?.getDrawerView()?.import_file_layout?.setOnClickListener {
             importFile()
+        }
+        mainActivity?.onSyncWithGoogleListener = this
+        mainActivity?.getDrawerView()?.google_sign_in_layout?.setOnClickListener {
+            signInToGoogle()
         }
     }
 
@@ -282,6 +288,25 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                 importFile()
             }
         }
+    }
+
+    private fun setupGoogleSync() {
+        val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(context)
+        if (googleSignInAccount != null) {
+            mainActivity?.getDrawerView()?.google_sign_in_layout?.visibility = View.GONE
+        }
+    }
+
+    private fun signInToGoogle() {
+        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestScopes(Drive.SCOPE_APPFOLDER)
+            .build()
+        val signInClient = GoogleSignIn.getClient(context!!, signInOptions)
+        startActivityForResult(signInClient.signInIntent, MainActivity.GOOGLE_SIGN_IN_REQUEST_CODE)
+    }
+
+    override fun onSyncComplete() {
+        setupGoogleSync()
     }
 
     companion object {

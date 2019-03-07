@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private var drawerIcon: DrawerArrowDrawable? = null
     private var onBackPressedListener: OnBackPressedListener? = null
     var onImportFileListener: OnImportFileListener? = null
+    var onSyncWithGoogleListener: OnSyncWithGoogleListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -167,6 +168,8 @@ class MainActivity : AppCompatActivity() {
             data?.data?.also { uri ->
                 onImportFileListener?.onFileSelected(uri)
             }
+        } else if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            onSyncWithGoogleListener?.onSyncComplete()
         }
 
     }
@@ -178,6 +181,7 @@ class MainActivity : AppCompatActivity() {
         const val DARK = "dark"
         const val LIGHT = "light"
         const val READ_REQUEST_CODE = 32
+        const val GOOGLE_SIGN_IN_REQUEST_CODE = 33
     }
 }
 
@@ -187,4 +191,8 @@ interface OnBackPressedListener {
 
 interface OnImportFileListener {
     fun onFileSelected(uri: Uri)
+}
+
+interface OnSyncWithGoogleListener {
+    fun onSyncComplete()
 }
