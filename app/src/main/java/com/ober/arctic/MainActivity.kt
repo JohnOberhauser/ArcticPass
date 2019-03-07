@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavControllerListener() {
-        findNavController(this, R.id.nav_host_fragment).addOnNavigatedListener { _, destination ->
+        findNavController(this, R.id.nav_host_fragment).addOnDestinationChangedListener { _, destination, _ ->
             appExecutors.mainThread().execute {
                 when (destination.label) {
                     CategoriesFragment::class.java.simpleName -> {
