@@ -26,7 +26,7 @@ class DataRepository @Inject constructor(
 
     fun saveCategoryCollection(categoryCollection: CategoryCollection) {
         val encryptedDataHolder: EncryptedDataHolder =
-            encryption.encryptString(gson.toJson(categoryCollection), keyManager.getCombinedKey()!!)
+            encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncyptionKey()!!)
         appExecutors.diskIO().execute {
             mainDatabase.encryptedDataHolderDao().insert(encryptedDataHolder)
             appExecutors.mainThread().execute {
@@ -44,10 +44,10 @@ class DataRepository @Inject constructor(
                     encryptedDataHolder != null -> {
                         appExecutors.miscellaneousThread().execute {
                             val categoryCollection: CategoryCollection = gson.fromJson(
-                                encryption.decryptString(
+                                encryption.decryptStringData(
                                     encryptedDataHolder.encryptedJson,
                                     encryptedDataHolder.salt,
-                                    keyManager.getCombinedKey()!!
+                                    keyManager.getEncyptionKey()!!
                                 ),
                                 genericType<CategoryCollection>()
                             )

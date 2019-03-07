@@ -2,9 +2,9 @@
     <string name="app_name">Arctic Pass</string>
     <string name="generate">Generate</string>
     <string name="done">Done</string>
-    <string name="partial_recovery_key">Partial Recovery Key</string>
-    <string name="master_key">Master Key</string>
-    <string name="instructions">The partial recovery key is required when recovering imported password files.  The master key is used when opening the app.  You should write both down in a secure place.</string>
+    <string name="recovery_key">Recovery Key</string>
+    <string name="unlock_key">Unlock Key</string>
+    <string name="instructions">The recovery key is required when recovering imported password files.  The unlock key is used when opening the app.  You should write both down in a secure place.</string>
     <string name="unlock">Unlock</string>
     <string name="business">Business</string>
     <string name="personal">Personal</string>

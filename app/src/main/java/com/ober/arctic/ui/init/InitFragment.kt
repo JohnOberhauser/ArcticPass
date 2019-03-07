@@ -41,36 +41,36 @@ class InitFragment : BaseFragment() {
 
     @OnClick(R.id.done_button)
     fun onDoneClicked() {
-        keyManager.savePartialRecoveryKey(recovery_field.text.toString().trim())
-        keyManager.setMasterKey(master_password_field.text.toString().trim(), true)
+        keyManager.setUnlockKey(unlock_password_field.text.toString().trim(), true)
+        keyManager.saveEncryptionKey(recovery_field.text.toString().trim())
         navController?.navigate(R.id.action_initFragment_to_categoriesFragment)
     }
 
     private fun setupEditTextListeners() {
         var recoveryKeyValid = false
-        var masterKeyValid = false
+        var unlockKeyValid = false
 
         recovery_field.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 recoveryKeyValid = !s.toString().trim().isEmpty()
-                done_button.isEnabled = recoveryKeyValid && masterKeyValid
+                done_button.isEnabled = recoveryKeyValid && unlockKeyValid
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        master_password_field.addTextChangedListener(object : TextWatcher {
+        unlock_password_field.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                masterKeyValid = !s.toString().trim().isEmpty()
-                done_button.isEnabled = recoveryKeyValid && masterKeyValid
+                unlockKeyValid = !s.toString().trim().isEmpty()
+                done_button.isEnabled = recoveryKeyValid && unlockKeyValid
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        master_password_field.setOnEditorActionListener { _, actionId, _ ->
+        unlock_password_field.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE && done_button.isEnabled) {
                 onDoneClicked()
             }

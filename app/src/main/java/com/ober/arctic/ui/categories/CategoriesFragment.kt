@@ -172,10 +172,10 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         try {
             val encryptedDataHolder: EncryptedDataHolder = gson.fromJson(jsonString, TypeUtil.genericType<EncryptedDataHolder>())
             val importedCategoryCollection: CategoryCollection = gson.fromJson(
-                encryption.decryptString(
+                encryption.decryptStringData(
                     encryptedDataHolder.encryptedJson,
                     encryptedDataHolder.salt,
-                    keyManager.getCombinedKey()!!
+                    keyManager.getEncyptionKey()!!
                 ), TypeUtil.genericType<CategoryCollection>()
             )
             showMergeOrReplaceDialog(importedCategoryCollection)
@@ -253,7 +253,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         if (hasStoragePermissions(EXPORT_STORAGE_REQUEST_CODE)) {
             if (FileUtil.isExternalStorageWritable()) {
                 val encryptedDataHolder: EncryptedDataHolder =
-                    encryption.encryptString(gson.toJson(categoryCollection), keyManager.getCombinedKey()!!)
+                    encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncyptionKey()!!)
                 val fileContent = gson.toJson(encryptedDataHolder)
                 FileUtil.writeStringToFile(getString(R.string.file_name) + ".json", fileContent)
             } else {

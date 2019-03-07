@@ -28,7 +28,7 @@ class UnlockFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
-        if (keyManager.isMasterKeyCorrect()) {
+        if (keyManager.isUnlockKeyCorrect()) {
             navController?.navigate(R.id.action_unlockFragment_to_categoriesFragment)
         }
         return setAndBindContentView(inflater, container!!, R.layout.fragment_unlock)
@@ -61,9 +61,9 @@ class UnlockFragment : BaseFragment() {
     @OnClick(R.id.unlock_button)
     fun onUnlockClicked() {
         unlock_button.isEnabled = false
-        keyManager.setMasterKey(password_field.text.toString().trim())
+        keyManager.setUnlockKey(password_field.text.toString().trim())
         appExecutors.miscellaneousThread().execute {
-            if (keyManager.isMasterKeyCorrect()) {
+            if (keyManager.isUnlockKeyCorrect()) {
                 appExecutors.mainThread().execute {
                     navController?.navigate(R.id.action_unlockFragment_to_categoriesFragment)
                 }

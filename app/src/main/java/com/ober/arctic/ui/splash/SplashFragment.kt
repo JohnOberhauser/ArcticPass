@@ -25,7 +25,7 @@ class SplashFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         GlobalScope.launch {
-            if (keyManager.getPartialRecoveryKey() != null) {
+            if (keyManager.doesRecoveryKeyExist()) {
                 navController?.navigate(R.id.action_splashFragment_to_unlockFragment)
             } else {
                 navController?.navigate(R.id.action_splashFragment_to_initFragment)

@@ -32,7 +32,7 @@
                     android:lines="1"
                     android:inputType="textNoSuggestions"
                     android:imeOptions="actionNext"
-                    android:hint="@string/partial_recovery_key"/>
+                    android:hint="@string/recovery_key"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -50,14 +50,14 @@
                 android:layout_marginTop="30dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/master_password_field"
+                    android:id="@+id/unlock_password_field"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="13sp"
                     android:lines="1"
                     android:inputType="textNoSuggestions"
                     android:imeOptions="actionDone"
-                    android:hint="@string/master_key"/>
+                    android:hint="@string/unlock_key"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

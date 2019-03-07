@@ -25,7 +25,7 @@
                     android:lines="1"
                     android:inputType="textNoSuggestions"
                     android:imeOptions="actionDone"
-                    android:hint="@string/master_key"/>
+                    android:hint="@string/unlock_key"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
