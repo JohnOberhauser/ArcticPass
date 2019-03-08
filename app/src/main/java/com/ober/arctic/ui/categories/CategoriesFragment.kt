@@ -32,6 +32,7 @@ import android.net.Uri
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.Scope
 import com.google.android.gms.drive.Drive
 import com.ober.arctic.*
 import com.ober.arctic.MainActivity.Companion.READ_REQUEST_CODE
@@ -158,6 +159,9 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         mainActivity?.onSyncWithGoogleListener = this
         mainActivity?.getDrawerView()?.google_sign_in_layout?.setOnClickListener {
             signInToGoogle()
+        }
+        mainActivity?.getDrawerView()?.google_restore_layout?.setOnClickListener {
+            restoreFilesFromGoogle()
         }
     }
 
@@ -291,9 +295,10 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     private fun setupGoogleSync() {
-        val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(context)
+        val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(App.app)
         if (googleSignInAccount != null) {
             mainActivity?.getDrawerView()?.google_sign_in_layout?.visibility = View.GONE
+            mainActivity?.getDrawerView()?.google_restore_layout?.visibility = View.VISIBLE
         }
     }
 
@@ -301,12 +306,17 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestScopes(Drive.SCOPE_APPFOLDER)
             .build()
-        val signInClient = GoogleSignIn.getClient(context!!, signInOptions)
+        val signInClient = GoogleSignIn.getClient(App.app!!, signInOptions)
         startActivityForResult(signInClient.signInIntent, MainActivity.GOOGLE_SIGN_IN_REQUEST_CODE)
     }
 
     override fun onSyncComplete() {
         setupGoogleSync()
+        dataViewModel.saveDomainCollection(categoryCollection)
+    }
+
+    private fun restoreFilesFromGoogle() {
+
     }
 
     companion object {

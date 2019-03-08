@@ -168,8 +168,9 @@ class MainActivity : AppCompatActivity() {
             data?.data?.also { uri ->
                 onImportFileListener?.onFileSelected(uri)
             }
-        } else if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        } else if (resultCode == Activity.RESULT_OK) {
             onSyncWithGoogleListener?.onSyncComplete()
+            println(data?.extras?.get("Error"))
         }
 
     }
