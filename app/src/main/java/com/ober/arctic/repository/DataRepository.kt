@@ -2,6 +2,7 @@ package com.ober.arctic.repository
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.ober.arctic.App
@@ -15,6 +16,17 @@ import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
 import javax.inject.Inject
+import java.util.Collections.singletonList
+import com.google.android.gms.tasks.Tasks
+import com.google.android.gms.tasks.Task
+import com.google.api.client.http.ByteArrayContent
+import com.google.api.services.drive.model.File
+import com.ober.arctic.util.DriveServiceHolder
+import java.io.ByteArrayInputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class DataRepository @Inject constructor(
     private var mainDatabase: MainDatabase,
@@ -22,7 +34,8 @@ class DataRepository @Inject constructor(
     private var liveDataHolder: LiveDataHolder,
     private var gson: Gson,
     private var encryption: Encryption,
-    private var appExecutors: AppExecutors
+    private var appExecutors: AppExecutors,
+    private var driveServiceHolder: DriveServiceHolder
 ) {
 
     @SuppressLint("SimpleDateFormat")
@@ -35,6 +48,8 @@ class DataRepository @Inject constructor(
                 liveDataHolder.setCategoryCollection(categoryCollection)
             }
         }
+
+        createFile(gson.toJson(encryptedDataHolder))
 //        val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(App.app)
 //        if (googleSignInAccount != null) {
 //            val fileContent = gson.toJson(encryptedDataHolder)
@@ -110,6 +125,24 @@ class DataRepository @Inject constructor(
                 }
             }
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun createFile(content: String) {
+        driveServiceHolder.getDriveService()?.let { drive ->
+            appExecutors.networkIO().execute {
+                val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+                val file = File()
+                    .setParents(singletonList("root"))
+                    .setMimeType("text/plain")
+                    .setName("arctic_pass/backup_" + simpleDateFormat.format(Date()))
+
+                val inputStream = ByteArrayContent.fromString("text/plain", content)
+
+                drive.files().create(file, inputStream).execute()
+            }
+        }
+
     }
 
     fun getCategoryCollectionLiveData(): LiveData<CategoryCollection> {

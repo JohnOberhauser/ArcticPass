@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
 import com.google.gson.Gson
 import com.ober.arctic.ui.DataViewModel
-import com.ober.arctic.util.BundleConstants
-import com.ober.arctic.util.FileUtil
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
@@ -31,14 +29,18 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
+import com.google.api.client.extensions.android.http.AndroidHttp
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.ober.arctic.*
 import com.ober.arctic.MainActivity.Companion.READ_REQUEST_CODE
 import com.ober.arctic.data.model.*
-import com.ober.arctic.util.AppExecutors
-import com.ober.arctic.util.TypeUtil
+import com.ober.arctic.util.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.security.GeneralSecurityException
@@ -58,6 +60,9 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     @Inject
     lateinit var appExecutors: AppExecutors
+
+    @Inject
+    lateinit var driveServiceHolder: DriveServiceHolder
 
     private lateinit var dataViewModel: DataViewModel
 
@@ -299,7 +304,18 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         if (googleSignInAccount != null) {
             mainActivity?.getDrawerView()?.google_sign_in_layout?.visibility = View.GONE
             mainActivity?.getDrawerView()?.google_restore_layout?.visibility = View.VISIBLE
+            setupDriveService(googleSignInAccount)
         }
+    }
+
+    private fun setupDriveService(googleSignInAccount: GoogleSignInAccount) {
+        val credential: GoogleAccountCredential = GoogleAccountCredential.usingOAuth2(context, Collections.singleton(DriveScopes.DRIVE_FILE))
+        credential.selectedAccount = googleSignInAccount.account
+        val googleDriveService: Drive = Drive
+            .Builder(AndroidHttp.newCompatibleTransport(), GsonFactory(), credential)
+            .setApplicationName(getString(R.string.app_name))
+            .build()
+        driveServiceHolder.setDriveService(googleDriveService)
     }
 
     private fun signInToGoogle() {

@@ -53,6 +53,17 @@ android {
     lintOptions {
         disable 'GoogleAppIndexingWarning'
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
 }
 
 dependencies {
@@ -104,7 +115,7 @@ dependencies {
 
     // Google drive/login
     implementation "com.google.android.gms:play-services-auth:16.0.1"
-//    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
+    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
     implementation('com.google.api-client:google-api-client-android:1.26.0') {
         exclude group: 'org.apache.httpcomponents'
     }

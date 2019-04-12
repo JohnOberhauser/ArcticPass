@@ -16,6 +16,8 @@ import com.ober.arctic.ui.splash.SplashFragment
 import com.ober.arctic.ui.unlock.UnlockFragment
 import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.AppExecutorsImpl
+import com.ober.arctic.util.DriveServiceHolder
+import com.ober.arctic.util.DriveServiceHolderImpl
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.EncryptionImpl
 import com.ober.arctic.util.security.KeyManager
@@ -77,6 +79,12 @@ class AppModule(private val app: App) {
     @Singleton
     internal fun provideAppExecutors(): AppExecutors {
         return AppExecutorsImpl()
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideDriveServiceHolder(): DriveServiceHolder {
+        return DriveServiceHolderImpl()
     }
 
     @Singleton
