@@ -43,4 +43,6 @@
     <string name="keep">Keep</string>
     <string name="sync_with_google">Sync with Google</string>
     <string name="restore_with_google">Restore with Google</string>
+    <string name="folder_name">ArcticPass</string>
+    <string name="backup">backup_</string>
 </resources>

@@ -333,7 +333,10 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     private fun restoreFilesFromGoogle() {
+        dataViewModel.backupFiles.observe(this, Observer {
 
+        })
+        dataViewModel.updateBackupFiles()
     }
 
     companion object {

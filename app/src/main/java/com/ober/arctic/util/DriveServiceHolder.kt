@@ -8,7 +8,7 @@ interface DriveServiceHolder {
 }
 
 class DriveServiceHolderImpl : DriveServiceHolder {
-    var drive: Drive? = null
+    private var drive: Drive? = null
 
     override fun setDriveService(drive: Drive) {
         this.drive = drive

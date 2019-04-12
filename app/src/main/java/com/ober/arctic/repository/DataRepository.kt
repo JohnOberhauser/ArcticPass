@@ -2,7 +2,7 @@ package com.ober.arctic.repository
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
-import com.google.android.gms.auth.api.signin.GoogleSignIn
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.ober.arctic.App
@@ -17,13 +17,10 @@ import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
 import javax.inject.Inject
 import java.util.Collections.singletonList
-import com.google.android.gms.tasks.Tasks
-import com.google.android.gms.tasks.Task
 import com.google.api.client.http.ByteArrayContent
+import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
 import com.ober.arctic.util.DriveServiceHolder
-import java.io.ByteArrayInputStream
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -50,45 +47,6 @@ class DataRepository @Inject constructor(
         }
 
         createFile(gson.toJson(encryptedDataHolder))
-//        val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(App.app)
-//        if (googleSignInAccount != null) {
-//            val fileContent = gson.toJson(encryptedDataHolder)
-//            Drive.getDriveResourceClient(App.app!!, googleSignInAccount)?.let { driveResourceClient ->
-//                val appFolderTask = driveResourceClient.appFolder
-//                val createContentsTask = driveResourceClient.createContents()
-//                val task = Tasks.whenAll(appFolderTask, createContentsTask)
-//                    .continueWithTask {
-//                        val parent = appFolderTask.result
-//                        val contents = createContentsTask.result
-//
-//                        val outputStream = contents!!.outputStream
-//                        val inputStream = ByteArrayInputStream(fileContent.toByteArray())
-//
-//                        inputStream.use { input ->
-//                            outputStream.use { output ->
-//                                input.copyTo(output)
-//                            }
-//                        }
-//
-//                        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-//                        val changeSet = MetadataChangeSet.Builder()
-//                            .setTitle("backup_" + simpleDateFormat.format(Date()))
-//                            .setMimeType("application/octet-stream")
-//                            .setStarred(true)
-//                            .build()
-//
-//                        driveResourceClient.createFile(parent!!, changeSet, contents)
-//                    }
-//
-//                task.addOnSuccessListener {
-//                    println("success")
-//                }
-//                task.addOnFailureListener {
-//                    println("failure")
-//                    println(it)
-//                }
-//            }
-//        }
     }
 
     fun loadCategoryCollection(createDefaultsIfNecessary: Boolean) {
@@ -131,18 +89,60 @@ class DataRepository @Inject constructor(
     fun createFile(content: String) {
         driveServiceHolder.getDriveService()?.let { drive ->
             appExecutors.networkIO().execute {
+                val folderId = getFolderId(drive)
+
                 val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-                val file = File()
-                    .setParents(singletonList("root"))
+                val fileMetaData = File()
+                    .setParents(singletonList(folderId))
                     .setMimeType("text/plain")
-                    .setName("arctic_pass/backup_" + simpleDateFormat.format(Date()))
+                    .setName(App.app!!.getString(R.string.backup) + simpleDateFormat.format(Date()))
 
                 val inputStream = ByteArrayContent.fromString("text/plain", content)
 
-                drive.files().create(file, inputStream).execute()
+                drive.files().create(fileMetaData, inputStream).execute()
             }
         }
 
+    }
+
+    private fun getFolderId(drive: Drive): String? {
+        val list = drive.files().list().execute()
+        for (file in list.files) {
+            if (file.name == App.app!!.getString(R.string.folder_name)) {
+                return file.id
+            }
+        }
+        return createFolder(drive)
+    }
+
+    private fun createFolder(drive: Drive): String? {
+        val folderMetaData = File()
+            .setName(App.app!!.getString(R.string.folder_name))
+            .setMimeType("application/vnd.google-apps.folder")
+        val folder = drive.files().create(folderMetaData)
+            .setFields("id")
+            .execute()
+
+        return folder.id
+    }
+
+    fun getBackupFiles(): MutableLiveData<List<File>> {
+        val liveData = MutableLiveData<List<File>>()
+        driveServiceHolder.getDriveService()?.let { drive ->
+            appExecutors.networkIO().execute {
+                val files = arrayListOf<File>()
+                val list = drive.files().list().execute()
+                for (file in list.files) {
+                    if (file.name.contains(App.app!!.getString(R.string.backup))) {
+                        files.add(file)
+                    }
+                }
+                appExecutors.mainThread().execute {
+                    liveData.value = files
+                }
+            }
+        }
+        return liveData
     }
 
     fun getCategoryCollectionLiveData(): LiveData<CategoryCollection> {
