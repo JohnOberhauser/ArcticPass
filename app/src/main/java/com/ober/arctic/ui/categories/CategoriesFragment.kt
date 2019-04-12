@@ -33,7 +33,7 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
-import com.google.android.gms.drive.Drive
+import com.google.api.services.drive.DriveScopes
 import com.ober.arctic.*
 import com.ober.arctic.MainActivity.Companion.READ_REQUEST_CODE
 import com.ober.arctic.data.model.*
@@ -304,7 +304,8 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     private fun signInToGoogle() {
         val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestScopes(Drive.SCOPE_APPFOLDER)
+            .requestEmail()
+            .requestScopes(Scope(DriveScopes.DRIVE_FILE))
             .build()
         val signInClient = GoogleSignIn.getClient(App.app!!, signInOptions)
         startActivityForResult(signInClient.signInIntent, MainActivity.GOOGLE_SIGN_IN_REQUEST_CODE)

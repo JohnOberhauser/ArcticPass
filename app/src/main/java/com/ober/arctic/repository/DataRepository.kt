@@ -1,12 +1,7 @@
 package com.ober.arctic.repository
 
 import android.annotation.SuppressLint
-import android.view.View
 import androidx.lifecycle.LiveData
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.drive.Drive
-import com.google.android.gms.drive.MetadataChangeSet
-import com.google.android.gms.tasks.Tasks
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.ober.arctic.App
@@ -19,10 +14,6 @@ import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
-import kotlinx.android.synthetic.main.nav_header.view.*
-import java.io.ByteArrayInputStream
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class DataRepository @Inject constructor(
@@ -44,45 +35,45 @@ class DataRepository @Inject constructor(
                 liveDataHolder.setCategoryCollection(categoryCollection)
             }
         }
-        val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(App.app)
-        if (googleSignInAccount != null) {
-            val fileContent = gson.toJson(encryptedDataHolder)
-            Drive.getDriveResourceClient(App.app!!, googleSignInAccount)?.let { driveResourceClient ->
-                val appFolderTask = driveResourceClient.appFolder
-                val createContentsTask = driveResourceClient.createContents()
-                val task = Tasks.whenAll(appFolderTask, createContentsTask)
-                    .continueWithTask {
-                        val parent = appFolderTask.result
-                        val contents = createContentsTask.result
-
-                        val outputStream = contents!!.outputStream
-                        val inputStream = ByteArrayInputStream(fileContent.toByteArray())
-
-                        inputStream.use { input ->
-                            outputStream.use { output ->
-                                input.copyTo(output)
-                            }
-                        }
-
-                        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
-                        val changeSet = MetadataChangeSet.Builder()
-                            .setTitle("backup_" + simpleDateFormat.format(Date()))
-                            .setMimeType("application/octet-stream")
-                            .setStarred(true)
-                            .build()
-
-                        driveResourceClient.createFile(parent!!, changeSet, contents)
-                    }
-
-                task.addOnSuccessListener {
-                    println("success")
-                }
-                task.addOnFailureListener {
-                    println("failure")
-                    println(it)
-                }
-            }
-        }
+//        val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(App.app)
+//        if (googleSignInAccount != null) {
+//            val fileContent = gson.toJson(encryptedDataHolder)
+//            Drive.getDriveResourceClient(App.app!!, googleSignInAccount)?.let { driveResourceClient ->
+//                val appFolderTask = driveResourceClient.appFolder
+//                val createContentsTask = driveResourceClient.createContents()
+//                val task = Tasks.whenAll(appFolderTask, createContentsTask)
+//                    .continueWithTask {
+//                        val parent = appFolderTask.result
+//                        val contents = createContentsTask.result
+//
+//                        val outputStream = contents!!.outputStream
+//                        val inputStream = ByteArrayInputStream(fileContent.toByteArray())
+//
+//                        inputStream.use { input ->
+//                            outputStream.use { output ->
+//                                input.copyTo(output)
+//                            }
+//                        }
+//
+//                        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
+//                        val changeSet = MetadataChangeSet.Builder()
+//                            .setTitle("backup_" + simpleDateFormat.format(Date()))
+//                            .setMimeType("application/octet-stream")
+//                            .setStarred(true)
+//                            .build()
+//
+//                        driveResourceClient.createFile(parent!!, changeSet, contents)
+//                    }
+//
+//                task.addOnSuccessListener {
+//                    println("success")
+//                }
+//                task.addOnFailureListener {
+//                    println("failure")
+//                    println(it)
+//                }
+//            }
+//        }
     }
 
     fun loadCategoryCollection(createDefaultsIfNecessary: Boolean) {
