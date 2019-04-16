@@ -41,6 +41,8 @@ import com.ober.arctic.*
 import com.ober.arctic.MainActivity.Companion.READ_REQUEST_CODE
 import com.ober.arctic.data.model.*
 import com.ober.arctic.util.*
+import com.ober.vmrlink.Error
+import com.ober.vmrlink.Success
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.security.GeneralSecurityException
@@ -333,10 +335,14 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     private fun restoreFilesFromGoogle() {
-        dataViewModel.backupFiles.observe(this, Observer {
-
+        dataViewModel.backupFilesLink.value.observe(this, Observer {
+            if (it is Success) {
+                println(it.data?.size)
+            } else if (it is Error) {
+                println("error")
+            }
         })
-        dataViewModel.updateBackupFiles()
+        dataViewModel.backupFilesLink.update()
     }
 
     companion object {

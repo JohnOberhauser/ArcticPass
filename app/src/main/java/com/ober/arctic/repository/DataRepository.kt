@@ -21,6 +21,9 @@ import com.google.api.client.http.ByteArrayContent
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
 import com.ober.arctic.util.DriveServiceHolder
+import com.ober.vmrlink.Resource
+import com.ober.vmrlink.Source
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -126,20 +129,27 @@ class DataRepository @Inject constructor(
         return folder.id
     }
 
-    fun getBackupFiles(): MutableLiveData<List<File>> {
-        val liveData = MutableLiveData<List<File>>()
+    fun getBackupFiles(): MutableLiveData<Resource<List<File>>> {
+        val liveData = MutableLiveData<Resource<List<File>>>()
         driveServiceHolder.getDriveService()?.let { drive ->
             appExecutors.networkIO().execute {
-                val files = arrayListOf<File>()
-                val list = drive.files().list().execute()
-                for (file in list.files) {
-                    if (file.name.contains(App.app!!.getString(R.string.backup))) {
-                        files.add(file)
+                try {
+                    val files = arrayListOf<File>()
+                    val list = drive.files().list().execute()
+                    for (file in list.files) {
+                        if (file.name.contains(App.app!!.getString(R.string.backup))) {
+                            files.add(file)
+                        }
+                    }
+                    appExecutors.mainThread().execute {
+                        liveData.value = Resource.success(files, Source.NETWORK)
+                    }
+                } catch (e: Exception) {
+                    appExecutors.mainThread().execute {
+                        liveData.value = Resource.error("error", null)
                     }
                 }
-                appExecutors.mainThread().execute {
-                    liveData.value = files
-                }
+
             }
         }
         return liveData

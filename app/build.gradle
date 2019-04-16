@@ -104,6 +104,9 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.0.0'
     kapt 'com.jakewharton:butterknife-compiler:10.0.0'
 
+    // ViewModel Repository connection
+    implementation 'com.github.JohnSolstice:VMR-Link:0.1.1'
+
     // GSON
     implementation 'com.google.code.gson:gson:2.8.5'
 

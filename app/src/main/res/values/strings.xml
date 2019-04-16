@@ -29,8 +29,8 @@
     <string name="categories">Categories</string>
     <string name="entries">Entries</string>
     <string name="credentials">Credentials</string>
-    <string name="import_file">Import File</string>
-    <string name="export_file">Export File</string>
+    <string name="import_file">Import Backup File</string>
+    <string name="export_file">Export Backup File</string>
     <string name="failed_to_write_file">Failed to write file</string>
     <string name="file_name">arcticPass</string>
     <string name="bad_file_type">Import Failed: Bad File</string>
