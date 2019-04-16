@@ -1,90 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?colorBackground"
+    tools:context="com.ober.arctic.ui.MainActivity">
+
+    <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?colorBackground"
-        tools:context="com.ober.arctic.ui.MainActivity">
-
-    <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+        android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:titleTextColor="@android:color/white"
-                android:background="?attr/colorPrimary">
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:titleTextColor="@android:color/white"
+            android:background="?attr/colorPrimary">
 
             <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <TextView
-                        android:id="@+id/toolbar_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:textSize="22sp"
-                        android:textColor="?colorTextOnPrimaryBackground"/>
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="22sp"
+                    android:textColor="?colorTextOnPrimaryBackground"/>
 
                 <ImageView
-                        android:id="@+id/save_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:paddingEnd="15dp"
-                        android:paddingStart="15dp"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:layout_gravity="end|center_vertical"
-                        android:visibility="gone"
-                        android:contentDescription="@string/save"
-                        android:src="@drawable/ic_save"/>
+                    android:id="@+id/save_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingEnd="15dp"
+                    android:paddingStart="15dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:layout_gravity="end|center_vertical"
+                    android:visibility="gone"
+                    android:contentDescription="@string/save"
+                    android:src="@drawable/ic_save"/>
 
                 <ImageView
-                        android:id="@+id/edit_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:paddingEnd="15dp"
-                        android:paddingStart="15dp"
-                        android:background="?android:attr/selectableItemBackgroundBorderless"
-                        android:layout_gravity="end|center_vertical"
-                        android:visibility="gone"
-                        android:contentDescription="@string/edit"
-                        android:src="@drawable/ic_edit"/>
+                    android:id="@+id/edit_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingEnd="15dp"
+                    android:paddingStart="15dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:layout_gravity="end|center_vertical"
+                    android:visibility="gone"
+                    android:contentDescription="@string/edit"
+                    android:src="@drawable/ic_edit"/>
 
             </FrameLayout>
 
         </androidx.appcompat.widget.Toolbar>
 
-
         <fragment
-                android:id="@+id/nav_host_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:name="androidx.navigation.fragment.NavHostFragment"
-                app:navGraph="@navigation/nav_graph"
-                app:defaultNavHost="true"
-        />
+            android:id="@+id/nav_host_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            app:navGraph="@navigation/nav_graph"
+            app:defaultNavHost="true"/>
 
     </LinearLayout>
 
-
     <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
-            android:background="?colorBackground"
-            app:headerLayout="@layout/nav_header"/>
-
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:background="?colorBackground"
+        app:headerLayout="@layout/nav_header"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
