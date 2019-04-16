@@ -40,6 +40,7 @@ import com.ober.arctic.*
 import com.ober.arctic.ui.MainActivity.Companion.READ_REQUEST_CODE
 import com.ober.arctic.data.model.*
 import com.ober.arctic.ui.*
+import com.ober.arctic.ui.categories.file_picker.BackupGoogleFileListDialogFragment
 import com.ober.arctic.util.*
 import com.ober.vmrlink.Error
 import com.ober.vmrlink.Success
@@ -338,7 +339,10 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     private fun restoreFilesFromGoogle() {
         dataViewModel.backupFilesLink.value.observe(this, Observer {
             if (it is Success) {
-                println(it.data?.size)
+                it.data?.let {fileList ->
+                    BackupGoogleFileListDialogFragment.newInstance(fileList)
+                        .show(childFragmentManager, BackupGoogleFileListDialogFragment::class.java.simpleName)
+                }
             } else if (it is Error) {
                 println("error")
             }

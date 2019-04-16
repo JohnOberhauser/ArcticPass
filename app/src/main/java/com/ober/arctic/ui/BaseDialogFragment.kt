@@ -22,7 +22,7 @@ abstract class BaseDialogFragment: DialogFragment() {
     protected val mainActivity: MainActivity?
         get() = if (activity != null) activity as MainActivity else null
 
-    protected fun setAndBindContentView(@NonNull inflater: LayoutInflater, @Nullable container: ViewGroup, @LayoutRes layoutResID: Int): View {
+    protected fun setAndBindContentView(@NonNull inflater: LayoutInflater, @Nullable container: ViewGroup?, @LayoutRes layoutResID: Int): View {
         val inflatedView = inflater.inflate(layoutResID, container, false)
         App.appComponent!!.inject(this)
         ButterKnife.bind(this, inflatedView)
