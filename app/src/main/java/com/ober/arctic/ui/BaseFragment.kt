@@ -1,4 +1,4 @@
-package com.ober.arctic
+package com.ober.arctic.ui
 
 import android.app.Activity
 import android.content.Context
@@ -14,8 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import butterknife.ButterKnife
+import com.ober.arctic.App
 import com.ober.arcticpass.R
-import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 abstract class BaseFragment : Fragment() {

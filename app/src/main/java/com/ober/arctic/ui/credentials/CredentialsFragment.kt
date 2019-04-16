@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.ober.arctic.App
-import com.ober.arctic.BaseFragment
+import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.data.model.Category
 import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.data.model.Credentials
@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.fragment_credentials.*
 import java.util.*
 import androidx.core.content.ContextCompat.getSystemService
 import butterknife.OnClick
-import com.ober.arctic.OnBackPressedListener
+import com.ober.arctic.ui.OnBackPressedListener
 import com.ober.arctic.util.security.Encryption
 import javax.inject.Inject
 

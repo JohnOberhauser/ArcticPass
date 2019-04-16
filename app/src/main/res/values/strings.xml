@@ -45,4 +45,5 @@
     <string name="restore_with_google">Restore with Google</string>
     <string name="folder_name">ArcticPass</string>
     <string name="backup">backup_</string>
+    <string name="select_file">Select the file you wish to import</string>
 </resources>

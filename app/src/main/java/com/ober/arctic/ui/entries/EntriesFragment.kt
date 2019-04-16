@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
 import com.ober.arctic.App
-import com.ober.arctic.BaseFragment
+import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.data.model.Credentials
 import com.ober.arctic.ui.DataViewModel

@@ -4,11 +4,12 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.ober.arctic.App
-import com.ober.arctic.BaseFragment
-import com.ober.arctic.MainActivity
+import com.ober.arctic.ui.BaseFragment
+import com.ober.arctic.ui.MainActivity
 import com.ober.arctic.data.cache.LiveDataHolder
 import com.ober.arctic.data.cache.LiveDataHolderImpl
 import com.ober.arctic.data.database.MainDatabase
+import com.ober.arctic.ui.BaseDialogFragment
 import com.ober.arctic.ui.categories.CategoriesFragment
 import com.ober.arctic.ui.credentials.CredentialsFragment
 import com.ober.arctic.ui.init.InitFragment
@@ -97,6 +98,8 @@ class AppModule(private val app: App) {
         fun inject(mainActivity: MainActivity)
 
         fun inject(baseFragment: BaseFragment)
+
+        fun inject(baseDialogFragment: BaseDialogFragment)
 
         fun inject(initFragment: InitFragment)
         fun inject(splashFragment: SplashFragment)

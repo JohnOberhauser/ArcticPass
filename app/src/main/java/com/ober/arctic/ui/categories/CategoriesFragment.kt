@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
 import com.google.gson.Gson
-import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
@@ -38,8 +37,9 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.ober.arctic.*
-import com.ober.arctic.MainActivity.Companion.READ_REQUEST_CODE
+import com.ober.arctic.ui.MainActivity.Companion.READ_REQUEST_CODE
 import com.ober.arctic.data.model.*
+import com.ober.arctic.ui.*
 import com.ober.arctic.util.*
 import com.ober.vmrlink.Error
 import com.ober.vmrlink.Success
@@ -49,7 +49,8 @@ import java.security.GeneralSecurityException
 import java.util.concurrent.CountDownLatch
 
 
-class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener, OnImportFileListener, OnSyncWithGoogleListener {
+class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener,
+    OnImportFileListener, OnSyncWithGoogleListener {
 
     @Inject
     lateinit var encryption: Encryption

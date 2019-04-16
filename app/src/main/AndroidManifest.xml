@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/SplashTheme">
 
-        <activity android:name="com.ober.arctic.MainActivity"
+        <activity android:name="com.ober.arctic.ui.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>

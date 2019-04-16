@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import butterknife.OnClick
 import com.ober.arctic.App
-import com.ober.arctic.BaseFragment
+import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_unlock.*

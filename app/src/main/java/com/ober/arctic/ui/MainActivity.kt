@@ -1,4 +1,4 @@
-package com.ober.arctic
+package com.ober.arctic.ui
 
 import android.animation.ObjectAnimator
 import android.app.Activity
@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.Navigation.findNavController
+import com.ober.arctic.App
 import com.ober.arctic.ui.entries.EntriesFragment
 import com.ober.arctic.ui.categories.CategoriesFragment
 import com.ober.arctic.ui.credentials.CredentialsFragment
@@ -48,7 +49,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setTheme() {
-        when (appPreferences.getString(THEME, LIGHT)) {
+        when (appPreferences.getString(
+            THEME,
+            LIGHT
+        )) {
             LIGHT -> setTheme(R.style.AppTheme)
             DARK -> setTheme(R.style.AppThemeDark)
         }
@@ -144,15 +148,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupDrawerClickListeners() {
         val switch = nav_view.getHeaderView(0).theme_switch
-        when (appPreferences.getString(THEME, LIGHT)) {
+        when (appPreferences.getString(
+            THEME,
+            LIGHT
+        )) {
             LIGHT -> switch.isChecked = false
             DARK -> switch.isChecked = true
         }
         switch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                appPreferences.put(THEME, DARK)
+                appPreferences.put(
+                    THEME,
+                    DARK
+                )
             } else {
-                appPreferences.put(THEME, LIGHT)
+                appPreferences.put(
+                    THEME,
+                    LIGHT
+                )
             }
             startActivity(Intent(this, MainActivity::class.java))
             finish()

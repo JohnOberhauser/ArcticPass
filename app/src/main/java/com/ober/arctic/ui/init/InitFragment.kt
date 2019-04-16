@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import butterknife.OnClick
 import com.ober.arctic.App
-import com.ober.arctic.BaseFragment
+import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
