@@ -188,6 +188,10 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     override fun onFileSelected(uri: Uri) {
         val jsonString: String = FileUtil.readTextFromUri(uri, context!!)
+        importString(jsonString)
+    }
+
+    private fun importString(jsonString: String) {
         try {
             val encryptedDataHolder: EncryptedDataHolder = gson.fromJson(jsonString, TypeUtil.genericType<EncryptedDataHolder>())
             val importedCategoryCollection: CategoryCollection = gson.fromJson(
@@ -338,7 +342,13 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     private fun restoreFilesFromGoogle() {
         BackupGoogleFileListDialogFragment.newInstance {
-            println(it.name)
+            dataViewModel.getSingleFileBackup(it).observe(this, Observer { resource ->
+                if (resource is Success) {
+                    resource.data?.let { string ->
+                        importString(string)
+                    }
+                }
+            })
         }.show(childFragmentManager, BackupGoogleFileListDialogFragment::class.java.simpleName)
     }
 

@@ -23,6 +23,9 @@ import com.google.api.services.drive.model.File
 import com.ober.arctic.util.DriveServiceHolder
 import com.ober.vmrlink.Resource
 import com.ober.vmrlink.Source
+import java.io.BufferedReader
+import java.io.ByteArrayOutputStream
+import java.io.InputStreamReader
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -143,6 +146,35 @@ class DataRepository @Inject constructor(
                     }
                     appExecutors.mainThread().execute {
                         liveData.value = Resource.success(files, Source.NETWORK)
+                    }
+                } catch (e: Exception) {
+                    appExecutors.mainThread().execute {
+                        liveData.value = Resource.error("error", null)
+                    }
+                }
+
+            }
+        }
+        return liveData
+    }
+
+    fun getSingleBackupFile(file: File): MutableLiveData<Resource<String>> {
+        val liveData = MutableLiveData<Resource<String>>()
+        driveServiceHolder.getDriveService()?.let { drive ->
+            appExecutors.networkIO().execute {
+                try {
+                    val inputStream = drive.files().get(file.id).executeMediaAsInputStream()
+                    val reader = BufferedReader(InputStreamReader(inputStream))
+                    val stringBuilder = StringBuilder()
+
+                    var line: String? = reader.readLine()
+                    while (line != null) {
+                        stringBuilder.append(line)
+                        line = reader.readLine()
+                    }
+
+                    appExecutors.mainThread().execute {
+                        liveData.value = Resource.success(stringBuilder.toString(), Source.NETWORK)
                     }
                 } catch (e: Exception) {
                     appExecutors.mainThread().execute {
