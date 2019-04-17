@@ -24,6 +24,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
                 android:lines="1"
+                android:fontFamily="serif-monospace"
+                android:textStyle="bold"
                 android:inputType="textNoSuggestions"
                 android:imeOptions="actionNext"
                 android:hint="@string/recovery_key"/>
@@ -49,6 +51,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="13sp"
                 android:lines="1"
+                android:fontFamily="serif-monospace"
+                android:textStyle="bold"
                 android:inputType="textNoSuggestions"
                 android:imeOptions="actionDone"
                 android:hint="@string/unlock_key"/>
