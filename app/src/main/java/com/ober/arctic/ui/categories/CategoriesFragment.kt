@@ -42,7 +42,6 @@ import com.ober.arctic.data.model.*
 import com.ober.arctic.ui.*
 import com.ober.arctic.ui.categories.file_picker.BackupGoogleFileListDialogFragment
 import com.ober.arctic.util.*
-import com.ober.vmrlink.Error
 import com.ober.vmrlink.Success
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -88,6 +87,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         setupGoogleSync()
     }
 
+    //<editor-fold desc="UI">
     private fun setupRecyclerView() {
         categoryAdapter = CategoryRecyclerAdapter(this)
         category_recycler_view.adapter = categoryAdapter
@@ -143,20 +143,6 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         navController?.navigate(R.id.action_categoriesFragment_to_entryFragment, bundle)
     }
 
-    override fun onDeleteCategory(category: Category) {
-        AlertDialog.Builder(context!!)
-            .setMessage(R.string.are_you_sure_you_want_to_delete)
-            .setPositiveButton(R.string.delete) { _, _ ->
-                categoryCollection?.categories?.remove(category)
-                dataViewModel.saveDomainCollection(categoryCollection)
-            }
-            .setNegativeButton(R.string.cancel) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
-            .show()
-    }
-
     private fun setupDrawerClickListeners() {
         mainActivity?.getDrawerView()?.export_file_layout?.setOnClickListener {
             exportFile()
@@ -177,6 +163,9 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         }
     }
 
+    //</editor-fold>
+
+    //<editor-fold desc="Files">
     private fun importFile() {
         if (hasStoragePermissions(IMPORT_STORAGE_REQUEST_CODE)) {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -288,6 +277,22 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         }
     }
 
+    override fun onDeleteCategory(category: Category) {
+        AlertDialog.Builder(context!!)
+            .setMessage(R.string.are_you_sure_you_want_to_delete)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                categoryCollection?.categories?.remove(category)
+                dataViewModel.saveDomainCollection(categoryCollection)
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Permissions">
     private fun hasStoragePermissions(requestCode: Int): Boolean {
         val permission = ActivityCompat.checkSelfPermission(context!!, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (permission != PackageManager.PERMISSION_GRANTED) {
@@ -309,7 +314,9 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
             }
         }
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Google Sync">
     private fun setupGoogleSync() {
         val googleSignInAccount = GoogleSignIn.getLastSignedInAccount(App.app)
         if (googleSignInAccount != null) {
@@ -378,6 +385,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
             })
         }.show(childFragmentManager, BackupGoogleFileListDialogFragment::class.java.simpleName)
     }
+    //</editor-fold>
 
     companion object {
         const val EXPORT_STORAGE_REQUEST_CODE = 345
