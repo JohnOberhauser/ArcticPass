@@ -13,6 +13,9 @@ interface KeyManager {
     fun doesRecoveryKeyExist(): Boolean
 }
 
+/**
+ * unlock key only unlocks the encryption key (the backup key)
+ */
 class KeyManagerImpl(
     private var appPreferences: AppPreferences,
     private var encryption: Encryption

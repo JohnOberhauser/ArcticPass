@@ -20,6 +20,7 @@ import java.util.Collections.singletonList
 import com.google.api.client.http.ByteArrayContent
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
+import com.ober.arctic.util.DateFormat
 import com.ober.arctic.util.DriveServiceHolder
 import com.ober.vmrlink.Resource
 import com.ober.vmrlink.Source
@@ -91,17 +92,15 @@ class DataRepository @Inject constructor(
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
     fun createFile(content: String) {
         driveServiceHolder.getDriveService()?.let { drive ->
             appExecutors.networkIO().execute {
                 val folderId = getFolderId(drive)
 
-                val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss")
                 val fileMetaData = File()
                     .setParents(singletonList(folderId))
                     .setMimeType("text/plain")
-                    .setName(App.app!!.getString(R.string.backup) + simpleDateFormat.format(Date()))
+                    .setName(App.app!!.getString(R.string.backup) + DateFormat.dateFormat.format(Date()))
 
                 val inputStream = ByteArrayContent.fromString("text/plain", content)
 
