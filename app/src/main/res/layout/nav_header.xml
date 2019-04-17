@@ -30,56 +30,175 @@
 
     </FrameLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="10dp"
-        android:background="?colorBackground">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/google_sign_in_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal">
+            android:background="?colorBackground">
 
-            <ImageView
+            <LinearLayout
+                android:id="@+id/google_sign_in_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:tint="?colorForeground"
+                    android:src="@drawable/ic_sync"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:textStyle="bold"
+                    android:textColor="?colorPrimaryText"
+                    android:text="@string/sync_with_google"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/google_restore_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:tint="?colorForeground"
+                    android:src="@drawable/ic_restore"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:textStyle="bold"
+                    android:textColor="?colorPrimaryText"
+                    android:text="@string/restore_with_google"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/export_file_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:tint="?colorForeground"
+                    android:src="@drawable/ic_arrow_back"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:textStyle="bold"
+                    android:textColor="?colorPrimaryText"
+                    android:text="@string/export_file"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/import_file_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:tint="?colorForeground"
+                    android:src="@drawable/ic_arrow_forward"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
+                    android:textStyle="bold"
+                    android:textColor="?colorPrimaryText"
+                    android:text="@string/import_file"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?colorPrimaryDark"
+                android:layout_margin="15dp"
+                android:visibility="gone"/>
+
+            <Switch
+                android:id="@+id/theme_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:tint="?colorForeground"
-                android:src="@drawable/ic_sync"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
                 android:textStyle="bold"
-                android:textColor="?colorPrimaryText"
-                android:text="@string/sync_with_google"/>
+                android:text="@string/theme"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/google_restore_layout"
+            android:id="@+id/google_sign_out_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingBottom="25dp"
             android:paddingStart="15dp"
-            android:paddingEnd="15dp"
+            android:paddingEnd="25dp"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:gravity="end"
             android:visibility="gone">
 
             <ImageView
@@ -87,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:tint="?colorForeground"
-                android:src="@drawable/ic_restore"/>
+                android:src="@drawable/ic_sync_disabled"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -96,87 +215,10 @@
                 android:layout_marginStart="15dp"
                 android:textStyle="bold"
                 android:textColor="?colorPrimaryText"
-                android:text="@string/restore_with_google"/>
+                android:text="@string/google_sign_out"/>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/export_file_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:tint="?colorForeground"
-                android:src="@drawable/ic_arrow_back"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:textStyle="bold"
-                android:textColor="?colorPrimaryText"
-                android:text="@string/export_file"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/import_file_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:tint="?colorForeground"
-                android:src="@drawable/ic_arrow_forward"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:textStyle="bold"
-                android:textColor="?colorPrimaryText"
-                android:text="@string/import_file"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?colorPrimaryDark"
-            android:layout_margin="15dp"/>
-
-        <Switch
-            android:id="@+id/theme_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="15dp"
-            android:paddingEnd="15dp"
-            android:textStyle="bold"
-            android:text="@string/theme"/>
-
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>

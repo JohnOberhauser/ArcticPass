@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupDrawerClickListeners() {
-        val switch = nav_view.getHeaderView(0).theme_switch
+        val switch = nav_view.theme_switch
         when (appPreferences.getString(
             THEME,
             LIGHT
@@ -173,7 +173,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getDrawerView(): View {
-        return nav_view.getHeaderView(0)
+        return nav_view
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

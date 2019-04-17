@@ -75,12 +75,16 @@
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        android:background="?colorBackground"
-        app:headerLayout="@layout/nav_header"/>
+        android:background="?colorBackground">
+
+        <include
+            android:id="@+id/nav_view"
+            layout="@layout/nav_header"/>
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

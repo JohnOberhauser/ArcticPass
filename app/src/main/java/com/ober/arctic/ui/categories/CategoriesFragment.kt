@@ -172,6 +172,9 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         mainActivity?.getDrawerView()?.google_restore_layout?.setOnClickListener {
             restoreFilesFromGoogle()
         }
+        mainActivity?.getDrawerView()?.google_sign_out_layout?.setOnClickListener {
+            showSignOutDialog()
+        }
     }
 
     private fun importFile() {
@@ -312,6 +315,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         if (googleSignInAccount != null) {
             mainActivity?.getDrawerView()?.google_sign_in_layout?.visibility = View.GONE
             mainActivity?.getDrawerView()?.google_restore_layout?.visibility = View.VISIBLE
+            mainActivity?.getDrawerView()?.google_sign_out_layout?.visibility = View.VISIBLE
             setupDriveService(googleSignInAccount)
         }
     }
@@ -333,6 +337,29 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
             .build()
         val signInClient = GoogleSignIn.getClient(App.app!!, signInOptions)
         startActivityForResult(signInClient.signInIntent, MainActivity.GOOGLE_SIGN_IN_REQUEST_CODE)
+    }
+
+    private fun showSignOutDialog() {
+        AlertDialog.Builder(context!!)
+            .setMessage(R.string.are_you_sure_sign_out)
+            .setPositiveButton(R.string.sign_out) { _, _ ->
+                signOutOfGoogle()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .create()
+            .show()
+    }
+
+    private fun signOutOfGoogle() {
+        val option = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        GoogleSignIn.getClient(App.app!!, option).signOut()
+        driveServiceHolder.setDriveService(null)
+        mainActivity?.getDrawerView()?.google_sign_in_layout?.visibility = View.VISIBLE
+        mainActivity?.getDrawerView()?.google_restore_layout?.visibility = View.GONE
+        mainActivity?.getDrawerView()?.google_sign_out_layout?.visibility = View.GONE
     }
 
     override fun onSyncComplete() {

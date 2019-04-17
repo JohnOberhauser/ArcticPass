@@ -49,4 +49,7 @@
     <string name="import_">Import</string>
     <string name="failed_to_download">Failed to download file list.</string>
     <string name="no_files_found">No files found.</string>
+    <string name="google_sign_out">Google Sign Out</string>
+    <string name="are_you_sure_sign_out">Are you sure you want to disable automatic backup with Google Drive?</string>
+    <string name="sign_out">Sign Out</string>
 </resources>
