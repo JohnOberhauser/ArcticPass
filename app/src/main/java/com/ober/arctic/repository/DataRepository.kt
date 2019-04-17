@@ -44,16 +44,13 @@ class DataRepository @Inject constructor(
 
     @SuppressLint("SimpleDateFormat")
     fun saveCategoryCollection(categoryCollection: CategoryCollection) {
-        val encryptedDataHolder: EncryptedDataHolder =
-            encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncyptionKey()!!)
+        liveDataHolder.setCategoryCollection(categoryCollection)
         appExecutors.diskIO().execute {
+            val encryptedDataHolder: EncryptedDataHolder =
+                encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncyptionKey()!!)
             mainDatabase.encryptedDataHolderDao().insert(encryptedDataHolder)
-            appExecutors.mainThread().execute {
-                liveDataHolder.setCategoryCollection(categoryCollection)
-            }
+            createFile(gson.toJson(encryptedDataHolder))
         }
-
-        createFile(gson.toJson(encryptedDataHolder))
     }
 
     fun loadCategoryCollection(createDefaultsIfNecessary: Boolean) {
@@ -92,7 +89,7 @@ class DataRepository @Inject constructor(
         }
     }
 
-    fun createFile(content: String) {
+    private fun createFile(content: String) {
         driveServiceHolder.getDriveService()?.let { drive ->
             appExecutors.networkIO().execute {
                 val folderId = getFolderId(drive)

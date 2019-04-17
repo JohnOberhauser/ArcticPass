@@ -20,6 +20,7 @@ interface Encryption {
     fun generateRandomKey(length: Int): String
     fun encryptStringData(data: String, password: String): EncryptedDataHolder
     fun decryptStringData(data: String, salt: String, password: String): String
+    fun getStoredSecretKeys(password: String): AesCbcWithIntegrity.SecretKeys?
 }
 
 class EncryptionImpl(private val context: Context) : Encryption {
@@ -36,12 +37,12 @@ class EncryptionImpl(private val context: Context) : Encryption {
 
     override fun encryptStringData(data: String, password: String): EncryptedDataHolder {
         val salt: String = AesCbcWithIntegrity.saltString(AesCbcWithIntegrity.generateSalt())
-        val secretKeys: AesCbcWithIntegrity.SecretKeys = AesCbcWithIntegrity.generateKeyFromPassword(password, salt)
+        val secretKeys: AesCbcWithIntegrity.SecretKeys = AesCbcWithIntegrity.generateKeyFromPassword(password, salt, iterationCount)
         return EncryptedDataHolder(salt, encrypt(data.toByteArray(), secretKeys))
     }
 
     override fun decryptStringData(data: String, salt: String, password: String): String {
-        val secretKeys: AesCbcWithIntegrity.SecretKeys = AesCbcWithIntegrity.generateKeyFromPassword(password, salt)
+        val secretKeys: AesCbcWithIntegrity.SecretKeys = AesCbcWithIntegrity.generateKeyFromPassword(password, salt, iterationCount)
         return AesCbcWithIntegrity.decryptString(AesCbcWithIntegrity.CipherTextIvMac(data), secretKeys)
     }
 
@@ -135,13 +136,17 @@ class EncryptionImpl(private val context: Context) : Encryption {
         IOException::class,
         UnrecoverableKeyException::class
     )
-    private fun getStoredSecretKeys(password: String): AesCbcWithIntegrity.SecretKeys? {
-        val ks = getKeyStore()
-        val secretKey = ks.getKey(KEYSTORE_SECRET_KEY, password.toCharArray()) as SecretKey?
-        val integrityKey = ks.getKey(KEYSTORE_INTEGRITY_KEY, password.toCharArray()) as SecretKey?
-        return if (secretKey != null && integrityKey != null) {
-            AesCbcWithIntegrity.SecretKeys(secretKey, integrityKey)
-        } else {
+    override fun getStoredSecretKeys(password: String): AesCbcWithIntegrity.SecretKeys? {
+        return try {
+            val ks = getKeyStore()
+            val secretKey = ks.getKey(KEYSTORE_SECRET_KEY, password.toCharArray()) as SecretKey?
+            val integrityKey = ks.getKey(KEYSTORE_INTEGRITY_KEY, password.toCharArray()) as SecretKey?
+            if (secretKey != null && integrityKey != null) {
+                AesCbcWithIntegrity.SecretKeys(secretKey, integrityKey)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
             null
         }
     }
@@ -177,5 +182,6 @@ class EncryptionImpl(private val context: Context) : Encryption {
         private const val KEYSTORE_INTEGRITY_KEY = BuildConfig.APPLICATION_ID + ":integrity"
         private const val KEYSTORE_FILENAME = BuildConfig.APPLICATION_ID + ":file"
         private const val CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[{]}\\;:<>/?"
+        const val iterationCount = 100000
     }
 }
