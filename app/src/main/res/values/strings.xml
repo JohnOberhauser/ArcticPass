@@ -47,4 +47,6 @@
     <string name="backup">backup_</string>
     <string name="select_file">Select the file you wish to import</string>
     <string name="import_">Import</string>
+    <string name="failed_to_download">Failed to download file list.</string>
+    <string name="no_files_found">No files found.</string>
 </resources>

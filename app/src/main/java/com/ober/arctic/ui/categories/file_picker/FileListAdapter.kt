@@ -16,6 +16,8 @@ class FileListAdapter: RecyclerView.Adapter<FileListAdapter.FileViewHolder>() {
             notifyDataSetChanged()
         }
 
+    var selectedFile: File? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder {
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.cell_file, parent, false)
         return FileViewHolder(view)
@@ -27,6 +29,17 @@ class FileListAdapter: RecyclerView.Adapter<FileListAdapter.FileViewHolder>() {
 
     override fun onBindViewHolder(holder: FileViewHolder, position: Int) {
         holder.view.file_name.text = files[position].name
+
+        holder.view.check.visibility = if (selectedFile != files[position]) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
+
+        holder.view.setOnClickListener {
+            selectedFile = files[position]
+            notifyDataSetChanged()
+        }
     }
 
     inner class FileViewHolder(val view: View) : RecyclerView.ViewHolder(view)

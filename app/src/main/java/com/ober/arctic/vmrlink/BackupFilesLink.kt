@@ -6,7 +6,7 @@ import com.ober.arctic.repository.DataRepository
 import com.ober.vmrlink.Link
 import com.ober.vmrlink.Resource
 
-class BackupFilesLink(private val dataRepository: DataRepository): Link<List<File>>() {
+class BackupFilesLink(private val dataRepository: DataRepository) : Link<List<File>>() {
 
     override fun fetch(): LiveData<Resource<List<File>>> {
         return dataRepository.getBackupFiles()

@@ -337,17 +337,9 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     private fun restoreFilesFromGoogle() {
-        dataViewModel.backupFilesLink.value.observe(this, Observer {
-            if (it is Success) {
-                it.data?.let {fileList ->
-                    BackupGoogleFileListDialogFragment.newInstance(fileList)
-                        .show(childFragmentManager, BackupGoogleFileListDialogFragment::class.java.simpleName)
-                }
-            } else if (it is Error) {
-                println("error")
-            }
-        })
-        dataViewModel.backupFilesLink.update()
+        BackupGoogleFileListDialogFragment.newInstance {
+            println(it.name)
+        }.show(childFragmentManager, BackupGoogleFileListDialogFragment::class.java.simpleName)
     }
 
     companion object {

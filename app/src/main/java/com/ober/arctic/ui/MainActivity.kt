@@ -181,7 +181,7 @@ class MainActivity : AppCompatActivity() {
             data?.data?.also { uri ->
                 onImportFileListener?.onFileSelected(uri)
             }
-        } else if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        } else if ((requestCode == GOOGLE_SIGN_IN_REQUEST_CODE || requestCode == GOOGLE_MAGIC_REQUEST_CODE) && resultCode == Activity.RESULT_OK) {
             onSyncWithGoogleListener?.onSyncComplete()
         }
 
@@ -195,6 +195,7 @@ class MainActivity : AppCompatActivity() {
         const val LIGHT = "light"
         const val READ_REQUEST_CODE = 32
         const val GOOGLE_SIGN_IN_REQUEST_CODE = 33
+        const val GOOGLE_MAGIC_REQUEST_CODE = 65569
     }
 }
 
