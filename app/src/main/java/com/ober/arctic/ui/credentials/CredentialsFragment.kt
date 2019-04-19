@@ -8,25 +8,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import butterknife.OnClick
 import com.ober.arctic.App
-import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.data.model.Category
 import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.data.model.Credentials
 import com.ober.arctic.data.model.CredentialsComparator
+import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.ui.DataViewModel
+import com.ober.arctic.ui.OnBackPressedListener
 import com.ober.arctic.util.BundleConstants
+import com.ober.arctic.util.security.Encryption
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_credentials.*
 import java.util.*
-import androidx.core.content.ContextCompat.getSystemService
-import butterknife.OnClick
-import com.ober.arctic.ui.OnBackPressedListener
-import com.ober.arctic.util.security.Encryption
 import javax.inject.Inject
-
 
 class CredentialsFragment : BaseFragment(), OnBackPressedListener {
 
@@ -61,8 +60,8 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
     }
 
     private fun setupObserver() {
-        dataViewModel.categoryCollectionLiveData.observe(this, Observer {
-            categoryCollection = CategoryCollection(it.categories)
+        dataViewModel.categoryCollectionLink.value.observe(this, Observer {
+            categoryCollection = CategoryCollection(it.data!!.categories)
 
             category = categoryCollection?.getCategoryByName(arguments?.getString(BundleConstants.CATEGORY))
 
@@ -81,7 +80,6 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
             }
             setText()
         })
-        dataViewModel.loadCategoryCollection()
     }
 
     private fun setupSeekBar() {
@@ -204,7 +202,7 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
 
                 inEditMode = false
 
-                dataViewModel.saveCategoryCollection(categoryCollection)
+                dataViewModel.categoryCollectionLink.save(categoryCollection)
             }
         } else {
             Toast.makeText(context, R.string.description_already_exists, Toast.LENGTH_LONG).show()

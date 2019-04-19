@@ -2,6 +2,9 @@ package com.ober.arctic.ui.categories
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,22 +14,11 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
-import com.google.gson.Gson
-import com.ober.arctic.util.security.Encryption
-import com.ober.arctic.util.security.KeyManager
-import com.ober.arcticpass.R
-import kotlinx.android.synthetic.main.nav_header.view.*
-import kotlinx.android.synthetic.main.fragment_landing.*
-import java.util.*
-import javax.inject.Inject
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -36,18 +28,25 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
-import com.ober.arctic.*
-import com.ober.arctic.ui.MainActivity.Companion.READ_REQUEST_CODE
+import com.google.gson.Gson
+import com.ober.arctic.App
 import com.ober.arctic.data.model.*
 import com.ober.arctic.ui.*
+import com.ober.arctic.ui.MainActivity.Companion.READ_REQUEST_CODE
 import com.ober.arctic.ui.categories.file_picker.BackupGoogleFileListDialogFragment
 import com.ober.arctic.util.*
+import com.ober.arctic.util.security.Encryption
+import com.ober.arctic.util.security.KeyManager
+import com.ober.arcticpass.R
 import com.ober.vmrlink.Success
+import kotlinx.android.synthetic.main.fragment_landing.*
+import kotlinx.android.synthetic.main.nav_header.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.security.GeneralSecurityException
+import java.util.*
 import java.util.concurrent.CountDownLatch
-
+import javax.inject.Inject
 
 class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClickedListener,
     OnImportFileListener, OnSyncWithGoogleListener {
@@ -95,12 +94,12 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     private fun setupObserver() {
-        dataViewModel.categoryCollectionLiveData.observe(this, Observer {
+        dataViewModel.categoryCollectionLink.value.observe(this, Observer {
             progress_bar.visibility = View.GONE
-            categoryAdapter?.categories = it.categories
-            categoryCollection = CategoryCollection(it.categories)
+            categoryAdapter?.categories = it.data!!.categories
+            categoryCollection = CategoryCollection(it.data!!.categories)
         })
-        dataViewModel.loadCategoryCollection()
+        dataViewModel.categoryCollectionLink.update()
     }
 
     @SuppressLint("InflateParams")
@@ -116,7 +115,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                 val category = Category(addField.text.toString().trim(), arrayListOf())
                 categoryCollection?.categories?.add(category)
                 Collections.sort(categoryCollection?.categories, CategoryComparator())
-                dataViewModel.saveCategoryCollection(categoryCollection)
+                dataViewModel.categoryCollectionLink.save(categoryCollection)
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -192,7 +191,8 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     private fun importString(jsonString: String) {
         try {
             GlobalScope.launch {
-                val encryptedDataHolder: EncryptedDataHolder = gson.fromJson(jsonString, TypeUtil.genericType<EncryptedDataHolder>())
+                val encryptedDataHolder: EncryptedDataHolder =
+                    gson.fromJson(jsonString, TypeUtil.genericType<EncryptedDataHolder>())
                 val importedCategoryCollection: CategoryCollection = gson.fromJson(
                     encryption.decryptStringData(
                         encryptedDataHolder.encryptedJson,
@@ -223,7 +223,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                 merge(importedCategoryCollection)
             }
             .setNegativeButton(R.string.replace_all) { _, _ ->
-                dataViewModel.saveCategoryCollection(importedCategoryCollection)
+                dataViewModel.categoryCollectionLink.save(importedCategoryCollection)
             }
             .setNeutralButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -271,7 +271,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                 }
             }
             appExecutors.mainThread().execute {
-                dataViewModel.saveCategoryCollection(importedCategoryCollection)
+                dataViewModel.categoryCollectionLink.save(importedCategoryCollection)
             }
         }
     }
@@ -296,7 +296,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
             .setMessage(R.string.are_you_sure_you_want_to_delete)
             .setPositiveButton(R.string.delete) { _, _ ->
                 categoryCollection?.categories?.remove(category)
-                dataViewModel.saveCategoryCollection(categoryCollection)
+                dataViewModel.categoryCollectionLink.save(categoryCollection)
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -342,7 +342,8 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     private fun setupDriveService(googleSignInAccount: GoogleSignInAccount) {
-        val credential: GoogleAccountCredential = GoogleAccountCredential.usingOAuth2(context, Collections.singleton(DriveScopes.DRIVE_FILE))
+        val credential: GoogleAccountCredential =
+            GoogleAccountCredential.usingOAuth2(context, Collections.singleton(DriveScopes.DRIVE_FILE))
         credential.selectedAccount = googleSignInAccount.account
         val googleDriveService: Drive = Drive
             .Builder(AndroidHttp.newCompatibleTransport(), GsonFactory(), credential)
@@ -385,7 +386,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     override fun onSyncComplete() {
         setupGoogleSync()
-        dataViewModel.saveCategoryCollection(categoryCollection)
+        dataViewModel.categoryCollectionLink.save(categoryCollection)
     }
 
     private fun restoreFilesFromGoogle() {

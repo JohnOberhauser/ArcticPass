@@ -14,7 +14,7 @@ import butterknife.ButterKnife
 import com.ober.arctic.App
 import javax.inject.Inject
 
-abstract class BaseDialogFragment: DialogFragment() {
+abstract class BaseDialogFragment : DialogFragment() {
 
     @Inject
     protected lateinit var viewModelFactory: ViewModelProvider.Factory

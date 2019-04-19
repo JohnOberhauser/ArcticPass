@@ -2,36 +2,34 @@ package com.ober.arctic.repository
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.api.client.http.ByteArrayContent
+import com.google.api.services.drive.Drive
+import com.google.api.services.drive.model.File
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.ober.arctic.App
-import com.ober.arctic.data.cache.LiveDataHolder
 import com.ober.arctic.data.database.MainDatabase
 import com.ober.arctic.data.model.Category
 import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.data.model.EncryptedDataHolder
 import com.ober.arctic.util.AppExecutors
+import com.ober.arctic.util.DriveServiceHolder
+import com.ober.arctic.util.FileUtil
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
-import javax.inject.Inject
-import java.util.Collections.singletonList
-import com.google.api.client.http.ByteArrayContent
-import com.google.api.services.drive.Drive
-import com.google.api.services.drive.model.File
-import com.ober.arctic.util.DriveServiceHolder
-import com.ober.arctic.util.FileUtil
 import com.ober.vmrlink.Resource
 import com.ober.vmrlink.Source
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.Exception
+import java.util.Collections.singletonList
+import javax.inject.Inject
 
 class DataRepository @Inject constructor(
     private var mainDatabase: MainDatabase,
     private var keyManager: KeyManager,
-    private var liveDataHolder: LiveDataHolder,
     private var gson: Gson,
     private var encryption: Encryption,
     private var appExecutors: AppExecutors,
@@ -40,7 +38,6 @@ class DataRepository @Inject constructor(
 
     @SuppressLint("SimpleDateFormat")
     fun saveCategoryCollection(categoryCollection: CategoryCollection) {
-        liveDataHolder.setCategoryCollection(categoryCollection)
         appExecutors.diskIO().execute {
             val encryptedDataHolder: EncryptedDataHolder =
                 encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncryptionKey()!!)
@@ -49,40 +46,36 @@ class DataRepository @Inject constructor(
         }
     }
 
-    fun loadCategoryCollection(createDefaultsIfNecessary: Boolean) {
-        if (liveDataHolder.getCategoryCollection().value == null) {
-            val source = mainDatabase.encryptedDataHolderDao().getEncryptedDataHolder()
-            liveDataHolder.getCategoryCollectionLiveData().addSource(source) { encryptedDataHolder ->
-                liveDataHolder.getCategoryCollectionLiveData().removeSource(source)
-                when {
-                    encryptedDataHolder != null -> {
-                        appExecutors.miscellaneousThread().execute {
-                            val categoryCollection: CategoryCollection = gson.fromJson(
-                                encryption.decryptStringData(
-                                    encryptedDataHolder.encryptedJson,
-                                    encryptedDataHolder.salt,
-                                    keyManager.getEncryptionKey()!!
-                                ),
-                                genericType<CategoryCollection>()
-                            )
-                            appExecutors.mainThread().execute {
-                                liveDataHolder.setCategoryCollection(categoryCollection)
-                            }
-                        }
-                    }
-                    createDefaultsIfNecessary -> {
-                        val domainList = arrayListOf<Category>()
-                        domainList.add(Category(App.app!!.getString(R.string.business), arrayListOf()))
-                        domainList.add(Category(App.app!!.getString(R.string.personal), arrayListOf()))
-                        val domainCollection = CategoryCollection(domainList)
-                        saveCategoryCollection(domainCollection)
-                    }
-                    else -> appExecutors.mainThread().execute {
-                        liveDataHolder.setCategoryCollection(null)
+    fun loadCategoryCollection(): LiveData<Resource<CategoryCollection>> {
+        val liveData = MediatorLiveData<Resource<CategoryCollection>>()
+
+        val source = mainDatabase.encryptedDataHolderDao().getEncryptedDataHolder()
+        liveData.addSource(source) { encryptedDataHolder ->
+            liveData.removeSource(source)
+            if (encryptedDataHolder != null) {
+                appExecutors.miscellaneousThread().execute {
+                    val categoryCollection: CategoryCollection = gson.fromJson(
+                        encryption.decryptStringData(
+                            encryptedDataHolder.encryptedJson,
+                            encryptedDataHolder.salt,
+                            keyManager.getEncryptionKey()!!
+                        ),
+                        genericType<CategoryCollection>()
+                    )
+                    appExecutors.mainThread().execute {
+                        liveData.value = Resource.success(categoryCollection, Source.DATABASE)
                     }
                 }
+            } else {
+                val categoryList = arrayListOf<Category>()
+                categoryList.add(Category(App.app!!.getString(R.string.business), arrayListOf()))
+                categoryList.add(Category(App.app!!.getString(R.string.personal), arrayListOf()))
+                val categoryCollection = CategoryCollection(categoryList)
+                liveData.value = Resource.success(categoryCollection, Source.DATABASE)
+                saveCategoryCollection(categoryCollection)
             }
         }
+        return liveData
     }
 
     private fun createFile(content: String) {
@@ -179,9 +172,9 @@ class DataRepository @Inject constructor(
         return liveData
     }
 
-    fun getCategoryCollectionLiveData(): LiveData<CategoryCollection> {
-        return liveDataHolder.getCategoryCollection()
-    }
+//    fun getCategoryCollectionLiveData(): LiveData<CategoryCollection> {
+//        return liveDataHolder.getCategoryCollection()
+//    }
 
     private inline fun <reified T> genericType() = object : TypeToken<T>() {}.type
 }

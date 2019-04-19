@@ -15,8 +15,7 @@ import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
-import kotlinx.android.synthetic.main.fragment_change_encryption_key.done_button
-import kotlinx.android.synthetic.main.fragment_change_encryption_key.encryption_field
+import kotlinx.android.synthetic.main.fragment_change_encryption_key.*
 import javax.inject.Inject
 
 class ChangeEncryptionKeyFragment : BaseFragment() {
@@ -48,7 +47,7 @@ class ChangeEncryptionKeyFragment : BaseFragment() {
     @OnClick(R.id.done_button)
     fun onDoneClicked() {
         keyManager.saveEncryptionKey(encryption_field.text.toString().trim())
-        dataViewModel.saveCategoryCollection(dataViewModel.categoryCollectionLiveData.value)
+        dataViewModel.categoryCollectionLink.save(dataViewModel.categoryCollectionLink.value.value!!.data)
         mainActivity?.onBackPressed()
     }
 

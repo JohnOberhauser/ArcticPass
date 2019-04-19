@@ -6,17 +6,16 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.inputmethod.EditorInfo
 import butterknife.OnClick
 import com.ober.arctic.App
 import com.ober.arctic.ui.BaseFragment
+import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_unlock.*
 import javax.inject.Inject
-import android.view.animation.AnimationUtils
-import android.view.inputmethod.EditorInfo
-import com.ober.arctic.util.AppExecutors
-
 
 class UnlockFragment : BaseFragment() {
 

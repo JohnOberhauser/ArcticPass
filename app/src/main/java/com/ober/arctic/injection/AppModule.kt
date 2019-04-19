@@ -4,12 +4,10 @@ import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.ober.arctic.App
-import com.ober.arctic.ui.BaseFragment
-import com.ober.arctic.ui.MainActivity
-import com.ober.arctic.data.cache.LiveDataHolder
-import com.ober.arctic.data.cache.LiveDataHolderImpl
 import com.ober.arctic.data.database.MainDatabase
 import com.ober.arctic.ui.BaseDialogFragment
+import com.ober.arctic.ui.BaseFragment
+import com.ober.arctic.ui.MainActivity
 import com.ober.arctic.ui.categories.CategoriesFragment
 import com.ober.arctic.ui.change_key.ChangeEncryptionKeyFragment
 import com.ober.arctic.ui.change_key.ChangeUnlockKeyFragment
@@ -74,12 +72,6 @@ class AppModule(private val app: App) {
 
     @Provides
     @Singleton
-    internal fun provideLiveDataHolder(): LiveDataHolder {
-        return LiveDataHolderImpl()
-    }
-
-    @Provides
-    @Singleton
     internal fun provideAppExecutors(): AppExecutors {
         return AppExecutorsImpl()
     }
@@ -121,8 +113,6 @@ class AppModule(private val app: App) {
         fun viewModelFactory(): ViewModelFactory
 
         fun mainDatabase(): MainDatabase
-
-        fun liveDataHolder(): LiveDataHolder
 
         fun appExecutors(): AppExecutors
     }

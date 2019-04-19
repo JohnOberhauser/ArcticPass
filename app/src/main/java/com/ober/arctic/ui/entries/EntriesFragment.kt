@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
 import com.ober.arctic.App
-import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.data.model.Credentials
+import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.BundleConstants
 import com.ober.arcticpass.R
@@ -48,14 +48,13 @@ class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsCl
     }
 
     private fun setupObserver() {
-        dataViewModel.categoryCollectionLiveData.observe(this, Observer {
+        dataViewModel.categoryCollectionLink.value.observe(this, Observer {
             progress_bar.visibility = View.GONE
-            categoryCollection = CategoryCollection(it.categories)
+            categoryCollection = CategoryCollection(it.data!!.categories)
             credentialsAdapter?.credentials =
-                    categoryCollection?.getCategoryByName(categoryName)?.credentialsList!!
+                categoryCollection?.getCategoryByName(categoryName)?.credentialsList!!
 
         })
-        dataViewModel.loadCategoryCollection()
     }
 
     override fun onCredentialClicked(credentials: Credentials) {
@@ -72,7 +71,7 @@ class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsCl
                 categoryCollection?.getCategoryByName(categoryName)?.credentialsList?.remove(
                     credentials
                 )
-                dataViewModel.saveCategoryCollection(categoryCollection)
+                dataViewModel.categoryCollectionLink.save(categoryCollection)
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()

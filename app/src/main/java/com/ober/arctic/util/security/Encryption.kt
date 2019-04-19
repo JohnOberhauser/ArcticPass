@@ -37,12 +37,14 @@ class EncryptionImpl(private val context: Context) : Encryption {
 
     override fun encryptStringData(data: String, password: String): EncryptedDataHolder {
         val salt: String = AesCbcWithIntegrity.saltString(AesCbcWithIntegrity.generateSalt())
-        val secretKeys: AesCbcWithIntegrity.SecretKeys = AesCbcWithIntegrity.generateKeyFromPassword(password, salt, ITERATION_COUNT)
+        val secretKeys: AesCbcWithIntegrity.SecretKeys =
+            AesCbcWithIntegrity.generateKeyFromPassword(password, salt, ITERATION_COUNT)
         return EncryptedDataHolder(salt, encrypt(data.toByteArray(), secretKeys))
     }
 
     override fun decryptStringData(data: String, salt: String, password: String): String {
-        val secretKeys: AesCbcWithIntegrity.SecretKeys = AesCbcWithIntegrity.generateKeyFromPassword(password, salt, ITERATION_COUNT)
+        val secretKeys: AesCbcWithIntegrity.SecretKeys =
+            AesCbcWithIntegrity.generateKeyFromPassword(password, salt, ITERATION_COUNT)
         return AesCbcWithIntegrity.decryptString(AesCbcWithIntegrity.CipherTextIvMac(data), secretKeys)
     }
 
