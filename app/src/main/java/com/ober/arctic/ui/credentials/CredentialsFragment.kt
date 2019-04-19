@@ -61,7 +61,7 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
     }
 
     private fun setupObserver() {
-        dataViewModel.domainCollectionLiveData.observe(this, Observer {
+        dataViewModel.categoryCollectionLiveData.observe(this, Observer {
             categoryCollection = CategoryCollection(it.categories)
 
             category = categoryCollection?.getCategoryByName(arguments?.getString(BundleConstants.CATEGORY))
@@ -204,7 +204,7 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
 
                 inEditMode = false
 
-                dataViewModel.saveDomainCollection(categoryCollection)
+                dataViewModel.saveCategoryCollection(categoryCollection)
             }
         } else {
             Toast.makeText(context, R.string.description_already_exists, Toast.LENGTH_LONG).show()

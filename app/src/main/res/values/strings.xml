@@ -2,9 +2,9 @@
     <string name="app_name">Arctic Pass</string>
     <string name="generate">Generate</string>
     <string name="done">Done</string>
-    <string name="recovery_key">Recovery Key</string>
+    <string name="encryption_key">Encryption Key</string>
     <string name="unlock_key">Unlock Key</string>
-    <string name="instructions">The recovery key is required when recovering imported password files.  The unlock key is used when opening the app.  You should write both down in a secure place.</string>
+    <string name="instructions">The encryption key is required when decrypting backup files.  The unlock key is used when opening the app.  You should write both down in a secure place.</string>
     <string name="unlock">Unlock</string>
     <string name="business">Business</string>
     <string name="personal">Personal</string>
@@ -52,4 +52,6 @@
     <string name="google_sign_out">Google Sign Out</string>
     <string name="are_you_sure_sign_out">Are you sure you want to disable automatic backup with Google Drive?</string>
     <string name="sign_out">Sign Out</string>
+    <string name="encryption_key_instructions">After changing the encryption key, old backup files will no longer be able to decrypted (unless you change the encryption key back).  You should write the new key down in a secure place.</string>
+    <string name="change_encryption_key">Change Encryption Key</string>
 </resources>

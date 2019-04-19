@@ -1,60 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/nav_graph"
-            app:startDestination="@id/splashFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.ober.arctic.ui.splash.SplashFragment"
         tools:layout="@layout/fragment_splash">
         <action
-                android:id="@+id/action_splashFragment_to_initFragment"
-                app:destination="@id/initFragment" app:popUpTo="@+id/splashFragment" app:popUpToInclusive="true"/>
+            android:id="@+id/action_splashFragment_to_initFragment"
+            app:destination="@id/initFragment"
+            app:popUpTo="@+id/splashFragment"
+            app:popUpToInclusive="true"/>
         <action
-                android:id="@+id/action_splashFragment_to_unlockFragment"
-                app:destination="@id/unlockFragment" app:popUpToInclusive="true" app:popUpTo="@+id/splashFragment"/>
+            android:id="@+id/action_splashFragment_to_unlockFragment"
+            app:destination="@id/unlockFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@+id/splashFragment"/>
     </fragment>
 
     <fragment
-            android:id="@+id/initFragment"
-            android:name="com.ober.arctic.ui.init.InitFragment"
-            android:label="InitFragment"
-            tools:layout="@layout/fragment_init">
+        android:id="@+id/initFragment"
+        android:name="com.ober.arctic.ui.init.InitFragment"
+        android:label="InitFragment"
+        tools:layout="@layout/fragment_init">
         <action
-                android:id="@+id/action_initFragment_to_categoriesFragment"
-                app:destination="@id/categoriesFragment" app:popUpTo="@+id/initFragment" app:popUpToInclusive="true"/>
+            android:id="@+id/action_initFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment"
+            app:popUpTo="@+id/initFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
-    <fragment android:id="@+id/unlockFragment"
-              android:name="com.ober.arctic.ui.unlock.UnlockFragment"
-              android:label="UnlockFragment"
-              tools:layout="@layout/fragment_unlock">
+    <fragment
+        android:id="@+id/unlockFragment"
+        android:name="com.ober.arctic.ui.unlock.UnlockFragment"
+        android:label="UnlockFragment"
+        tools:layout="@layout/fragment_unlock">
         <action
-                android:id="@+id/action_unlockFragment_to_categoriesFragment"
-                app:destination="@id/categoriesFragment" app:popUpToInclusive="true" app:popUpTo="@+id/unlockFragment"/>
+            android:id="@+id/action_unlockFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@+id/unlockFragment"/>
     </fragment>
 
     <fragment
-            android:id="@+id/categoriesFragment"
-            android:name="com.ober.arctic.ui.categories.CategoriesFragment"
-            android:label="CategoriesFragment"
-            tools:layout="@layout/fragment_landing">
-        <action android:id="@+id/action_categoriesFragment_to_entryFragment" app:destination="@id/entriesFragment"/>
+        android:id="@+id/categoriesFragment"
+        android:name="com.ober.arctic.ui.categories.CategoriesFragment"
+        android:label="CategoriesFragment"
+        tools:layout="@layout/fragment_landing">
+        <action
+            android:id="@+id/action_categoriesFragment_to_entryFragment"
+            app:destination="@id/entriesFragment"/>
+        <action
+            android:id="@+id/action_categoriesFragment_to_changeEncryptionKeyFragment"
+            app:destination="@id/changeEncryptionKeyFragment"/>
     </fragment>
 
     <fragment
-            android:id="@+id/entriesFragment"
-            android:name="com.ober.arctic.ui.entries.EntriesFragment"
-            android:label="EntriesFragment"
-            tools:layout="@layout/fragment_category">
-        <action android:id="@+id/action_entryFragment_to_credentialsFragment" app:destination="@id/credentialsFragment"/>
+        android:id="@+id/entriesFragment"
+        android:name="com.ober.arctic.ui.entries.EntriesFragment"
+        android:label="EntriesFragment"
+        tools:layout="@layout/fragment_category">
+        <action
+            android:id="@+id/action_entryFragment_to_credentialsFragment"
+            app:destination="@id/credentialsFragment"/>
     </fragment>
+
     <fragment
-            android:id="@+id/credentialsFragment"
-            android:name="com.ober.arctic.ui.credentials.CredentialsFragment"
-            android:label="CredentialsFragment"
-            tools:layout="@layout/fragment_credentials"/>
+        android:id="@+id/credentialsFragment"
+        android:name="com.ober.arctic.ui.credentials.CredentialsFragment"
+        android:label="CredentialsFragment"
+        tools:layout="@layout/fragment_credentials"/>
+
+    <fragment
+        android:id="@+id/changeEncryptionKeyFragment"
+        android:name="com.ober.arctic.ui.change_encryption_key.ChangeEncryptionKeyFragment"
+        android:label="ChangeEncryptionKeyFragment"
+        tools:layout="@layout/fragment_change_encryption_key"/>
 
 </navigation>

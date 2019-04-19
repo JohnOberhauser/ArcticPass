@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 class DataViewModel @Inject constructor(private val dataRepository: DataRepository) : ViewModel() {
 
-    val domainCollectionLiveData = dataRepository.getCategoryCollectionLiveData()
+    val categoryCollectionLiveData = dataRepository.getCategoryCollectionLiveData()
 
     var backupFilesLink = BackupFilesLink(dataRepository)
 
@@ -19,7 +19,7 @@ class DataViewModel @Inject constructor(private val dataRepository: DataReposito
         dataRepository.loadCategoryCollection(true)
     }
 
-    fun saveDomainCollection(categoryCollection: CategoryCollection?) {
+    fun saveCategoryCollection(categoryCollection: CategoryCollection?) {
         if (categoryCollection != null) {
             dataRepository.saveCategoryCollection(categoryCollection)
         }

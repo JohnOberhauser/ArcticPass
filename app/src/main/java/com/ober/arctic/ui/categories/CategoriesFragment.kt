@@ -95,7 +95,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     private fun setupObserver() {
-        dataViewModel.domainCollectionLiveData.observe(this, Observer {
+        dataViewModel.categoryCollectionLiveData.observe(this, Observer {
             progress_bar.visibility = View.GONE
             categoryAdapter?.categories = it.categories
             categoryCollection = CategoryCollection(it.categories)
@@ -116,7 +116,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                 val category = Category(addField.text.toString().trim(), arrayListOf())
                 categoryCollection?.categories?.add(category)
                 Collections.sort(categoryCollection?.categories, CategoryComparator())
-                dataViewModel.saveDomainCollection(categoryCollection)
+                dataViewModel.saveCategoryCollection(categoryCollection)
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -160,6 +160,9 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         }
         mainActivity?.getDrawerView()?.google_sign_out_layout?.setOnClickListener {
             showSignOutDialog()
+        }
+        mainActivity?.getDrawerView()?.change_encryption_key?.setOnClickListener {
+            navController?.navigate(R.id.action_categoriesFragment_to_changeEncryptionKeyFragment)
         }
     }
 
@@ -217,7 +220,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                 merge(importedCategoryCollection)
             }
             .setNegativeButton(R.string.replace_all) { _, _ ->
-                dataViewModel.saveDomainCollection(importedCategoryCollection)
+                dataViewModel.saveCategoryCollection(importedCategoryCollection)
             }
             .setNeutralButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -265,7 +268,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                 }
             }
             appExecutors.mainThread().execute {
-                dataViewModel.saveDomainCollection(importedCategoryCollection)
+                dataViewModel.saveCategoryCollection(importedCategoryCollection)
             }
         }
     }
@@ -290,7 +293,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
             .setMessage(R.string.are_you_sure_you_want_to_delete)
             .setPositiveButton(R.string.delete) { _, _ ->
                 categoryCollection?.categories?.remove(category)
-                dataViewModel.saveDomainCollection(categoryCollection)
+                dataViewModel.saveCategoryCollection(categoryCollection)
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
@@ -379,7 +382,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     override fun onSyncComplete() {
         setupGoogleSync()
-        dataViewModel.saveDomainCollection(categoryCollection)
+        dataViewModel.saveCategoryCollection(categoryCollection)
     }
 
     private fun restoreFilesFromGoogle() {

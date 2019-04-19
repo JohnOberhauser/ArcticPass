@@ -1,4 +1,4 @@
-package com.ober.arctic.ui.init
+package com.ober.arctic.ui.change_encryption_key
 
 import android.os.Bundle
 import android.text.Editable
@@ -7,16 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.lifecycle.ViewModelProviders
 import butterknife.OnClick
 import com.ober.arctic.App
 import com.ober.arctic.ui.BaseFragment
+import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
-import kotlinx.android.synthetic.main.fragment_init.*
+import kotlinx.android.synthetic.main.fragment_change_encryption_key.done_button
+import kotlinx.android.synthetic.main.fragment_change_encryption_key.encryption_field
 import javax.inject.Inject
 
-class InitFragment : BaseFragment() {
+class ChangeEncryptionKeyFragment : BaseFragment() {
 
     @Inject
     lateinit var encryption: Encryption
@@ -24,9 +27,12 @@ class InitFragment : BaseFragment() {
     @Inject
     lateinit var keyManager: KeyManager
 
+    private lateinit var dataViewModel: DataViewModel
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
-        return setAndBindContentView(inflater, container!!, R.layout.fragment_init)
+        dataViewModel = ViewModelProviders.of(this, viewModelFactory)[DataViewModel::class.java]
+        return setAndBindContentView(inflater, container!!, R.layout.fragment_change_encryption_key)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -41,36 +47,23 @@ class InitFragment : BaseFragment() {
 
     @OnClick(R.id.done_button)
     fun onDoneClicked() {
-        keyManager.setUnlockKey(unlock_password_field.text.toString().trim(), true)
         keyManager.saveEncryptionKey(encryption_field.text.toString().trim())
-        navController?.navigate(R.id.action_initFragment_to_categoriesFragment)
+        dataViewModel.saveCategoryCollection(dataViewModel.categoryCollectionLiveData.value)
+        mainActivity?.onBackPressed()
     }
 
     private fun setupEditTextListeners() {
-        var recoveryKeyValid = false
-        var unlockKeyValid = false
 
         encryption_field.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                recoveryKeyValid = !s.toString().trim().isEmpty()
-                done_button.isEnabled = recoveryKeyValid && unlockKeyValid
+                done_button.isEnabled = s.toString().trim().isNotEmpty()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        unlock_password_field.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                unlockKeyValid = !s.toString().trim().isEmpty()
-                done_button.isEnabled = recoveryKeyValid && unlockKeyValid
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        unlock_password_field.setOnEditorActionListener { _, actionId, _ ->
+        encryption_field.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE && done_button.isEnabled) {
                 onDoneClicked()
             }

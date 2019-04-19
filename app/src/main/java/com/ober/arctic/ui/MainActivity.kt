@@ -16,6 +16,7 @@ import androidx.navigation.Navigation.findNavController
 import com.ober.arctic.App
 import com.ober.arctic.ui.entries.EntriesFragment
 import com.ober.arctic.ui.categories.CategoriesFragment
+import com.ober.arctic.ui.change_encryption_key.ChangeEncryptionKeyFragment
 import com.ober.arctic.ui.credentials.CredentialsFragment
 import com.ober.arctic.ui.unlock.UnlockFragment
 import com.ober.arctic.util.AppExecutors
@@ -87,6 +88,11 @@ class MainActivity : AppCompatActivity() {
                     CredentialsFragment::class.java.simpleName -> toolbar_title.text = getString(R.string.credentials)
                     UnlockFragment::class.java.simpleName -> {
                         toolbar_title.text = ""
+                        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                    }
+                    ChangeEncryptionKeyFragment::class.java.simpleName -> {
+                        toolbar_title.text = getString(R.string.change_encryption_key)
+                        enableBackButton()
                         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     }
                 }

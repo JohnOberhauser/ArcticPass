@@ -48,7 +48,7 @@ class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsCl
     }
 
     private fun setupObserver() {
-        dataViewModel.domainCollectionLiveData.observe(this, Observer {
+        dataViewModel.categoryCollectionLiveData.observe(this, Observer {
             progress_bar.visibility = View.GONE
             categoryCollection = CategoryCollection(it.categories)
             credentialsAdapter?.credentials =
@@ -72,7 +72,7 @@ class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsCl
                 categoryCollection?.getCategoryByName(categoryName)?.credentialsList?.remove(
                     credentials
                 )
-                dataViewModel.saveDomainCollection(categoryCollection)
+                dataViewModel.saveCategoryCollection(categoryCollection)
             }
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
