@@ -3,12 +3,17 @@ package com.ober.arctic.util
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import com.ober.arctic.App
+import com.ober.arcticpass.R
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStreamReader
+import java.util.*
 
 object FileUtil {
+
+    private const val JSON_EXTENSION = ".json"
 
     /* Checks if external storage is available for read and write */
     fun isExternalStorageWritable(): Boolean {
@@ -40,5 +45,17 @@ object FileUtil {
             }
         }
         return stringBuilder.toString()
+    }
+
+    fun buildFileName(): String {
+        return App.app!!.getString(R.string.backup) + DateFormat.dateFormat.format(Date()) + JSON_EXTENSION
+    }
+
+    fun getDateFromFileName(fileName: String): Date {
+        return DateFormat.dateFormat.parse(
+            fileName
+                .substringAfter(App.app!!.getString(R.string.backup))
+                .substringBefore(JSON_EXTENSION)
+        )
     }
 }

@@ -20,17 +20,13 @@ import java.util.Collections.singletonList
 import com.google.api.client.http.ByteArrayContent
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
-import com.ober.arctic.util.DateFormat
 import com.ober.arctic.util.DriveServiceHolder
+import com.ober.arctic.util.FileUtil
 import com.ober.vmrlink.Resource
 import com.ober.vmrlink.Source
 import java.io.BufferedReader
-import java.io.ByteArrayOutputStream
 import java.io.InputStreamReader
 import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.util.*
-
 
 class DataRepository @Inject constructor(
     private var mainDatabase: MainDatabase,
@@ -47,7 +43,7 @@ class DataRepository @Inject constructor(
         liveDataHolder.setCategoryCollection(categoryCollection)
         appExecutors.diskIO().execute {
             val encryptedDataHolder: EncryptedDataHolder =
-                encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncyptionKey()!!)
+                encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncryptionKey()!!)
             mainDatabase.encryptedDataHolderDao().insert(encryptedDataHolder)
             createFile(gson.toJson(encryptedDataHolder))
         }
@@ -65,7 +61,7 @@ class DataRepository @Inject constructor(
                                 encryption.decryptStringData(
                                     encryptedDataHolder.encryptedJson,
                                     encryptedDataHolder.salt,
-                                    keyManager.getEncyptionKey()!!
+                                    keyManager.getEncryptionKey()!!
                                 ),
                                 genericType<CategoryCollection>()
                             )
@@ -97,7 +93,7 @@ class DataRepository @Inject constructor(
                 val fileMetaData = File()
                     .setParents(singletonList(folderId))
                     .setMimeType("text/plain")
-                    .setName(App.app!!.getString(R.string.backup) + DateFormat.dateFormat.format(Date()))
+                    .setName(FileUtil.buildFileName())
 
                 val inputStream = ByteArrayContent.fromString("text/plain", content)
 

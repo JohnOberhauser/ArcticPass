@@ -185,15 +185,19 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     private fun importString(jsonString: String) {
         try {
-            val encryptedDataHolder: EncryptedDataHolder = gson.fromJson(jsonString, TypeUtil.genericType<EncryptedDataHolder>())
-            val importedCategoryCollection: CategoryCollection = gson.fromJson(
-                encryption.decryptStringData(
-                    encryptedDataHolder.encryptedJson,
-                    encryptedDataHolder.salt,
-                    keyManager.getEncyptionKey()!!
-                ), TypeUtil.genericType<CategoryCollection>()
-            )
-            showMergeOrReplaceDialog(importedCategoryCollection)
+            GlobalScope.launch {
+                val encryptedDataHolder: EncryptedDataHolder = gson.fromJson(jsonString, TypeUtil.genericType<EncryptedDataHolder>())
+                val importedCategoryCollection: CategoryCollection = gson.fromJson(
+                    encryption.decryptStringData(
+                        encryptedDataHolder.encryptedJson,
+                        encryptedDataHolder.salt,
+                        keyManager.getEncryptionKey()!!
+                    ), TypeUtil.genericType<CategoryCollection>()
+                )
+                appExecutors.mainThread().execute {
+                    showMergeOrReplaceDialog(importedCategoryCollection)
+                }
+            }
         } catch (e: Exception) {
             when (e) {
                 is GeneralSecurityException -> {
@@ -260,17 +264,21 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                     }
                 }
             }
-            dataViewModel.saveDomainCollection(importedCategoryCollection)
+            appExecutors.mainThread().execute {
+                dataViewModel.saveDomainCollection(importedCategoryCollection)
+            }
         }
     }
 
     private fun exportFile() {
         if (hasStoragePermissions(EXPORT_STORAGE_REQUEST_CODE)) {
             if (FileUtil.isExternalStorageWritable()) {
-                val encryptedDataHolder: EncryptedDataHolder =
-                    encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncyptionKey()!!)
-                val fileContent = gson.toJson(encryptedDataHolder)
-                FileUtil.writeStringToFile(getString(R.string.file_name) + ".json", fileContent)
+                GlobalScope.launch {
+                    val encryptedDataHolder: EncryptedDataHolder =
+                        encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncryptionKey()!!)
+                    val fileContent = gson.toJson(encryptedDataHolder)
+                    FileUtil.writeStringToFile(FileUtil.buildFileName(), fileContent)
+                }
             } else {
                 Toast.makeText(context, getString(R.string.failed_to_write_file), Toast.LENGTH_SHORT).show()
             }

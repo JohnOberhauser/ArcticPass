@@ -44,7 +44,7 @@
     <string name="sync_with_google">Sync with Google</string>
     <string name="restore_with_google">Restore with Google</string>
     <string name="folder_name">ArcticPass</string>
-    <string name="backup">backup_</string>
+    <string name="backup">arctic_pass_backup_</string>
     <string name="select_file">Select the file you wish to import</string>
     <string name="import_">Import</string>
     <string name="failed_to_download">Failed to download file list.</string>

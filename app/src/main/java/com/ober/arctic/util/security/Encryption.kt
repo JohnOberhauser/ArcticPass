@@ -37,12 +37,12 @@ class EncryptionImpl(private val context: Context) : Encryption {
 
     override fun encryptStringData(data: String, password: String): EncryptedDataHolder {
         val salt: String = AesCbcWithIntegrity.saltString(AesCbcWithIntegrity.generateSalt())
-        val secretKeys: AesCbcWithIntegrity.SecretKeys = AesCbcWithIntegrity.generateKeyFromPassword(password, salt, iterationCount)
+        val secretKeys: AesCbcWithIntegrity.SecretKeys = AesCbcWithIntegrity.generateKeyFromPassword(password, salt, ITERATION_COUNT)
         return EncryptedDataHolder(salt, encrypt(data.toByteArray(), secretKeys))
     }
 
     override fun decryptStringData(data: String, salt: String, password: String): String {
-        val secretKeys: AesCbcWithIntegrity.SecretKeys = AesCbcWithIntegrity.generateKeyFromPassword(password, salt, iterationCount)
+        val secretKeys: AesCbcWithIntegrity.SecretKeys = AesCbcWithIntegrity.generateKeyFromPassword(password, salt, ITERATION_COUNT)
         return AesCbcWithIntegrity.decryptString(AesCbcWithIntegrity.CipherTextIvMac(data), secretKeys)
     }
 
@@ -182,6 +182,6 @@ class EncryptionImpl(private val context: Context) : Encryption {
         private const val KEYSTORE_INTEGRITY_KEY = BuildConfig.APPLICATION_ID + ":integrity"
         private const val KEYSTORE_FILENAME = BuildConfig.APPLICATION_ID + ":file"
         private const val CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[{]}\\;:<>/?"
-        const val iterationCount = 100000
+        const val ITERATION_COUNT = 30000
     }
 }

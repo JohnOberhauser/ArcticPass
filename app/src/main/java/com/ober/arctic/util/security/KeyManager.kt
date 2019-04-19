@@ -1,12 +1,10 @@
 package com.ober.arctic.util.security
 
-import android.util.Base64
-import com.tozny.crypto.android.AesCbcWithIntegrity
 import net.grandcentrix.tray.AppPreferences
 
 interface KeyManager {
     fun saveEncryptionKey(key: String)
-    fun getEncyptionKey(): String?
+    fun getEncryptionKey(): String?
     fun setUnlockKey(key: String, newKey: Boolean = false)
     fun isUnlockKeyCorrect(): Boolean
     fun clearKeys()
@@ -29,7 +27,7 @@ class KeyManagerImpl(
         encryptionKey = key
     }
 
-    override fun getEncyptionKey(): String? {
+    override fun getEncryptionKey(): String? {
         if (encryptionKey == null) {
             val encryptedKey = appPreferences.getString(ENCRYPTION_KEY, null)
             if (encryptedKey != null) {

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.api.services.drive.model.File
 import com.ober.arctic.App
 import com.ober.arctic.util.DateFormat
+import com.ober.arctic.util.FileUtil
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.cell_file.view.*
 
@@ -16,7 +17,7 @@ class FileListAdapter: RecyclerView.Adapter<FileListAdapter.FileViewHolder>() {
         set(value) {
             field = value.sortedWith(
                 compareBy {
-                    DateFormat.dateFormat.parse(it.name.substringAfter(App.app!!.getString(R.string.backup))).time
+                    FileUtil.getDateFromFileName(it.name).time
                 }
             ).reversed()
             notifyDataSetChanged()
