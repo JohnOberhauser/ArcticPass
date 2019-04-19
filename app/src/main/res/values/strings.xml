@@ -54,4 +54,6 @@
     <string name="sign_out">Sign Out</string>
     <string name="encryption_key_instructions">After changing the encryption key, old backup files will no longer be able to decrypted (unless you change the encryption key back).  You should write the new key down in a secure place.</string>
     <string name="change_encryption_key">Change Encryption Key</string>
+    <string name="change_unlock_key_instruction">Changing the unlock key only changes the key required to open the app on this device.  You should write this key down in a secure place.</string>
+    <string name="change_unlock_key">Change Unlock Key</string>
 </resources>

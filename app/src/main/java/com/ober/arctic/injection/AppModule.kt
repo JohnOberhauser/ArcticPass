@@ -11,7 +11,8 @@ import com.ober.arctic.data.cache.LiveDataHolderImpl
 import com.ober.arctic.data.database.MainDatabase
 import com.ober.arctic.ui.BaseDialogFragment
 import com.ober.arctic.ui.categories.CategoriesFragment
-import com.ober.arctic.ui.change_encryption_key.ChangeEncryptionKeyFragment
+import com.ober.arctic.ui.change_key.ChangeEncryptionKeyFragment
+import com.ober.arctic.ui.change_key.ChangeUnlockKeyFragment
 import com.ober.arctic.ui.credentials.CredentialsFragment
 import com.ober.arctic.ui.init.InitFragment
 import com.ober.arctic.ui.splash.SplashFragment
@@ -108,6 +109,7 @@ class AppModule(private val app: App) {
         fun inject(credentialsFragment: CredentialsFragment)
         fun inject(categoriesFragment: CategoriesFragment)
         fun inject(changeEncryptionKeyFragment: ChangeEncryptionKeyFragment)
+        fun inject(changeUnlockKeyFragment: ChangeUnlockKeyFragment)
 
         // Tools  ======================================
         fun gson(): Gson

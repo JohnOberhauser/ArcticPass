@@ -56,6 +56,9 @@
         <action
             android:id="@+id/action_categoriesFragment_to_changeEncryptionKeyFragment"
             app:destination="@id/changeEncryptionKeyFragment"/>
+        <action
+            android:id="@+id/action_categoriesFragment_to_changeUnlockKeyFragment"
+            app:destination="@id/changeUnlockKeyFragment"/>
     </fragment>
 
     <fragment
@@ -76,8 +79,14 @@
 
     <fragment
         android:id="@+id/changeEncryptionKeyFragment"
-        android:name="com.ober.arctic.ui.change_encryption_key.ChangeEncryptionKeyFragment"
+        android:name="com.ober.arctic.ui.change_key.ChangeEncryptionKeyFragment"
         android:label="ChangeEncryptionKeyFragment"
         tools:layout="@layout/fragment_change_encryption_key"/>
+
+    <fragment
+        android:id="@+id/changeUnlockKeyFragment"
+        android:name="com.ober.arctic.ui.change_key.ChangeUnlockKeyFragment"
+        android:label="ChangeUnlockKeyFragment"
+        tools:layout="@layout/fragment_change_unlock_key"/>
 
 </navigation>

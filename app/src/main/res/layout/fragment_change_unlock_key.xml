@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
+    android:background="?colorBackground">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/unlock_password_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:lines="1"
+            android:fontFamily="serif-monospace"
+            android:textStyle="bold"
+            android:inputType="textNoSuggestions"
+            android:imeOptions="actionDone"
+            android:hint="@string/unlock_key"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/done_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textSize="12sp"
+        android:enabled="false"
+        android:text="@string/done"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textSize="12sp"
+        android:text="@string/change_unlock_key_instruction"/>
+
+</LinearLayout>

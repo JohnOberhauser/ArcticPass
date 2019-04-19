@@ -1,4 +1,4 @@
-package com.ober.arctic.ui.change_encryption_key
+package com.ober.arctic.ui.change_key
 
 import android.os.Bundle
 import android.text.Editable
