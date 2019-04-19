@@ -75,7 +75,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
-        dataViewModel = ViewModelProviders.of(this, viewModelFactory)[DataViewModel::class.java]
+        dataViewModel = ViewModelProviders.of(mainActivity!!, viewModelFactory)[DataViewModel::class.java]
         return setAndBindContentView(inflater, container!!, R.layout.fragment_landing)
     }
 
@@ -100,7 +100,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
             categoryAdapter?.categories = it.categories
             categoryCollection = CategoryCollection(it.categories)
         })
-        dataViewModel.loadDomainCollection()
+        dataViewModel.loadCategoryCollection()
     }
 
     @SuppressLint("InflateParams")

@@ -45,7 +45,7 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
-        dataViewModel = ViewModelProviders.of(this, viewModelFactory)[DataViewModel::class.java]
+        dataViewModel = ViewModelProviders.of(mainActivity!!, viewModelFactory)[DataViewModel::class.java]
         return setAndBindContentView(inflater, container!!, R.layout.fragment_credentials)
     }
 
@@ -81,7 +81,7 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
             }
             setText()
         })
-        dataViewModel.loadDomainCollection()
+        dataViewModel.loadCategoryCollection()
     }
 
     private fun setupSeekBar() {

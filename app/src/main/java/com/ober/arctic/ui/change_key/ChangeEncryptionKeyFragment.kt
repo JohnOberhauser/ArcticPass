@@ -31,7 +31,7 @@ class ChangeEncryptionKeyFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
-        dataViewModel = ViewModelProviders.of(this, viewModelFactory)[DataViewModel::class.java]
+        dataViewModel = ViewModelProviders.of(mainActivity!!, viewModelFactory)[DataViewModel::class.java]
         return setAndBindContentView(inflater, container!!, R.layout.fragment_change_encryption_key)
     }
 

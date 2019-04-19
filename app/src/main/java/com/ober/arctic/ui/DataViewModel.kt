@@ -15,7 +15,7 @@ class DataViewModel @Inject constructor(private val dataRepository: DataReposito
 
     var backupFilesLink = BackupFilesLink(dataRepository)
 
-    fun loadDomainCollection() {
+    fun loadCategoryCollection() {
         dataRepository.loadCategoryCollection(true)
     }
 

@@ -30,7 +30,7 @@ class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsCl
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
-        dataViewModel = ViewModelProviders.of(this, viewModelFactory)[DataViewModel::class.java]
+        dataViewModel = ViewModelProviders.of(mainActivity!!, viewModelFactory)[DataViewModel::class.java]
         categoryName = arguments?.getString(BundleConstants.CATEGORY)
         return setAndBindContentView(inflater, container!!, R.layout.fragment_category)
     }
@@ -55,7 +55,7 @@ class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsCl
                     categoryCollection?.getCategoryByName(categoryName)?.credentialsList!!
 
         })
-        dataViewModel.loadDomainCollection()
+        dataViewModel.loadCategoryCollection()
     }
 
     override fun onCredentialClicked(credentials: Credentials) {
