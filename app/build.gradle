@@ -110,9 +110,6 @@ dependencies {
     // GSON
     implementation 'com.google.code.gson:gson:2.8.5'
 
-    // Encryption
-    implementation 'com.scottyab:aes-crypto:0.0.5'
-
     // App Preferences
     implementation 'net.grandcentrix.tray:tray:0.12.0'
 
