@@ -12,6 +12,7 @@ import butterknife.OnClick
 import com.ober.arctic.App
 import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.ui.DataViewModel
+import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
@@ -25,6 +26,9 @@ class ChangeEncryptionKeyFragment : BaseFragment() {
 
     @Inject
     lateinit var keyManager: KeyManager
+
+    @Inject
+    lateinit var appExecutors: AppExecutors
 
     private lateinit var dataViewModel: DataViewModel
 
@@ -46,9 +50,14 @@ class ChangeEncryptionKeyFragment : BaseFragment() {
 
     @OnClick(R.id.done_button)
     fun onDoneClicked() {
-        keyManager.saveEncryptionKey(encryption_field.text.toString().trim())
-        dataViewModel.categoryCollectionLink.save(dataViewModel.categoryCollectionLink.value.value!!.data)
-        mainActivity?.onBackPressed()
+        done_button.isEnabled = false
+        appExecutors.miscellaneousThread().execute {
+            keyManager.saveEncryptionKey(encryption_field.text.toString().trim())
+            dataViewModel.categoryCollectionLink.save(dataViewModel.categoryCollectionLink.value.value!!.data)
+            appExecutors.mainThread().execute {
+                mainActivity?.onBackPressed()
+            }
+        }
     }
 
     private fun setupEditTextListeners() {

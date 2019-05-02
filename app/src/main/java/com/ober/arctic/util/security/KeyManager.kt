@@ -23,15 +23,18 @@ class KeyManagerImpl(
     private var unlockKey: String? = null
 
     override fun saveEncryptionKey(key: String) {
-        appPreferences.put(ENCRYPTION_KEY, encryption.encryptString(key, unlockKey!!))
+        val encryptedDataHolder = encryption.encryptStringData(key, unlockKey!!, PBE_ITERATIONS)
+        appPreferences.put(ENCRYPTION_KEY, encryptedDataHolder.encryptedData)
+        appPreferences.put(ENCRYPTION_KEY_SALT, encryptedDataHolder.salt)
         encryptionKey = key
     }
 
     override fun getEncryptionKey(): String? {
         if (encryptionKey == null) {
             val encryptedKey = appPreferences.getString(ENCRYPTION_KEY, null)
-            if (encryptedKey != null) {
-                encryptionKey = encryption.decryptString(encryptedKey, unlockKey!!)
+            val salt = appPreferences.getString(ENCRYPTION_KEY_SALT, null)
+            if (encryptedKey != null && salt != null) {
+                encryptionKey = encryption.decryptStringData(encryptedKey, salt, unlockKey!!, PBE_ITERATIONS)
             }
         }
         return encryptionKey
@@ -46,10 +49,12 @@ class KeyManagerImpl(
     }
 
     override fun isUnlockKeyCorrect(): Boolean {
-        if (unlockKey == null) {
-            return false
+        return try {
+            getEncryptionKey()
+            true
+        } catch (e: Exception) {
+            false
         }
-        return encryption.getStoredSecretKeys(unlockKey!!) != null
     }
 
     override fun clearKeys() {
@@ -59,5 +64,7 @@ class KeyManagerImpl(
 
     companion object {
         const val ENCRYPTION_KEY = "encryption_key"
+        const val ENCRYPTION_KEY_SALT = "encryption_key_salt"
+        const val PBE_ITERATIONS = 100000
     }
 }

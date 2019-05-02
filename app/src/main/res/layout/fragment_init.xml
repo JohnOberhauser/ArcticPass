@@ -17,11 +17,11 @@
             android:id="@+id/encryption_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:lines="1"
             android:fontFamily="serif-monospace"
             android:textStyle="bold"
-            android:inputType="textNoSuggestions"
+            android:inputType="textVisiblePassword"
             android:imeOptions="actionNext"
             android:hint="@string/encryption_key"/>
 
@@ -44,11 +44,11 @@
             android:id="@+id/unlock_password_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:lines="1"
             android:fontFamily="serif-monospace"
             android:textStyle="bold"
-            android:inputType="textNoSuggestions"
+            android:inputType="textVisiblePassword"
             android:imeOptions="actionDone"
             android:hint="@string/unlock_key"/>
 

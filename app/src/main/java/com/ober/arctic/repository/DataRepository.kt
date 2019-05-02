@@ -56,7 +56,7 @@ class DataRepository @Inject constructor(
                 appExecutors.miscellaneousThread().execute {
                     val categoryCollection: CategoryCollection = gson.fromJson(
                         encryption.decryptStringData(
-                            encryptedDataHolder.encryptedJson,
+                            encryptedDataHolder.encryptedData,
                             encryptedDataHolder.salt,
                             keyManager.getEncryptionKey()!!
                         ),

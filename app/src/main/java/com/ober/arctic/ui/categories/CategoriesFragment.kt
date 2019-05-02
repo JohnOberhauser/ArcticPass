@@ -195,7 +195,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                     gson.fromJson(jsonString, TypeUtil.genericType<EncryptedDataHolder>())
                 val importedCategoryCollection: CategoryCollection = gson.fromJson(
                     encryption.decryptStringData(
-                        encryptedDataHolder.encryptedJson,
+                        encryptedDataHolder.encryptedData,
                         encryptedDataHolder.salt,
                         keyManager.getEncryptionKey()!!
                     ), TypeUtil.genericType<CategoryCollection>()

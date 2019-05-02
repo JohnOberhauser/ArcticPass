@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import butterknife.OnClick
 import com.ober.arctic.App
 import com.ober.arctic.ui.BaseFragment
+import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
@@ -24,6 +25,9 @@ class ChangeUnlockKeyFragment : BaseFragment() {
     @Inject
     lateinit var keyManager: KeyManager
 
+    @Inject
+    lateinit var appExecutors: AppExecutors
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
         return setAndBindContentView(inflater, container!!, R.layout.fragment_change_unlock_key)
@@ -36,10 +40,15 @@ class ChangeUnlockKeyFragment : BaseFragment() {
 
     @OnClick(R.id.done_button)
     fun onDoneClicked() {
-        val encryptionKey = keyManager.getEncryptionKey()!!
-        keyManager.setUnlockKey(unlock_password_field.text.toString().trim(), true)
-        keyManager.saveEncryptionKey(encryptionKey)
-        mainActivity?.onBackPressed()
+        done_button.isEnabled = false
+        appExecutors.miscellaneousThread().execute {
+            val encryptionKey = keyManager.getEncryptionKey()!!
+            keyManager.setUnlockKey(unlock_password_field.text.toString().trim(), true)
+            keyManager.saveEncryptionKey(encryptionKey)
+            appExecutors.mainThread().execute {
+                mainActivity?.onBackPressed()
+            }
+        }
     }
 
     private fun setupEditTextListeners() {

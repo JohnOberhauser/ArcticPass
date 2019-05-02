@@ -10,7 +10,7 @@ import com.ober.arctic.data.database.BaseDao
 @Entity
 class EncryptedDataHolder(
     val salt: String,
-    val encryptedJson: String
+    val encryptedData: String
 ) {
     @PrimaryKey
     var id: String = "singleId"

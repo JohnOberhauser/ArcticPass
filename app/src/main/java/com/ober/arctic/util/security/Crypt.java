@@ -72,9 +72,9 @@ public class Crypt {
     private static final String CIPHER = "AES";
     private static final int AES_KEY_LENGTH_BITS = 256;
     private static final int IV_LENGTH_BYTES = 16;
-    private static final int PBE_ITERATION_COUNT = 30000;
+    private static final int PBE_ITERATION_COUNT = 10000;
     private static final int PBE_SALT_LENGTH_BITS = AES_KEY_LENGTH_BITS; // same size as key output
-    private static final String PBE_ALGORITHM = "PBKDF2WithHmacSHA1";
+    private static final String PBE_ALGORITHM = "PBKDF2WithHmacSHA512";
 
     //Made BASE_64_FLAGS public as it's useful to know for compatibility.
     public static final int BASE64_FLAGS = Base64.NO_WRAP;

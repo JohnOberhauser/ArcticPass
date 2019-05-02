@@ -40,7 +40,7 @@ class AppModule(private val app: App) {
     @Provides
     @Singleton
     internal fun provideEncryption(): Encryption {
-        return EncryptionImpl(app)
+        return EncryptionImpl()
     }
 
     @Provides

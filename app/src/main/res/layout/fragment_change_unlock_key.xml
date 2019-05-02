@@ -21,7 +21,7 @@
             android:lines="1"
             android:fontFamily="serif-monospace"
             android:textStyle="bold"
-            android:inputType="textNoSuggestions"
+            android:inputType="textVisiblePassword"
             android:imeOptions="actionDone"
             android:hint="@string/unlock_key"/>
 
