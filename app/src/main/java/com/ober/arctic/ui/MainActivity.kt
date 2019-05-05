@@ -6,12 +6,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import com.ober.arctic.App
 import com.ober.arctic.ui.categories.CategoriesFragment
@@ -21,10 +24,12 @@ import com.ober.arctic.ui.credentials.CredentialsFragment
 import com.ober.arctic.ui.entries.EntriesFragment
 import com.ober.arctic.ui.unlock.UnlockFragment
 import com.ober.arctic.util.AppExecutors
+import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import net.grandcentrix.tray.AppPreferences
+import java.util.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -35,19 +40,43 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var appExecutors: AppExecutors
 
+    @Inject
+    lateinit var keyManager: KeyManager
+
     private var drawerIcon: DrawerArrowDrawable? = null
     private var onBackPressedListener: OnBackPressedListener? = null
     var onImportFileListener: OnImportFileListener? = null
     var onSyncWithGoogleListener: OnSyncWithGoogleListener? = null
+    private var navController: NavController? = null
+    private var pauseTime: Date? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.appComponent?.inject(this)
+        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
         setTheme()
         setContentView(R.layout.activity_main)
         setupToolbar()
         setupDrawerClickListeners()
         setupNavControllerListener()
+        navController = findNavController(this, R.id.nav_host_fragment)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        pauseTime = Date()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        pauseTime?.let {
+            val now = Date()
+            now.time = now.time - (5 * 60 * 1000)
+            if (it.before(now)) {
+                keyManager.clearKeys()
+                navController?.navigate(R.id.reset)
+            }
+        }
     }
 
     private fun setTheme() {
@@ -90,6 +119,7 @@ class MainActivity : AppCompatActivity() {
                     UnlockFragment::class.java.simpleName -> {
                         toolbar_title.text = ""
                         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                        toolbar?.navigationIcon = null
                     }
                     ChangeEncryptionKeyFragment::class.java.simpleName -> {
                         toolbar_title.text = getString(R.string.change_encryption_key)

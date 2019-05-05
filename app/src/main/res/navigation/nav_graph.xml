@@ -5,6 +5,10 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/splashFragment">
 
+    <action
+        android:id="@+id/reset"
+        app:destination="@id/splashFragment"/>
+
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.ober.arctic.ui.splash.SplashFragment"
