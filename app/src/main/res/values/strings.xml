@@ -56,4 +56,14 @@
     <string name="change_encryption_key">Change Encryption Key</string>
     <string name="change_unlock_key_instruction">Changing the unlock key only changes the key required to open the app on this device.  You should write this key down in a secure place.</string>
     <string name="change_unlock_key">Change Unlock Key</string>
+    <string name="_30_seconds">30 Seconds</string>
+    <string name="_1_minute">1 Minute</string>
+    <string name="_2_minute">2 Minutes</string>
+    <string name="_3_minute">3 Minutes</string>
+    <string name="_5_minute">5 Minutes</string>
+    <string name="_10_minute">10 Minutes</string>
+    <string name="no_timeout">No Timeout</string>
+    <string name="lock_when_screen_off">Lock when screen is turned off</string>
+    <string name="auto_lock_time">Auto Lock Time</string>
+    <string name="settings">Settings</string>
 </resources>

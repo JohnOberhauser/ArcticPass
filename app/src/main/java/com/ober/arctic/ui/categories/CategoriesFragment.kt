@@ -166,6 +166,9 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         mainActivity?.getDrawerView()?.change_unlock_key?.setOnClickListener {
             navController?.navigate(R.id.action_categoriesFragment_to_changeUnlockKeyFragment)
         }
+        mainActivity?.getDrawerView()?.settings?.setOnClickListener {
+            navController?.navigate(R.id.action_categoriesFragment_to_settingsFragment)
+        }
     }
 
     //</editor-fold>

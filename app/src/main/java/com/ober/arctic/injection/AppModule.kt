@@ -13,6 +13,7 @@ import com.ober.arctic.ui.change_key.ChangeEncryptionKeyFragment
 import com.ober.arctic.ui.change_key.ChangeUnlockKeyFragment
 import com.ober.arctic.ui.credentials.CredentialsFragment
 import com.ober.arctic.ui.init.InitFragment
+import com.ober.arctic.ui.settings.SettingsFragment
 import com.ober.arctic.ui.splash.SplashFragment
 import com.ober.arctic.ui.unlock.UnlockFragment
 import com.ober.arctic.util.AppExecutors
@@ -102,6 +103,7 @@ class AppModule(private val app: App) {
         fun inject(categoriesFragment: CategoriesFragment)
         fun inject(changeEncryptionKeyFragment: ChangeEncryptionKeyFragment)
         fun inject(changeUnlockKeyFragment: ChangeUnlockKeyFragment)
+        fun inject(settingsFragment: SettingsFragment)
 
         // Tools  ======================================
         fun gson(): Gson

@@ -43,7 +43,7 @@ class UnlockFragment : BaseFragment() {
 
         password_field.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                unlock_button.isEnabled = !s.toString().trim().isEmpty()
+                unlock_button.isEnabled = s.toString().trim().isNotEmpty()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

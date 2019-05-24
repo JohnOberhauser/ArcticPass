@@ -63,6 +63,9 @@
         <action
             android:id="@+id/action_categoriesFragment_to_changeUnlockKeyFragment"
             app:destination="@id/changeUnlockKeyFragment"/>
+        <action
+            android:id="@+id/action_categoriesFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"/>
     </fragment>
 
     <fragment
@@ -92,5 +95,11 @@
         android:name="com.ober.arctic.ui.change_key.ChangeUnlockKeyFragment"
         android:label="ChangeUnlockKeyFragment"
         tools:layout="@layout/fragment_change_unlock_key"/>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.ober.arctic.ui.settings.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings"/>
 
 </navigation>

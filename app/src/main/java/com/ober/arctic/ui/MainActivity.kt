@@ -23,6 +23,7 @@ import com.ober.arctic.ui.change_key.ChangeEncryptionKeyFragment
 import com.ober.arctic.ui.change_key.ChangeUnlockKeyFragment
 import com.ober.arctic.ui.credentials.CredentialsFragment
 import com.ober.arctic.ui.entries.EntriesFragment
+import com.ober.arctic.ui.settings.SettingsFragment
 import com.ober.arctic.ui.unlock.UnlockFragment
 import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.security.KeyManager
@@ -74,13 +75,20 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         pauseTime?.let {
             val now = Date()
-            now.time = now.time - (5 * 60 * 1000)
-            if (it.before(now)) {
-                logout()
+            val timeout: Int = appPreferences.getInt(SettingsFragment.TIMEOUT, SettingsFragment.T_5_MINUTES)
+            if (timeout != SettingsFragment.NO_TIMEOUT) {
+                now.time = now.time - timeout
+                if (it.before(now)) {
+                    logout()
+                }
             }
         }
         if (screenBroadcastReceiver.needToLogout) {
-            logout()
+            if (appPreferences.getBoolean(SettingsFragment.SCREEN_LOCK, true)) {
+                logout()
+            } else {
+                screenBroadcastReceiver.needToLogout = false
+            }
         }
     }
 
@@ -139,6 +147,11 @@ class MainActivity : AppCompatActivity() {
                     }
                     ChangeUnlockKeyFragment::class.java.simpleName -> {
                         toolbar_title.text = getString(R.string.change_unlock_key)
+                        enableBackButton()
+                        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+                    }
+                    SettingsFragment::class.java.simpleName -> {
+                        toolbar_title.text = getString(R.string.settings)
                         enableBackButton()
                         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                     }

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?colorBackground"
+    android:padding="30dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/auto_lock_time"
+        android:textColor="?colorPrimaryText"
+        android:layout_marginBottom="20dp"
+        android:textSize="16sp"/>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/_30_seconds_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="?colorPrimaryText"
+            android:text="@string/_30_seconds"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/_1_minute_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="?colorPrimaryText"
+            android:text="@string/_1_minute"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/_2_minutes_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="?colorPrimaryText"
+            android:text="@string/_2_minute"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/_3_minutes_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="?colorPrimaryText"
+            android:text="@string/_3_minute"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/_5_minutes_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="?colorPrimaryText"
+            android:text="@string/_5_minute"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/_10_minutes_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="?colorPrimaryText"
+            android:text="@string/_10_minute"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/no_timeout_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="?colorPrimaryText"
+            android:text="@string/no_timeout"/>
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?colorPrimaryDark"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"/>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/lock_when_screen_off_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="?colorPrimaryText"
+        android:text="@string/lock_when_screen_off"/>
+
+</LinearLayout>
