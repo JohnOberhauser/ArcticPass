@@ -3,6 +3,7 @@ package com.ober.arctic.ui
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     var onSyncWithGoogleListener: OnSyncWithGoogleListener? = null
     private var navController: NavController? = null
     private var pauseTime: Date? = null
+    private var screenBroadcastReceiver = ScreenBroadcastReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +62,7 @@ class MainActivity : AppCompatActivity() {
         setupDrawerClickListeners()
         setupNavControllerListener()
         navController = findNavController(this, R.id.nav_host_fragment)
+        registerReceiver(screenBroadcastReceiver, IntentFilter(Intent.ACTION_SCREEN_OFF))
     }
 
     override fun onPause() {
@@ -73,10 +76,18 @@ class MainActivity : AppCompatActivity() {
             val now = Date()
             now.time = now.time - (5 * 60 * 1000)
             if (it.before(now)) {
-                keyManager.clearKeys()
-                navController?.navigate(R.id.reset)
+                logout()
             }
         }
+        if (screenBroadcastReceiver.needToLogout) {
+            logout()
+        }
+    }
+
+    private fun logout() {
+        screenBroadcastReceiver.needToLogout = false
+        keyManager.clearKeys()
+        navController?.navigate(R.id.reset)
     }
 
     private fun setTheme() {
