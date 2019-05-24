@@ -37,6 +37,9 @@ class UnlockFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupEditTextListeners()
         password_field.requestFocus()
+        handler.post {
+            showKeyboard()
+        }
     }
 
     private fun setupEditTextListeners() {

@@ -2,6 +2,8 @@ package com.ober.arctic.ui
 
 import android.app.Activity
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,8 @@ import javax.inject.Inject
 abstract class BaseFragment : Fragment() {
 
     protected var navController: NavController? = null
+
+    protected var handler = Handler(Looper.getMainLooper())
 
     @Inject
     protected lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -45,5 +49,10 @@ abstract class BaseFragment : Fragment() {
     protected fun hideKeyboard() {
         val inputMethodManager = mainActivity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
+    }
+
+    protected fun showKeyboard() {
+        val inputMethodManager = mainActivity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
 }
