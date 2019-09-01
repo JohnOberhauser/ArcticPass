@@ -1,4 +1,4 @@
-package com.ober.arctic.ui.credentials
+package com.ober.arctic.ui.categories.entries.credentials
 
 import android.content.ClipData
 import android.content.ClipboardManager

@@ -11,7 +11,7 @@ import com.ober.arctic.ui.MainActivity
 import com.ober.arctic.ui.categories.CategoriesFragment
 import com.ober.arctic.ui.change_key.ChangeEncryptionKeyFragment
 import com.ober.arctic.ui.change_key.ChangeUnlockKeyFragment
-import com.ober.arctic.ui.credentials.CredentialsFragment
+import com.ober.arctic.ui.categories.entries.credentials.CredentialsFragment
 import com.ober.arctic.ui.init.InitFragment
 import com.ober.arctic.ui.settings.SettingsFragment
 import com.ober.arctic.ui.splash.SplashFragment

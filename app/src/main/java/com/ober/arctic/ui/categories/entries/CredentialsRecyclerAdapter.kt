@@ -1,4 +1,4 @@
-package com.ober.arctic.ui.entries
+package com.ober.arctic.ui.categories.entries
 
 import android.view.LayoutInflater
 import android.view.View
