@@ -19,9 +19,6 @@ class Credentials {
         return false
     }
 
-    override fun hashCode(): Int {
-        return super.hashCode()
-    }
 }
 
 class CredentialsComparator : Comparator<Credentials> {

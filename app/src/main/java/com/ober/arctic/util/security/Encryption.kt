@@ -1,7 +1,8 @@
 package com.ober.arctic.util.security
 
 import com.ober.arctic.data.model.EncryptedDataHolder
-import java.security.*
+import java.security.GeneralSecurityException
+import java.security.SecureRandom
 
 interface Encryption {
     fun generateRandomKey(length: Int): String
