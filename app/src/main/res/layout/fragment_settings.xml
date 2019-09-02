@@ -91,4 +91,19 @@
         android:textColor="?colorPrimaryText"
         android:text="@string/lock_when_screen_off"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?colorPrimaryDark"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"/>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/enable_fingerprint_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="?colorPrimaryText"
+        android:text="@string/enable_fingerprint"/>
+
 </LinearLayout>

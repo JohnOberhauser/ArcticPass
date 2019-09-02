@@ -3,9 +3,9 @@ package com.ober.arctic.util.security
 import net.grandcentrix.tray.AppPreferences
 
 interface KeyManager {
+    var unlockKey: String?
     fun saveEncryptionKey(key: String)
     fun getEncryptionKey(): String?
-    fun setUnlockKey(key: String, newKey: Boolean = false)
     fun isUnlockKeyCorrect(): Boolean
     fun clearKeys()
     fun doesRecoveryKeyExist(): Boolean
@@ -20,7 +20,7 @@ class KeyManagerImpl(
 ) : KeyManager {
 
     private var encryptionKey: String? = null
-    private var unlockKey: String? = null
+    override var unlockKey: String? = null
 
     override fun saveEncryptionKey(key: String) {
         val encryptedDataHolder = encryption.encryptStringData(key, unlockKey!!, PBE_ITERATIONS)
@@ -42,10 +42,6 @@ class KeyManagerImpl(
 
     override fun doesRecoveryKeyExist(): Boolean {
         return appPreferences.getString(ENCRYPTION_KEY, null) != null
-    }
-
-    override fun setUnlockKey(key: String, newKey: Boolean) {
-        unlockKey = key
     }
 
     override fun isUnlockKeyCorrect(): Boolean {

@@ -43,7 +43,7 @@ class ChangeUnlockKeyFragment : BaseFragment() {
         done_button.isEnabled = false
         appExecutors.miscellaneousThread().execute {
             val encryptionKey = keyManager.getEncryptionKey()!!
-            keyManager.setUnlockKey(unlock_password_field.text.toString().trim(), true)
+            keyManager.unlockKey = unlock_password_field.text.toString().trim()
             keyManager.saveEncryptionKey(encryptionKey)
             appExecutors.mainThread().execute {
                 mainActivity?.onBackPressed()

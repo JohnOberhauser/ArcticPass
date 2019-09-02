@@ -16,6 +16,9 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="windowNoTitle">true</item>
+
+        <item name="swirl_ridgeColor">@color/teal6</item>
+        <item name="swirl_errorColor">@color/red</item>
     </style>
 
     <style name="SplashTheme" parent="AppTheme">

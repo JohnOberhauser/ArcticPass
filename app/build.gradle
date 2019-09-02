@@ -10,7 +10,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.ober.arcticpass"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 4
         versionName "1.0"
@@ -114,6 +114,13 @@ dependencies {
 
     // App Preferences
     implementation 'net.grandcentrix.tray:tray:0.12.0'
+
+    // Fingerprint Helper
+    implementation 'com.mtramin:rxfingerprint:2.2.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.1'
+
+    // Fingerprint Animation
+    implementation 'com.mattprecious.swirl:swirl:1.2.0'
 
     // Google drive/login
     implementation "com.google.android.gms:play-services-auth:17.0.0"
