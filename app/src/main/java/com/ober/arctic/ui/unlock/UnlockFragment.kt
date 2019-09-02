@@ -1,6 +1,7 @@
 package com.ober.arctic.ui.unlock
 
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -9,8 +10,10 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 import androidx.core.os.CancellationSignal
 import butterknife.OnClick
+import com.mattprecious.swirl.SwirlView
 import com.mtramin.rxfingerprint.RxFingerprint
 import com.ober.arctic.App
 import com.ober.arctic.ui.BaseFragment
@@ -82,12 +85,17 @@ class UnlockFragment : BaseFragment() {
         ) {
             fingerprintManager.authenticateAndDecrypt(context!!, cancellationSignal, object : FingerprintDecryptCallback {
                 override fun onSuccess(data: String) {
+                    fingerprint_swirl.setState(SwirlView.State.OFF, true)
                     keyManager.unlockKey = data
-                    if (keyManager.isUnlockKeyCorrect()) {
-                        navController?.navigate(R.id.action_unlockFragment_to_categoriesFragment)
-                    } else {
-                        fingerprintNeedsToResave = true
-                        showPasswordLayout()
+                    GlobalScope.launch {
+                        if (keyManager.isUnlockKeyCorrect()) {
+                            navController?.navigate(R.id.action_unlockFragment_to_categoriesFragment)
+                        } else {
+                            appExecutors.mainThread().execute {
+                                fingerprintNeedsToResave = true
+                                showPasswordLayout()
+                            }
+                        }
                     }
                 }
 
@@ -96,6 +104,8 @@ class UnlockFragment : BaseFragment() {
                     showPasswordLayout()
                 }
             })
+
+            fingerprint_swirl.setState(SwirlView.State.ON, true)
         } else {
             showPasswordLayout()
         }
