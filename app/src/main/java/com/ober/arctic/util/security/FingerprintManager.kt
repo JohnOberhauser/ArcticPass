@@ -2,6 +2,7 @@ package com.ober.arctic.util.security
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.security.keystore.KeyPermanentlyInvalidatedException
 import androidx.core.os.CancellationSignal
 import com.mtramin.rxfingerprint.EncryptionMethod
 import com.mtramin.rxfingerprint.RxFingerprint
@@ -45,7 +46,9 @@ class FingerprintManagerImpl(
                         }
                     }
                 }, {
-                    fingerprintDecryptCallback.onInvalid()
+                    if (it is KeyPermanentlyInvalidatedException) {
+                        fingerprintDecryptCallback.onInvalid()
+                    }
                 })
         } ?: run {
             // nothing for now
