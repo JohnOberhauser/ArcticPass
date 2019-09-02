@@ -43,8 +43,8 @@ class AppModule(private val app: App) {
 
     @Provides
     @Singleton
-    internal fun provideFingerprintManager(appPreferences: AppPreferences): FingerprintManager {
-        return FingerprintManagerImpl(appPreferences)
+    internal fun provideFingerprintManager(appPreferences: AppPreferences, keyManager: KeyManager): FingerprintManager {
+        return FingerprintManagerImpl(appPreferences, keyManager)
     }
 
     @Provides

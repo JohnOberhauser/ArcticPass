@@ -5,13 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import butterknife.OnClick
 import com.mtramin.rxfingerprint.RxFingerprint
 import com.ober.arctic.App
 import com.ober.arctic.ui.BaseFragment
-import com.ober.arctic.util.security.FingerprintEncryptCallback
+import com.ober.arctic.util.security.FingerprintEnabledCallback
 import com.ober.arctic.util.security.FingerprintManager
-import com.ober.arctic.util.security.FingerprintManagerImpl
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -53,10 +51,8 @@ class SettingsFragment : BaseFragment() {
 
         if (RxFingerprint.isUnavailable(context!!)) {
             enable_fingerprint_checkbox.visibility = View.GONE
-        } else {
-            if (appPreferences.getBoolean(FingerprintManagerImpl.FINGERPRINT_ENABLED, false)) {
-                enable_fingerprint_checkbox.isChecked = true
-            }
+        } else if (fingerprintManager.isFingerprintEnabled()) {
+            enable_fingerprint_checkbox.isChecked = true
         }
 
         setupRadioListeners()
@@ -110,31 +106,18 @@ class SettingsFragment : BaseFragment() {
             if (isChecked) {
                 onEnableFingerprint()
             } else {
-                onDisableFingerprint()
+                fingerprintManager.disableFingerprint()
             }
         }
     }
 
     private fun onEnableFingerprint() {
-        GlobalScope.launch {
-            keyManager.unlockKey?.let {
-                fingerprintManager.authenticateAndEncrypt(context!!, it, object : FingerprintEncryptCallback {
-
-                    override fun onFailure() {
-                        enable_fingerprint_checkbox.isChecked = false
-                        Toast.makeText(context, getString(R.string.failed), Toast.LENGTH_SHORT).show()
-                    }
-                })
-            } ?: run {
+        fingerprintManager.enableFingerprint(context!!, object : FingerprintEnabledCallback {
+            override fun onFailure() {
                 enable_fingerprint_checkbox.isChecked = false
                 Toast.makeText(context, getString(R.string.failed), Toast.LENGTH_SHORT).show()
             }
-        }
-    }
-
-    private fun onDisableFingerprint() {
-        appPreferences.put(FingerprintManagerImpl.FINGERPRINT_ENABLED, false)
-        appPreferences.put(FingerprintManagerImpl.ENCRYPTED_DATA, null)
+        })
     }
 
     companion object {

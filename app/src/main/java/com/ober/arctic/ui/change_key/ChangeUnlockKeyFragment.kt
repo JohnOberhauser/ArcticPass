@@ -13,7 +13,6 @@ import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.FingerprintManager
-import com.ober.arctic.util.security.FingerprintManagerImpl
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_change_unlock_key.*
@@ -54,10 +53,8 @@ class ChangeUnlockKeyFragment : BaseFragment() {
             val encryptionKey = keyManager.getEncryptionKey()!!
             keyManager.unlockKey = unlock_password_field.text.toString().trim()
             keyManager.saveEncryptionKey(encryptionKey)
-            if (appPreferences.getBoolean(FingerprintManagerImpl.FINGERPRINT_ENABLED, false)) {
-                keyManager.unlockKey?.let {
-                    fingerprintManager.authenticateAndEncrypt(context!!, it)
-                }
+            if (fingerprintManager.isFingerprintEnabled()) {
+                fingerprintManager.enableFingerprint(context!!)
             }
             appExecutors.mainThread().execute {
                 mainActivity?.onBackPressed()
