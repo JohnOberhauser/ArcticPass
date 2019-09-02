@@ -10,7 +10,7 @@ import com.ober.vmrlink.Source
 class CategoryCollectionLink(private val dataRepository: DataRepository) : SimpleLink<CategoryCollection>() {
 
     fun save(categoryCollection: CategoryCollection?) {
-        value.value = Resource.success(categoryCollection, Source.DATABASE)
+        value = Resource.success(categoryCollection, Source.DATABASE)
         categoryCollection?.let {
             dataRepository.saveCategoryCollection(categoryCollection)
         }

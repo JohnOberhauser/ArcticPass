@@ -53,7 +53,7 @@ class ChangeEncryptionKeyFragment : BaseFragment() {
         done_button.isEnabled = false
         appExecutors.miscellaneousThread().execute {
             keyManager.saveEncryptionKey(encryption_field.text.toString().trim())
-            dataViewModel.categoryCollectionLink.save(dataViewModel.categoryCollectionLink.value.value!!.data)
+            dataViewModel.categoryCollectionLink.save(dataViewModel.categoryCollectionLink.value!!.data)
             appExecutors.mainThread().execute {
                 mainActivity?.onBackPressed()
             }

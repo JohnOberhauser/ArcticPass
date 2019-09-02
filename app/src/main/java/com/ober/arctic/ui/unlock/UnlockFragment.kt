@@ -161,7 +161,7 @@ class UnlockFragment : BaseFragment() {
     }
 
     private fun setupObserver() {
-        dataViewModel.categoryCollectionLink.value.observe(this, Observer {
+        dataViewModel.categoryCollectionLink.observe(this, Observer {
             navController?.navigate(R.id.action_unlockFragment_to_categoriesFragment)
         })
     }

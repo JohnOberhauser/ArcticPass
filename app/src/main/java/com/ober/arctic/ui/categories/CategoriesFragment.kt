@@ -94,7 +94,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     private fun setupObserver() {
-        dataViewModel.categoryCollectionLink.value.observe(this, Observer {
+        dataViewModel.categoryCollectionLink.observe(this, Observer {
             progress_bar.visibility = View.GONE
             categoryAdapter?.categories = it.data!!.categories
             categoryCollection = CategoryCollection(it.data!!.categories)
