@@ -11,7 +11,13 @@ import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.grandcentrix.tray.AppPreferences
+import java.io.IOException
+import java.lang.Exception
 import java.security.InvalidKeyException
+import java.security.KeyStore
+import java.security.KeyStoreException
+import java.security.NoSuchAlgorithmException
+import java.security.cert.CertificateException
 
 interface FingerprintManager {
     fun authenticateAndSetUnlockKey(
@@ -56,6 +62,7 @@ class FingerprintManagerImpl(
                     }
                 }, {
                     if (it is KeyPermanentlyInvalidatedException || it is InvalidKeyException) {
+                        deleteOldKey()
                         fingerprintAuthenticatedCallback.onInvalid()
                     }
                 })
@@ -108,6 +115,33 @@ class FingerprintManagerImpl(
         }
         fingerprintEnabled = appPreferences.getBoolean(FINGERPRINT_ENABLED, false)
         return fingerprintEnabled ?: false
+    }
+
+    private fun deleteOldKey() {  //TODO remove in future versions. only need because i f'd up and need to remove old key
+        try {
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+            val keyName = "encrypted_data_unlock_key"
+            if (keyExists(keyName, keyStore)) {
+                keyStore.deleteEntry(keyName)
+            }
+        } catch (e: Exception) {
+            // do nothing
+        }
+    }
+
+    @Throws(KeyStoreException::class, CertificateException::class, NoSuchAlgorithmException::class, IOException::class)
+    fun keyExists(keyName: String, keyStore: KeyStore): Boolean {
+
+        val aliases = keyStore.aliases()
+
+        while (aliases.hasMoreElements()) {
+            if (keyName == aliases.nextElement()) {
+                return true
+            }
+        }
+
+        return false
     }
 
     companion object {
