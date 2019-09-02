@@ -11,6 +11,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.grandcentrix.tray.AppPreferences
+import java.security.InvalidKeyException
 
 interface FingerprintManager {
     fun authenticateAndSetUnlockKey(
@@ -41,8 +42,8 @@ class FingerprintManagerImpl(
         fingerprintAuthenticatedCallback: FingerprintAuthenticatedCallback
     ) {
         var disposable: Disposable? = null
-        appPreferences.getString(ENCRYPTED_DATA)?.let { encryptedString ->
-            disposable = RxFingerprint.decrypt(EncryptionMethod.RSA, context, ENCRYPTED_DATA, encryptedString)
+        appPreferences.getString(ENCRYPTED_UNLOCK_KEY)?.let { encryptedUnlockKey ->
+            disposable = RxFingerprint.decrypt(EncryptionMethod.RSA, context, KEY_NAME, encryptedUnlockKey)
                 .subscribe({
                     when (it.result) {
                         FingerprintResult.AUTHENTICATED -> {
@@ -54,7 +55,7 @@ class FingerprintManagerImpl(
                         }
                     }
                 }, {
-                    if (it is KeyPermanentlyInvalidatedException) {
+                    if (it is KeyPermanentlyInvalidatedException || it is InvalidKeyException) {
                         fingerprintAuthenticatedCallback.onInvalid()
                     }
                 })
@@ -74,11 +75,11 @@ class FingerprintManagerImpl(
     ) {
         GlobalScope.launch {
             keyManager.unlockKey?.let { unlockKey ->
-                RxFingerprint.encrypt(EncryptionMethod.RSA, context, ENCRYPTED_DATA, unlockKey)
+                RxFingerprint.encrypt(EncryptionMethod.RSA, context, KEY_NAME, unlockKey)
                     .subscribe({
                         when (it.result) {
                             FingerprintResult.AUTHENTICATED -> {
-                                appPreferences.put(ENCRYPTED_DATA, it.encrypted)
+                                appPreferences.put(ENCRYPTED_UNLOCK_KEY, it.encrypted)
                                 appPreferences.put(FINGERPRINT_ENABLED, true)
                                 fingerprintEnabled = true
                             }
@@ -98,7 +99,7 @@ class FingerprintManagerImpl(
     override fun disableFingerprint() {
         appPreferences.put(FINGERPRINT_ENABLED, false)
         fingerprintEnabled = false
-        appPreferences.put(ENCRYPTED_DATA, null)
+        appPreferences.put(ENCRYPTED_UNLOCK_KEY, null)
     }
 
     override fun isFingerprintEnabled(): Boolean {
@@ -110,8 +111,9 @@ class FingerprintManagerImpl(
     }
 
     companion object {
-        const val ENCRYPTED_DATA = "encrypted_data_unlock_key"
+        const val ENCRYPTED_UNLOCK_KEY = "encrypted_data_unlock_key"
         const val FINGERPRINT_ENABLED = "fingerprint_enabled"
+        const val KEY_NAME = "arctic_pass_fingerprint_key"
     }
 }
 
