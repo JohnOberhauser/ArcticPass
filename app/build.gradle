@@ -12,8 +12,8 @@ android {
         applicationId "com.ober.arcticpass"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.0"
+        versionCode 5
+        versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
