@@ -4,10 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import butterknife.OnClick
+import com.mtramin.rxfingerprint.RxFingerprint
 import com.ober.arctic.App
 import com.ober.arctic.ui.BaseFragment
+import com.ober.arctic.util.security.FingerprintEncryptCallback
+import com.ober.arctic.util.security.FingerprintManager
+import com.ober.arctic.util.security.FingerprintManagerImpl
+import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_settings.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import net.grandcentrix.tray.AppPreferences
 import javax.inject.Inject
 
@@ -16,14 +25,18 @@ class SettingsFragment : BaseFragment() {
     @Inject
     lateinit var appPreferences: AppPreferences
 
+    @Inject
+    lateinit var fingerprintManager: FingerprintManager
+
+    @Inject
+    lateinit var keyManager: KeyManager
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         App.appComponent!!.inject(this)
         return setAndBindContentView(inflater, container!!, R.layout.fragment_settings)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setupRadioListeners()
-        setupCheckListener()
         when (appPreferences.getInt(TIMEOUT, T_5_MINUTES)) {
             T_30_SECONDS -> _30_seconds_radio_button.isChecked = true
             T_1_MINUTE -> _1_minute_radio_button.isChecked = true
@@ -37,6 +50,17 @@ class SettingsFragment : BaseFragment() {
         if (appPreferences.getBoolean(SCREEN_LOCK, true)) {
             lock_when_screen_off_check_box.isChecked = true
         }
+
+        if (RxFingerprint.isUnavailable(context!!)) {
+            enable_fingerprint_checkbox.visibility = View.GONE
+        } else {
+            if (appPreferences.getBoolean(FingerprintManagerImpl.FINGERPRINT_ENABLED, false)) {
+                enable_fingerprint_checkbox.isChecked = true
+            }
+        }
+
+        setupRadioListeners()
+        setupCheckListener()
     }
 
     private fun setupRadioListeners() {
@@ -81,6 +105,36 @@ class SettingsFragment : BaseFragment() {
         lock_when_screen_off_check_box.setOnCheckedChangeListener { _, isChecked ->
             appPreferences.put(SCREEN_LOCK, isChecked)
         }
+
+        enable_fingerprint_checkbox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                onEnableFingerprint()
+            } else {
+                onDisableFingerprint()
+            }
+        }
+    }
+
+    private fun onEnableFingerprint() {
+        GlobalScope.launch {
+            keyManager.unlockKey?.let {
+                fingerprintManager.authenticateAndEncrypt(context!!, it, object : FingerprintEncryptCallback {
+
+                    override fun onFailure() {
+                        enable_fingerprint_checkbox.isChecked = false
+                        Toast.makeText(context, getString(R.string.failed), Toast.LENGTH_SHORT).show()
+                    }
+                })
+            } ?: run {
+                enable_fingerprint_checkbox.isChecked = false
+                Toast.makeText(context, getString(R.string.failed), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun onDisableFingerprint() {
+        appPreferences.put(FingerprintManagerImpl.FINGERPRINT_ENABLED, false)
+        appPreferences.put(FingerprintManagerImpl.ENCRYPTED_DATA, null)
     }
 
     companion object {

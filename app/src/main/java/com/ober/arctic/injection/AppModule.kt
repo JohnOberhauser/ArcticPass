@@ -20,10 +20,7 @@ import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.AppExecutorsImpl
 import com.ober.arctic.util.DriveServiceHolder
 import com.ober.arctic.util.DriveServiceHolderImpl
-import com.ober.arctic.util.security.Encryption
-import com.ober.arctic.util.security.EncryptionImpl
-import com.ober.arctic.util.security.KeyManager
-import com.ober.arctic.util.security.KeyManagerImpl
+import com.ober.arctic.util.security.*
 import dagger.Component
 import dagger.Module
 import dagger.Provides
@@ -42,6 +39,12 @@ class AppModule(private val app: App) {
     @Singleton
     internal fun provideEncryption(): Encryption {
         return EncryptionImpl()
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideFingerprintManager(appPreferences: AppPreferences): FingerprintManager {
+        return FingerprintManagerImpl(appPreferences)
     }
 
     @Provides

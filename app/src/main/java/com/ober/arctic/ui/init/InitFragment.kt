@@ -41,7 +41,7 @@ class InitFragment : BaseFragment() {
 
     @OnClick(R.id.done_button)
     fun onDoneClicked() {
-        keyManager.setUnlockKey(unlock_password_field.text.toString().trim(), true)
+        keyManager.unlockKey = unlock_password_field.text.toString().trim()
         keyManager.saveEncryptionKey(encryption_field.text.toString().trim())
         navController?.navigate(R.id.action_initFragment_to_categoriesFragment)
     }

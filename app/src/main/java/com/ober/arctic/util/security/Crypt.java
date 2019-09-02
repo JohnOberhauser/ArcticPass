@@ -69,7 +69,7 @@ public class Crypt {
     // If ALLOW_BROKEN_PRNG is true, however, we will simply log instead.
     private static final boolean ALLOW_BROKEN_PRNG = false;
 
-    private static final String CIPHER_TRANSFORMATION = "AES/CBC/PKCS7Padding";
+    public static final String CIPHER_TRANSFORMATION = "AES/CBC/PKCS7Padding";
     private static final String CIPHER = "AES";
     private static final int AES_KEY_LENGTH_BITS = 256;
     private static final int IV_LENGTH_BYTES = 16;
