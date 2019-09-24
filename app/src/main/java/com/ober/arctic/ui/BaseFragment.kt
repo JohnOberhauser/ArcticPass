@@ -32,7 +32,7 @@ abstract class BaseFragment : Fragment() {
     protected val mainActivity: MainActivity?
         get() = if (activity != null) activity as MainActivity else null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (mainActivity != null) {
             navController = Navigation.findNavController(mainActivity!!, R.id.nav_host_fragment)
