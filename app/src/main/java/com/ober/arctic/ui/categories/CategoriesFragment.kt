@@ -95,9 +95,13 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     private fun setupObserver() {
         dataViewModel.categoryCollectionLink.observe(this, Observer {
-            progress_bar.visibility = View.GONE
-            categoryAdapter?.categories = it.data!!.categories
-            categoryCollection = CategoryCollection(it.data!!.categories)
+            if (it is Success) {
+                it.data?.let { data ->
+                    progress_bar.visibility = View.GONE
+                    categoryAdapter?.categories = data.categories
+                    categoryCollection = CategoryCollection(data.categories)
+                }
+            }
         })
         dataViewModel.categoryCollectionLink.update()
     }
@@ -194,17 +198,19 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     private fun importString(jsonString: String) {
         try {
             GlobalScope.launch {
-                val encryptedDataHolder: EncryptedDataHolder =
-                    gson.fromJson(jsonString, TypeUtil.genericType<EncryptedDataHolder>())
-                val importedCategoryCollection: CategoryCollection = gson.fromJson(
-                    encryption.decryptStringData(
-                        encryptedDataHolder.encryptedData,
-                        encryptedDataHolder.salt,
-                        keyManager.getEncryptionKey()!!
-                    ), TypeUtil.genericType<CategoryCollection>()
-                )
-                appExecutors.mainThread().execute {
-                    showMergeOrReplaceDialog(importedCategoryCollection)
+                keyManager.getEncryptionKey()?.let {
+                    val encryptedDataHolder: EncryptedDataHolder =
+                        gson.fromJson(jsonString, TypeUtil.genericType<EncryptedDataHolder>())
+                    val importedCategoryCollection: CategoryCollection = gson.fromJson(
+                        encryption.decryptStringData(
+                            encryptedDataHolder.encryptedData,
+                            encryptedDataHolder.salt,
+                            it
+                        ), TypeUtil.genericType<CategoryCollection>()
+                    )
+                    appExecutors.mainThread().execute {
+                        showMergeOrReplaceDialog(importedCategoryCollection)
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -283,10 +289,12 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         if (hasStoragePermissions(EXPORT_STORAGE_REQUEST_CODE)) {
             if (FileUtil.isExternalStorageWritable()) {
                 GlobalScope.launch {
-                    val encryptedDataHolder: EncryptedDataHolder =
-                        encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncryptionKey()!!)
-                    val fileContent = gson.toJson(encryptedDataHolder)
-                    FileUtil.writeStringToFile(FileUtil.buildFileName(), fileContent)
+                    keyManager.getEncryptionKey()?.let {
+                        val encryptedDataHolder: EncryptedDataHolder =
+                            encryption.encryptStringData(gson.toJson(categoryCollection), it)
+                        val fileContent = gson.toJson(encryptedDataHolder)
+                        FileUtil.writeStringToFile(FileUtil.buildFileName(), fileContent)
+                    }
                 }
             } else {
                 Toast.makeText(context, getString(R.string.failed_to_write_file), Toast.LENGTH_SHORT).show()

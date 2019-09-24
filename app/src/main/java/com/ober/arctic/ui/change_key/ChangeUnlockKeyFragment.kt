@@ -50,14 +50,15 @@ class ChangeUnlockKeyFragment : BaseFragment() {
     fun onDoneClicked() {
         done_button.isEnabled = false
         appExecutors.miscellaneousThread().execute {
-            val encryptionKey = keyManager.getEncryptionKey()!!
-            keyManager.unlockKey = unlock_password_field.text.toString().trim()
-            keyManager.saveEncryptionKey(encryptionKey)
-            if (fingerprintManager.isFingerprintEnabled()) {
-                fingerprintManager.enableFingerprint(context!!)
-            }
-            appExecutors.mainThread().execute {
-                mainActivity?.onBackPressed()
+            keyManager.getEncryptionKey()?.let { encryptionKey ->
+                keyManager.unlockKey = unlock_password_field.text.toString().trim()
+                keyManager.saveEncryptionKey(encryptionKey)
+                if (fingerprintManager.isFingerprintEnabled()) {
+                    fingerprintManager.enableFingerprint(context!!)
+                }
+                appExecutors.mainThread().execute {
+                    mainActivity?.onBackPressed()
+                }
             }
         }
     }

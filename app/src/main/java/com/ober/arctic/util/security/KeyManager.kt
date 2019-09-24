@@ -4,7 +4,7 @@ import net.grandcentrix.tray.AppPreferences
 
 interface KeyManager {
     var unlockKey: String?
-    fun saveEncryptionKey(key: String)
+    fun saveEncryptionKey(key: String): Boolean
     fun getEncryptionKey(): String?
     fun isUnlockKeyCorrect(): Boolean
     fun clearKeys()
@@ -22,19 +22,27 @@ class KeyManagerImpl(
     private var encryptionKey: String? = null
     override var unlockKey: String? = null
 
-    override fun saveEncryptionKey(key: String) {
-        val encryptedDataHolder = encryption.encryptStringData(key, unlockKey!!, PBE_ITERATIONS)
-        appPreferences.put(ENCRYPTION_KEY, encryptedDataHolder.encryptedData)
-        appPreferences.put(ENCRYPTION_KEY_SALT, encryptedDataHolder.salt)
-        encryptionKey = key
+    /**
+     * return true if successful
+     */
+    override fun saveEncryptionKey(key: String): Boolean {
+        unlockKey?.let {
+            val encryptedDataHolder = encryption.encryptStringData(key, it, PBE_ITERATIONS)
+            appPreferences.put(ENCRYPTION_KEY, encryptedDataHolder.encryptedData)
+            appPreferences.put(ENCRYPTION_KEY_SALT, encryptedDataHolder.salt)
+            encryptionKey = key
+            return true
+        } ?: return false
     }
 
     override fun getEncryptionKey(): String? {
         if (encryptionKey == null) {
-            val encryptedKey = appPreferences.getString(ENCRYPTION_KEY, null)
-            val salt = appPreferences.getString(ENCRYPTION_KEY_SALT, null)
-            if (encryptedKey != null && salt != null) {
-                encryptionKey = encryption.decryptStringData(encryptedKey, salt, unlockKey!!, PBE_ITERATIONS)
+            unlockKey?.let {
+                val encryptedKey = appPreferences.getString(ENCRYPTION_KEY, null)
+                val salt = appPreferences.getString(ENCRYPTION_KEY_SALT, null)
+                if (encryptedKey != null && salt != null) {
+                    encryptionKey = encryption.decryptStringData(encryptedKey, salt, it, PBE_ITERATIONS)
+                }
             }
         }
         return encryptionKey
@@ -46,8 +54,7 @@ class KeyManagerImpl(
 
     override fun isUnlockKeyCorrect(): Boolean {
         return try {
-            getEncryptionKey()
-            true
+            getEncryptionKey() != null
         } catch (e: Exception) {
             false
         }

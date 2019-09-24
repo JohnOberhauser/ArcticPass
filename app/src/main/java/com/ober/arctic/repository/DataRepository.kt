@@ -39,10 +39,12 @@ class DataRepository @Inject constructor(
     @SuppressLint("SimpleDateFormat")
     fun saveCategoryCollection(categoryCollection: CategoryCollection) {
         appExecutors.diskIO().execute {
-            val encryptedDataHolder: EncryptedDataHolder =
-                encryption.encryptStringData(gson.toJson(categoryCollection), keyManager.getEncryptionKey()!!)
-            mainDatabase.encryptedDataHolderDao().insert(encryptedDataHolder)
-            createFile(gson.toJson(encryptedDataHolder))
+            keyManager.getEncryptionKey()?.let {
+                val encryptedDataHolder: EncryptedDataHolder =
+                    encryption.encryptStringData(gson.toJson(categoryCollection), it)
+                mainDatabase.encryptedDataHolderDao().insert(encryptedDataHolder)
+                createFile(gson.toJson(encryptedDataHolder))
+            }
         }
     }
 
@@ -54,16 +56,18 @@ class DataRepository @Inject constructor(
             liveData.removeSource(source)
             if (encryptedDataHolder != null) {
                 appExecutors.miscellaneousThread().execute {
-                    val categoryCollection: CategoryCollection = gson.fromJson(
-                        encryption.decryptStringData(
-                            encryptedDataHolder.encryptedData,
-                            encryptedDataHolder.salt,
-                            keyManager.getEncryptionKey()!!
-                        ),
-                        genericType<CategoryCollection>()
-                    )
-                    appExecutors.mainThread().execute {
-                        liveData.value = Resource.success(categoryCollection, Source.DATABASE)
+                    keyManager.getEncryptionKey()?.let {
+                        val categoryCollection: CategoryCollection = gson.fromJson(
+                            encryption.decryptStringData(
+                                encryptedDataHolder.encryptedData,
+                                encryptedDataHolder.salt,
+                                it
+                            ),
+                            genericType<CategoryCollection>()
+                        )
+                        appExecutors.mainThread().execute {
+                            liveData.value = Resource.success(categoryCollection, Source.DATABASE)
+                        }
                     }
                 }
             } else {

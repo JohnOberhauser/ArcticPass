@@ -16,6 +16,7 @@ import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.BundleConstants
 import com.ober.arcticpass.R
+import com.ober.vmrlink.Success
 import kotlinx.android.synthetic.main.fragment_category.*
 
 class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsClickedListener {
@@ -49,11 +50,15 @@ class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsCl
 
     private fun setupObserver() {
         dataViewModel.categoryCollectionLink.observe(this, Observer {
-            progress_bar.visibility = View.GONE
-            categoryCollection = CategoryCollection(it.data!!.categories)
-            credentialsAdapter?.credentials =
-                categoryCollection?.getCategoryByName(categoryName)?.credentialsList!!
-
+            if (it is Success) {
+                it.data?.let { data ->
+                    progress_bar.visibility = View.GONE
+                    categoryCollection = CategoryCollection(data.categories)
+                    categoryCollection?.getCategoryByName(categoryName)?.credentialsList?.let { credentials ->
+                        credentialsAdapter?.credentials = credentials
+                    }
+                }
+            }
         })
     }
 

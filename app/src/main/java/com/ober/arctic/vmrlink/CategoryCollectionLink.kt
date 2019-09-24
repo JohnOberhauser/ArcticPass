@@ -16,6 +16,10 @@ class CategoryCollectionLink(private val dataRepository: DataRepository) : Simpl
         }
     }
 
+    fun clear() {
+        value = Resource.loading(null, Source.NO_DATA)
+    }
+
     override fun fetch(): LiveData<Resource<CategoryCollection>> {
         return dataRepository.loadCategoryCollection()
     }

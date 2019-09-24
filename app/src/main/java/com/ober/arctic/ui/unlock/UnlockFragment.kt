@@ -20,6 +20,7 @@ import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.security.*
 import com.ober.arcticpass.R
+import com.ober.vmrlink.Success
 import kotlinx.android.synthetic.main.fragment_unlock.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -161,8 +162,11 @@ class UnlockFragment : BaseFragment() {
     }
 
     private fun setupObserver() {
+        dataViewModel.categoryCollectionLink.clear()
         dataViewModel.categoryCollectionLink.observe(this, Observer {
-            navController?.navigate(R.id.action_unlockFragment_to_categoriesFragment)
+            if (it is Success) {
+                navController?.navigate(R.id.action_unlockFragment_to_categoriesFragment)
+            }
         })
     }
 }
