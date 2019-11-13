@@ -1,6 +1,5 @@
 package com.ober.arctic.ui
 
-import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentFilter
@@ -10,7 +9,6 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -27,6 +25,7 @@ import com.ober.arctic.ui.unlock.UnlockFragment
 import com.ober.arctic.util.AppExecutors
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
+import com.ober.drawerxarrowdrawable.DrawerXArrowDrawable
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.nav_header.view.*
 import net.grandcentrix.tray.AppPreferences
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var keyManager: KeyManager
 
-    private var drawerIcon: DrawerArrowDrawable? = null
+    private var drawerIcon: DrawerXArrowDrawable? = null
     private var onBackPressedListener: OnBackPressedListener? = null
     var onImportFileListener: OnImportFileListener? = null
     var onSyncWithGoogleListener: OnSyncWithGoogleListener? = null
@@ -109,8 +108,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
-        drawerIcon = DrawerArrowDrawable(this)
-        drawerIcon?.color = ContextCompat.getColor(this, android.R.color.white)
+        drawerIcon = DrawerXArrowDrawable(this, DrawerXArrowDrawable.Mode.DRAWER)
+        drawerIcon?.setColor(ContextCompat.getColor(this, android.R.color.white))
         supportActionBar?.setDisplayShowTitleEnabled(true)
         enableDrawer()
     }
@@ -166,17 +165,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun enableBackButton() {
-        ObjectAnimator.ofFloat(drawerIcon!!, "progress", 1f).start()
-        toolbar?.setNavigationOnClickListener {
-            onBackPressed()
-        }
+        drawerIcon?.setMode(DrawerXArrowDrawable.Mode.ARROW)
     }
 
     private fun enableDrawer() {
-        ObjectAnimator.ofFloat(drawerIcon!!, "progress", 0f).start()
-        toolbar?.setNavigationOnClickListener {
-            drawer.openDrawer(GravityCompat.START)
-        }
+        drawerIcon?.setMode(DrawerXArrowDrawable.Mode.DRAWER)
     }
 
     override fun onBackPressed() {
