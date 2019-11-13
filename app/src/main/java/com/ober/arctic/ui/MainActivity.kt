@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         drawerIcon = DrawerXArrowDrawable(this, DrawerXArrowDrawable.Mode.DRAWER)
-        drawerIcon?.setColor(ContextCompat.getColor(this, android.R.color.white))
+        drawerIcon?.color = ContextCompat.getColor(this, android.R.color.white)
         supportActionBar?.setDisplayShowTitleEnabled(true)
         enableDrawer()
     }
@@ -235,6 +235,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.data?.also { uri ->
                 onImportFileListener?.onFileSelected(uri)

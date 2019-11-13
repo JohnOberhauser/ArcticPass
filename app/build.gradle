@@ -107,7 +107,7 @@ dependencies {
     kapt 'com.jakewharton:butterknife-compiler:10.0.0'
 
     // Drawables
-    implementation 'com.ober:drawerxarrowdrawable:0.1.1'
+    implementation 'com.ober:drawerxarrowdrawable:0.1.2'
 
     // ViewModel Repository connection
     implementation 'com.ober:vmr-link:0.1.5'
