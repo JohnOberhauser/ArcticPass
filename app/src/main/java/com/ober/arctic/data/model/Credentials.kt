@@ -12,6 +12,7 @@ class Credentials {
             && description == other.description
             && website == other.website
             && username == other.username
+            && password == other.password
             && notes == other.notes
         ) {
             return true

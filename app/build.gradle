@@ -90,8 +90,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.1.0'
 
     // Room (Persistence)
-    implementation 'androidx.room:room-runtime:2.1.0'
-    kapt 'androidx.room:room-compiler:2.1.0'
+    implementation 'androidx.room:room-runtime:2.2.3'
+    kapt 'androidx.room:room-compiler:2.2.3'
 
     // Navigation
     implementation 'android.arch.navigation:navigation-fragment:1.0.0'

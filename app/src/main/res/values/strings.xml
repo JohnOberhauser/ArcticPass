@@ -39,7 +39,7 @@
     <string name="replace_all">Replace All</string>
     <string name="replace">Replace</string>
     <string name="merge">Merge</string>
-    <string name="merge_conflict">There is a merge conflict with this entry.  Would you like to <b>replace</b> the current entry with the new one, or <b>keep</b> the current entry?</string>
+    <string name="merge_conflict">There is a merge conflict with this entry.  Would you like to <b>replace</b> the current entry with the backup, or <b>keep</b> the current entry?</string>
     <string name="keep">Keep</string>
     <string name="sync_with_google">Sync with Google</string>
     <string name="restore_with_google">Restore with Google</string>

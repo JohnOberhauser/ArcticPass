@@ -166,10 +166,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun enableBackButton() {
         drawerIcon?.setMode(DrawerXArrowDrawable.Mode.ARROW)
+        toolbar?.setNavigationOnClickListener {
+            onBackPressed()
+        }
     }
 
     private fun enableDrawer() {
         drawerIcon?.setMode(DrawerXArrowDrawable.Mode.DRAWER)
+        toolbar?.setNavigationOnClickListener {
+            drawer.openDrawer(GravityCompat.START)
+        }
     }
 
     override fun onBackPressed() {
