@@ -85,6 +85,10 @@ class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsCl
             .show()
     }
 
+    override fun onMoveCredential(credentials: Credentials) {
+        //TODO
+    }
+
     @OnClick(R.id.add_new_fab)
     fun onAddNewFabClicked() {
         val bundle = Bundle()

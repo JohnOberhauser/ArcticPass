@@ -15,5 +15,6 @@
     <color name="white">@android:color/white</color>
     <color name="black">@android:color/black</color>
     <color name="red">@android:color/holo_red_dark</color>
+    <color name="blue">#2255dd</color>
 
 </resources>

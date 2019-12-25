@@ -27,18 +27,38 @@
             android:elevation="5dp"
             tools:text="Business"/>
 
-        <ImageView
-            android:id="@+id/delete_button"
+        <LinearLayout
+            android:id="@+id/extra_buttons"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_delete"
-            android:paddingEnd="15dp"
-            android:paddingStart="15dp"
-            android:tint="?colorRed"
-            android:visibility="gone"
+            android:orientation="horizontal"
             android:layout_gravity="end|center_vertical"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/delete"/>
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/move_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_arrow_forward"
+                android:paddingEnd="15dp"
+                android:paddingStart="15dp"
+                android:tint="?colorBlue"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/move"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/delete_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_delete"
+                android:paddingEnd="15dp"
+                android:paddingStart="15dp"
+                android:tint="?colorRed"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/delete"/>
+
+        </LinearLayout>
 
     </FrameLayout>
 

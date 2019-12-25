@@ -28,11 +28,11 @@ class CredentialsRecyclerAdapter(private val credentialsClickedListener: Credent
     }
 
     override fun onBindViewHolder(holder: CredentialsViewHolder, position: Int) {
-        holder.view.delete_button.visibility = View.GONE
+        holder.view.extra_buttons.visibility = View.GONE
         holder.view.category_text_view.text = credentials[position].description
         holder.view.card_root.setOnClickListener {
-            if (holder.view.delete_button.visibility == View.VISIBLE) {
-                holder.view.delete_button.visibility = View.GONE
+            if (holder.view.extra_buttons.visibility == View.VISIBLE) {
+                holder.view.extra_buttons.visibility = View.GONE
             } else {
                 credentialsClickedListener.onCredentialClicked(credentials[position])
             }
@@ -41,15 +41,19 @@ class CredentialsRecyclerAdapter(private val credentialsClickedListener: Credent
         holder.view.delete_button.setOnClickListener {
             credentialsClickedListener.onDeleteCredential(credentials[position])
         }
+        //TODO
+//        holder.view.move_button.setOnClickListener {
+//            credentialsClickedListener.onMoveCredential(credentials[position])
+//        }
     }
 
     inner class CredentialsViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         init {
             view.card_root.setOnLongClickListener {
-                if (view.delete_button.visibility == View.GONE) {
-                    view.delete_button.startAnimation(AnimationUtils.loadAnimation(view.context, R.anim.fade_in))
-                    view.delete_button.visibility = View.VISIBLE
+                if (view.extra_buttons.visibility == View.GONE) {
+                    view.extra_buttons.startAnimation(AnimationUtils.loadAnimation(view.context, R.anim.fade_in))
+                    view.extra_buttons.visibility = View.VISIBLE
                 }
                 true
             }
@@ -59,5 +63,6 @@ class CredentialsRecyclerAdapter(private val credentialsClickedListener: Credent
     interface CredentialsClickedListener {
         fun onCredentialClicked(credentials: Credentials)
         fun onDeleteCredential(credentials: Credentials)
+        fun onMoveCredential(credentials: Credentials)
     }
 }
