@@ -28,6 +28,7 @@ class CredentialsRecyclerAdapter(private val credentialsClickedListener: Credent
     }
 
     override fun onBindViewHolder(holder: CredentialsViewHolder, position: Int) {
+        holder.view.move_button.visibility = View.VISIBLE
         holder.view.extra_buttons.visibility = View.GONE
         holder.view.category_text_view.text = credentials[position].description
         holder.view.card_root.setOnClickListener {

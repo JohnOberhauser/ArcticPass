@@ -116,7 +116,12 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         val dialog = AlertDialog.Builder(context!!)
             .setView(inflatedView)
             .setPositiveButton(R.string.add) { _, _ ->
-                val category = Category(addField.text.toString().trim(), arrayListOf())
+                val newName = addField.text.toString().trim()
+                categoryCollection?.categories?.find { it.name == newName }?.let {
+                    Toast.makeText(context, getString(R.string.category_already_exists), Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                val category = Category(newName, arrayListOf())
                 categoryCollection?.categories?.add(category)
                 Collections.sort(categoryCollection?.categories, CategoryComparator())
                 dataViewModel.categoryCollectionLink.save(categoryCollection)
@@ -132,7 +137,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         positiveButton.isEnabled = false
         addField.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                positiveButton.isEnabled = !s.toString().trim().isEmpty()
+                positiveButton.isEnabled = s.toString().trim().isNotEmpty()
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -300,6 +305,43 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
                 Toast.makeText(context, getString(R.string.failed_to_write_file), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    @SuppressLint("InflateParams")
+    override fun onEditCategory(category: Category) {
+        val inflater = LayoutInflater.from(context)
+        val inflatedView = inflater.inflate(R.layout.dialog, null)
+        val addField = inflatedView.findViewById<EditText>(R.id.add_field)
+
+        val dialog = AlertDialog.Builder(context!!)
+            .setView(inflatedView)
+            .setPositiveButton(R.string.change) { _, _ ->
+                val newName = addField.text.toString().trim()
+                categoryCollection?.categories?.find { it.name == newName }?.let {
+                    Toast.makeText(context, getString(R.string.category_already_exists), Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                category.name = newName
+                Collections.sort(categoryCollection?.categories, CategoryComparator())
+                dataViewModel.categoryCollectionLink.save(categoryCollection)
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+
+        dialog.show()
+
+        val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        positiveButton.isEnabled = false
+        addField.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                positiveButton.isEnabled = s.toString().trim().isNotEmpty()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
 
     override fun onDeleteCategory(category: Category) {

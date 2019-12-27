@@ -28,7 +28,7 @@ class CategoryRecyclerAdapter(private val categoryClickedListener: CategoryClick
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        holder.view.move_button.visibility = View.GONE
+        holder.view.edit_button.visibility = View.VISIBLE
         holder.view.extra_buttons.visibility = View.GONE
         holder.view.category_text_view.text = categories[position].name
         holder.view.card_root.setOnClickListener {
@@ -41,6 +41,9 @@ class CategoryRecyclerAdapter(private val categoryClickedListener: CategoryClick
 
         holder.view.delete_button.setOnClickListener {
             categoryClickedListener.onDeleteCategory(categories[position])
+        }
+        holder.view.edit_button.setOnClickListener {
+            categoryClickedListener.onEditCategory(categories[position])
         }
     }
 
@@ -60,5 +63,6 @@ class CategoryRecyclerAdapter(private val categoryClickedListener: CategoryClick
     interface CategoryClickedListener {
         fun onCategoryClicked(category: Category)
         fun onDeleteCategory(category: Category)
+        fun onEditCategory(category: Category)
     }
 }

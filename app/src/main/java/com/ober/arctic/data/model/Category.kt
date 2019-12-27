@@ -1,7 +1,7 @@
 package com.ober.arctic.data.model
 
 class Category(
-    val name: String,
+    var name: String,
     val credentialsList: ArrayList<Credentials>
 )
 
