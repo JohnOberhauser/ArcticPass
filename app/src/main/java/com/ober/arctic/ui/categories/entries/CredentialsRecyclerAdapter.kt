@@ -41,10 +41,9 @@ class CredentialsRecyclerAdapter(private val credentialsClickedListener: Credent
         holder.view.delete_button.setOnClickListener {
             credentialsClickedListener.onDeleteCredential(credentials[position])
         }
-        //TODO
-//        holder.view.move_button.setOnClickListener {
-//            credentialsClickedListener.onMoveCredential(credentials[position])
-//        }
+        holder.view.move_button.setOnClickListener {
+            credentialsClickedListener.onMoveCredential(credentials[position])
+        }
     }
 
     inner class CredentialsViewHolder(val view: View) : RecyclerView.ViewHolder(view) {

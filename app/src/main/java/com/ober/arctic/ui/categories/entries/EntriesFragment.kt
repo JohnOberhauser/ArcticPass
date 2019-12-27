@@ -14,6 +14,7 @@ import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.data.model.Credentials
 import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.ui.DataViewModel
+import com.ober.arctic.ui.categories.entries.move_entry.MoveEntryDialogFragment
 import com.ober.arctic.util.BundleConstants
 import com.ober.arcticpass.R
 import com.ober.vmrlink.Success
@@ -86,7 +87,10 @@ class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsCl
     }
 
     override fun onMoveCredential(credentials: Credentials) {
-        //TODO
+        categoryName?.let {
+            MoveEntryDialogFragment.newInstance(credentials, it)
+                .show(childFragmentManager, MoveEntryDialogFragment::class.java.simpleName)
+        }
     }
 
     @OnClick(R.id.add_new_fab)

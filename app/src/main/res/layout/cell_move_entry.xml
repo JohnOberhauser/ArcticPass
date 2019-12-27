@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?colorBackground"
+    android:layout_marginBottom="1dp">
+
+    <TextView
+        android:id="@+id/category_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="?colorPrimaryText"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:padding="15dp"
+        android:elevation="5dp"
+        android:background="?android:attr/selectableItemBackground"
+        tools:text="Business"/>
+
+    <!--  for some reason need this otherwise the card doesn't actually match parent, it wraps content.  not sure why...  -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+
+</com.google.android.material.card.MaterialCardView>

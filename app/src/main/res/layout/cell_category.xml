@@ -44,8 +44,7 @@
                 android:paddingStart="15dp"
                 android:tint="?colorBlue"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/move"
-                android:visibility="gone"/>
+                android:contentDescription="@string/move"/>
 
             <ImageView
                 android:id="@+id/delete_button"
