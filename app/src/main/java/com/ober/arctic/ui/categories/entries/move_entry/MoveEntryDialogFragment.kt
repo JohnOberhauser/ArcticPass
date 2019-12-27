@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import butterknife.OnClick
 import com.ober.arctic.data.model.CategoryCollection
 import com.ober.arctic.data.model.Credentials
+import com.ober.arctic.data.model.CredentialsComparator
 import com.ober.arctic.ui.BaseDialogFragment
 import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.ui.ViewState
 import com.ober.arcticpass.R
 import com.ober.vmrlink.Success
 import kotlinx.android.synthetic.main.fragment_file_list.*
+import java.util.*
 
 class MoveEntryDialogFragment : BaseDialogFragment(), MoveEntryRecyclerAdapter.CategoryClickedListener {
 
@@ -86,6 +88,7 @@ class MoveEntryDialogFragment : BaseDialogFragment(), MoveEntryRecyclerAdapter.C
         }
         credentials?.let { credentials ->
             category?.credentialsList?.add(credentials)
+            Collections.sort(category?.credentialsList, CredentialsComparator())
             categoryCollection?.categories?.find { it.name == currentCategoryName }
                 ?.credentialsList?.remove(credentials)
             dataViewModel.categoryCollectionLink.save(categoryCollection)

@@ -12,7 +12,7 @@ android {
         applicationId "com.ober.arcticpass"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 10
+        versionCode 11
         versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
