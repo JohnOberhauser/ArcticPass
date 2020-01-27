@@ -56,7 +56,7 @@ class MoveEntryDialogFragment : BaseDialogFragment(), MoveEntryRecyclerAdapter.C
     }
 
     private fun setupObservers() {
-        dataViewModel.categoryCollectionLink.observe(this, Observer {
+        dataViewModel.categoryCollectionLink.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Success -> {
                     categoryCollection = it.data

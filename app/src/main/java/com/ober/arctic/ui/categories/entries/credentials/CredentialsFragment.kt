@@ -60,7 +60,7 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
     }
 
     private fun setupObserver() {
-        dataViewModel.categoryCollectionLink.observe(this, Observer {
+        dataViewModel.categoryCollectionLink.observe(viewLifecycleOwner, Observer {
             categoryCollection = CategoryCollection(it.data!!.categories)
 
             category = categoryCollection?.getCategoryByName(arguments?.getString(BundleConstants.CATEGORY))

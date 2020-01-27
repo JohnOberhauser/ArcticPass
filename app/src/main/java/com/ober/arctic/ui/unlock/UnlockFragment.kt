@@ -163,7 +163,7 @@ class UnlockFragment : BaseFragment() {
 
     private fun setupObserver() {
         dataViewModel.categoryCollectionLink.clear()
-        dataViewModel.categoryCollectionLink.observe(this, Observer {
+        dataViewModel.categoryCollectionLink.observe(viewLifecycleOwner, Observer {
             if (it is Success) {
                 navController?.navigate(R.id.action_unlockFragment_to_categoriesFragment)
             }

@@ -50,7 +50,7 @@ class EntriesFragment : BaseFragment(), CredentialsRecyclerAdapter.CredentialsCl
     }
 
     private fun setupObserver() {
-        dataViewModel.categoryCollectionLink.observe(this, Observer {
+        dataViewModel.categoryCollectionLink.observe(viewLifecycleOwner, Observer {
             if (it is Success) {
                 it.data?.let { data ->
                     progress_bar.visibility = View.GONE

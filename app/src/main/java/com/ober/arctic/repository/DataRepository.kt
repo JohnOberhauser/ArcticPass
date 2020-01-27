@@ -138,7 +138,7 @@ class DataRepository @Inject constructor(
                     }
                 } catch (e: Exception) {
                     appExecutors.mainThread().execute {
-                        liveData.value = Resource.error("error", null)
+                        liveData.value = Resource.error(null, Throwable())
                     }
                 }
 
@@ -167,7 +167,7 @@ class DataRepository @Inject constructor(
                     }
                 } catch (e: Exception) {
                     appExecutors.mainThread().execute {
-                        liveData.value = Resource.error("error", null)
+                        liveData.value = Resource.error(null, Throwable())
                     }
                 }
 

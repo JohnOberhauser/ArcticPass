@@ -55,7 +55,7 @@ class BackupGoogleFileListDialogFragment : BaseDialogFragment() {
     }
 
     private fun setupObservers() {
-        dataViewModel.backupFilesLink.observe(this, Observer {
+        dataViewModel.backupFilesLink.observe(viewLifecycleOwner, Observer {
             it.data?.let { fileList ->
                 adapter.files = fileList
             }

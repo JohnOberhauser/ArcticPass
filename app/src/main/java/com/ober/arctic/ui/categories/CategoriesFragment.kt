@@ -94,7 +94,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
     }
 
     private fun setupObserver() {
-        dataViewModel.categoryCollectionLink.observe(this, Observer {
+        dataViewModel.categoryCollectionLink.observe(viewLifecycleOwner, Observer {
             if (it is Success) {
                 it.data?.let { data ->
                     progress_bar.visibility = View.GONE
@@ -444,7 +444,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
 
     private fun restoreFilesFromGoogle() {
         BackupGoogleFileListDialogFragment.newInstance {
-            dataViewModel.getSingleFileBackup(it).observe(this, Observer { resource ->
+            dataViewModel.getSingleFileBackup(it).observe(viewLifecycleOwner, Observer { resource ->
                 if (resource is Success) {
                     resource.data?.let { string ->
                         importString(string)
