@@ -20,6 +20,7 @@ import com.ober.arctic.util.FileUtil
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
+import com.ober.vmr_annotation.Link
 import com.ober.vmrlink.Resource
 import com.ober.vmrlink.Source
 import java.io.BufferedReader

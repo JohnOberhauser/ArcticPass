@@ -81,7 +81,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     // material
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
 
     //====================================================================
     // Architecture Components
@@ -110,7 +110,9 @@ dependencies {
     implementation 'com.ober:drawerxarrowdrawable:0.1.2'
 
     // ViewModel Repository connection
-    implementation 'com.ober:vmr-link:1.0.0'
+    implementation 'com.ober:vmr-link:3.0.8'
+    kapt 'com.ober:vmr-processor:3.0.7'
+    implementation 'com.squareup:kotlinpoet:1.5.0'
 
     // GSON
     implementation 'com.google.code.gson:gson:2.8.5'
