@@ -74,8 +74,12 @@ class FingerprintManagerImpl(
             .setConfirmationRequired(true)
             .build()
 
-        val cryptoObject = BiometricPrompt.CryptoObject(BiometricEncryption.getCipherForDecryption())
-        biometricPrompt.authenticate(biometricPromptInfo, cryptoObject)
+        BiometricEncryption.getCipherForDecryption()?.let {
+            val cryptoObject = BiometricPrompt.CryptoObject(it)
+            biometricPrompt.authenticate(biometricPromptInfo, cryptoObject)
+        } ?: kotlin.run {
+            fingerprintAuthenticatedCallback.onInvalid()
+        }
     }
 
     override fun enableFingerprint2(

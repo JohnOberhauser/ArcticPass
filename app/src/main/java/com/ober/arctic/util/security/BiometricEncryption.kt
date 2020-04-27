@@ -13,10 +13,13 @@ object BiometricEncryption {
     private const val KEY_NAME = "arctic_pass_fingerprint_key"
     private const val ANDROID_KEY_STORE = "AndroidKeyStore"
 
-    fun getCipherForDecryption(): Cipher {
+    fun getCipherForDecryption(): Cipher? {
         val cipher: Cipher = createCipher()
-        cipher.init(Cipher.DECRYPT_MODE, getPrivateKey())
-        return cipher
+        getPrivateKey()?.let {
+            cipher.init(Cipher.DECRYPT_MODE, it)
+            return cipher
+        }
+        return null
     }
 
     fun cipherForEncryption(): Cipher {
@@ -53,7 +56,7 @@ object BiometricEncryption {
     }
 
     private fun getPrivateKey(): PrivateKey? {
-        return getKeyStore().getKey(KEY_NAME, null) as PrivateKey
+        return getKeyStore().getKey(KEY_NAME, null) as? PrivateKey
     }
 
     private fun getPublicKey(
