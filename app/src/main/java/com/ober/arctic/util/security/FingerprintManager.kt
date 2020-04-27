@@ -1,38 +1,34 @@
 package com.ober.arctic.util.security
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.security.keystore.KeyPermanentlyInvalidatedException
-import androidx.core.os.CancellationSignal
-import com.mtramin.rxfingerprint.EncryptionMethod
-import com.mtramin.rxfingerprint.RxFingerprint
-import com.mtramin.rxfingerprint.data.FingerprintResult
-import io.reactivex.disposables.Disposable
+import android.util.Base64
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import com.ober.arcticpass.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import net.grandcentrix.tray.AppPreferences
-import java.io.IOException
-import java.lang.Exception
-import java.security.InvalidKeyException
-import java.security.KeyStore
-import java.security.KeyStoreException
-import java.security.NoSuchAlgorithmException
-import java.security.cert.CertificateException
+import java.nio.charset.Charset
+import javax.crypto.Cipher
 
 interface FingerprintManager {
-    fun authenticateAndSetUnlockKey(
+
+    fun authenticateAndSetUnlockKey2(
         context: Context,
-        cancellationSignal: CancellationSignal,
+        fragment: Fragment,
         fingerprintAuthenticatedCallback: FingerprintAuthenticatedCallback
     )
 
-    fun enableFingerprint(
+    fun enableFingerprint2(
         context: Context,
         fingerprintEnabledCallback: FingerprintEnabledCallback? = null
     )
 
     fun disableFingerprint()
     fun isFingerprintEnabled(): Boolean
+    fun isBiometricsAvailable(context: Context): Boolean
 }
 
 class FingerprintManagerImpl(
@@ -42,61 +38,59 @@ class FingerprintManagerImpl(
 
     private var fingerprintEnabled: Boolean? = null
 
-    override fun authenticateAndSetUnlockKey(
+    override fun authenticateAndSetUnlockKey2(
         context: Context,
-        cancellationSignal: CancellationSignal,
+        fragment: Fragment,
         fingerprintAuthenticatedCallback: FingerprintAuthenticatedCallback
     ) {
-        var disposable: Disposable? = null
-        appPreferences.getString(ENCRYPTED_UNLOCK_KEY)?.let { encryptedUnlockKey ->
-            disposable = RxFingerprint.decrypt(EncryptionMethod.RSA, context, KEY_NAME, encryptedUnlockKey)
-                .subscribe({
-                    when (it.result) {
-                        FingerprintResult.AUTHENTICATED -> {
-                            keyManager.unlockKey = it.decrypted
-                            fingerprintAuthenticatedCallback.onSuccess()
-                        }
-                        else -> {
-                            // nothing for now
-                        }
-                    }
-                }, {
-                    if (it is KeyPermanentlyInvalidatedException || it is InvalidKeyException) {
-                        deleteOldKey()
-                        fingerprintAuthenticatedCallback.onInvalid()
-                    }
-                })
-        } ?: run {
-            fingerprintAuthenticatedCallback.onInvalid()
-        }
+        val biometricPrompt = BiometricPrompt(fragment, ContextCompat.getMainExecutor(context), object: BiometricPrompt.AuthenticationCallback() {
+            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                super.onAuthenticationError(errorCode, errString)
+                fingerprintAuthenticatedCallback.onInvalid()
+            }
 
-        cancellationSignal.setOnCancelListener {
-            disposable?.dispose()
-        }
+            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                super.onAuthenticationSucceeded(result)
+                result.cryptoObject?.cipher?.let { cipher ->
+                    appPreferences.getString(ENCRYPTED_UNLOCK_KEY)?.let { encryptedUnlockKey ->
+                        val bytes: ByteArray = cipher.doFinal(Base64.decode(encryptedUnlockKey, Base64.DEFAULT))
+                        val decrypted = String(bytes, Charset.forName("UTF-8"))
+                        keyManager.unlockKey = decrypted
+                        fingerprintAuthenticatedCallback.onSuccess()
+                    }
+                }
+
+            }
+
+            override fun onAuthenticationFailed() {
+                super.onAuthenticationFailed()
+                fingerprintAuthenticatedCallback.onInvalid()
+            }
+        })
+
+        val biometricPromptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle(context.getString(R.string.scan_biometrics_to_log_in))
+            .setNegativeButtonText(context.getString(R.string.cancel))
+            .setConfirmationRequired(true)
+            .build()
+
+        val cryptoObject = BiometricPrompt.CryptoObject(BiometricEncryption.getCipherForDecryption())
+        biometricPrompt.authenticate(biometricPromptInfo, cryptoObject)
     }
 
-    @SuppressLint("CheckResult")
-    override fun enableFingerprint(
+    override fun enableFingerprint2(
         context: Context,
         fingerprintEnabledCallback: FingerprintEnabledCallback?
     ) {
         GlobalScope.launch {
             keyManager.unlockKey?.let { unlockKey ->
-                RxFingerprint.encrypt(EncryptionMethod.RSA, context, KEY_NAME, unlockKey)
-                    .subscribe({
-                        when (it.result) {
-                            FingerprintResult.AUTHENTICATED -> {
-                                appPreferences.put(ENCRYPTED_UNLOCK_KEY, it.encrypted)
-                                appPreferences.put(FINGERPRINT_ENABLED, true)
-                                fingerprintEnabled = true
-                            }
-                            else -> {
-                                fingerprintEnabledCallback?.onFailure()
-                            }
-                        }
-                    }, {
-                        fingerprintEnabledCallback?.onFailure()
-                    })
+                val cipher: Cipher = BiometricEncryption.cipherForEncryption()
+                val encryptedBytes = cipher.doFinal(unlockKey.toByteArray(charset("UTF-8")))
+                val encryptedString: String = Base64.encodeToString(encryptedBytes, Base64.DEFAULT)
+
+                appPreferences.put(ENCRYPTED_UNLOCK_KEY, encryptedString)
+                appPreferences.put(FINGERPRINT_ENABLED, true)
+                fingerprintEnabled = true
             } ?: run {
                 fingerprintEnabledCallback?.onFailure()
             }
@@ -117,37 +111,13 @@ class FingerprintManagerImpl(
         return fingerprintEnabled ?: false
     }
 
-    private fun deleteOldKey() {  //TODO remove in future versions. only need because i f'd up and need to remove old key
-        try {
-            val keyStore = KeyStore.getInstance("AndroidKeyStore")
-            keyStore.load(null)
-            val keyName = "encrypted_data_unlock_key"
-            if (keyExists(keyName, keyStore)) {
-                keyStore.deleteEntry(keyName)
-            }
-        } catch (e: Exception) {
-            // do nothing
-        }
-    }
-
-    @Throws(KeyStoreException::class, CertificateException::class, NoSuchAlgorithmException::class, IOException::class)
-    fun keyExists(keyName: String, keyStore: KeyStore): Boolean {
-
-        val aliases = keyStore.aliases()
-
-        while (aliases.hasMoreElements()) {
-            if (keyName == aliases.nextElement()) {
-                return true
-            }
-        }
-
-        return false
+    override fun isBiometricsAvailable(context: Context): Boolean {
+        return BiometricManager.from(context).canAuthenticate() == BiometricManager.BIOMETRIC_SUCCESS
     }
 
     companion object {
         const val ENCRYPTED_UNLOCK_KEY = "encrypted_data_unlock_key"
         const val FINGERPRINT_ENABLED = "fingerprint_enabled"
-        const val KEY_NAME = "arctic_pass_fingerprint_key"
     }
 }
 

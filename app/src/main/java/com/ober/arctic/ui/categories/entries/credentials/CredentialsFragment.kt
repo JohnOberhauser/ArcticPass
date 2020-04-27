@@ -163,14 +163,14 @@ class CredentialsFragment : BaseFragment(), OnBackPressedListener {
 
     private fun onUserNameLongClick(view: View): Boolean {
         val clipboard = getSystemService(context!!, ClipboardManager::class.java)
-        clipboard?.primaryClip = ClipData.newPlainText("", username_text_view.text)
+        clipboard?.setPrimaryClip(ClipData.newPlainText("", username_text_view.text))
         Toast.makeText(context, R.string.username_copied_to_clipboard, Toast.LENGTH_SHORT).show()
         return true
     }
 
     private fun onPasswordLongClick(view: View): Boolean {
         val clipboard = getSystemService(context!!, ClipboardManager::class.java)
-        clipboard?.primaryClip = ClipData.newPlainText("", password_text_view.text)
+        clipboard?.setPrimaryClip(ClipData.newPlainText("", password_text_view.text))
         Toast.makeText(context, R.string.password_copied_to_clipboard, Toast.LENGTH_SHORT).show()
         return true
     }

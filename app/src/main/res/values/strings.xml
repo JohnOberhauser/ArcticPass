@@ -77,4 +77,5 @@
     <string name="move_failed">Error: An entry with this description already exists in that category</string>
     <string name="change">Change</string>
     <string name="category_already_exists">Error: Category already exists</string>
+    <string name="scan_biometrics_to_log_in">Scan biometrics to log in.</string>
 </resources>

@@ -8,12 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
-import androidx.core.os.CancellationSignal
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import butterknife.OnClick
-import com.mattprecious.swirl.SwirlView
-import com.mtramin.rxfingerprint.RxFingerprint
 import com.ober.arctic.App
 import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.ui.DataViewModel
@@ -42,8 +39,6 @@ class UnlockFragment : BaseFragment() {
     lateinit var fingerprintManager: FingerprintManager
 
     private lateinit var dataViewModel: DataViewModel
-
-    private val cancellationSignal = CancellationSignal()
 
     private var fingerprintNeedsToReSave = false
 
@@ -87,34 +82,34 @@ class UnlockFragment : BaseFragment() {
     }
 
     private fun setupFingerprintUnlock() {
-        if (RxFingerprint.isAvailable(context!!)
+        if (fingerprintManager.isBiometricsAvailable(context!!)
             && fingerprintManager.isFingerprintEnabled()
         ) {
-            fingerprintManager.authenticateAndSetUnlockKey(
-                context!!,
-                cancellationSignal,
-                object : FingerprintAuthenticatedCallback {
-                    override fun onSuccess() {
-                        fingerprint_swirl.setState(SwirlView.State.OFF, true)
-                        attemptUnlock()
-                    }
-
-                    override fun onInvalid() {
-                        fingerprintNeedsToReSave = true
-                        showPasswordLayout()
-                    }
-                })
-
-            fingerprint_swirl.setState(SwirlView.State.ON, true)
+            showBiometricPrompt()
         } else {
             showPasswordLayout()
         }
     }
 
+    private fun showBiometricPrompt() {
+        fingerprintManager.authenticateAndSetUnlockKey2(
+            context!!,
+            this,
+            object : FingerprintAuthenticatedCallback {
+                override fun onSuccess() {
+                    unlock_button.isEnabled = false
+                    attemptUnlock()
+                }
+
+                override fun onInvalid() {
+                    fingerprintNeedsToReSave = true
+                    showPasswordLayout()
+                }
+            }
+        )
+    }
+
     private fun showPasswordLayout() {
-        cancellationSignal.cancel()
-        fingerprint_layout.visibility = View.GONE
-        password_layout.visibility = View.VISIBLE
         password_field.requestFocus()
         handler.post {
             showKeyboard()
@@ -125,11 +120,6 @@ class UnlockFragment : BaseFragment() {
         return password_layout.visibility == View.VISIBLE
     }
 
-    @OnClick(R.id.enter_password_button)
-    fun onEnterPasswordClicked() {
-        showPasswordLayout()
-    }
-
     @OnClick(R.id.unlock_button)
     fun onUnlockClicked() {
         unlock_button.isEnabled = false
@@ -138,6 +128,7 @@ class UnlockFragment : BaseFragment() {
     }
 
     private fun attemptUnlock() {
+        loading_spinner.visibility = View.VISIBLE
         GlobalScope.launch {
             val unlockKeyCorrect = keyManager.isUnlockKeyCorrect()
             appExecutors.mainThread().execute {
@@ -145,9 +136,10 @@ class UnlockFragment : BaseFragment() {
                     hideKeyboard()
                     dataViewModel.categoryCollectionLink.update()
                     if (fingerprintNeedsToReSave) {
-                        fingerprintManager.enableFingerprint(context!!)
+                        fingerprintManager.enableFingerprint2(context!!)
                     }
                 } else {
+                    loading_spinner.visibility = View.GONE
                     if (isPasswordLayoutShowing()) {
                         val shake = AnimationUtils.loadAnimation(context, R.anim.shake)
                         password_field.startAnimation(shake)
