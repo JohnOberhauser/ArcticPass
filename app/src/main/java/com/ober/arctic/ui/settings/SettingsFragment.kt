@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.biometric.BiometricManager
-import com.mtramin.rxfingerprint.RxFingerprint
 import com.ober.arctic.App
 import com.ober.arctic.ui.BaseFragment
 import com.ober.arctic.util.security.FingerprintEnabledCallback
@@ -14,8 +12,6 @@ import com.ober.arctic.util.security.FingerprintManager
 import com.ober.arctic.util.security.KeyManager
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.fragment_settings.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import net.grandcentrix.tray.AppPreferences
 import javax.inject.Inject
 
