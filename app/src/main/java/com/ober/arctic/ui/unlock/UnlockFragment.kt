@@ -87,12 +87,29 @@ class UnlockFragment : BaseFragment() {
     }
 
     private fun setupFingerprintUnlock() {
-        if (RxFingerprint.isAvailable(context!!)
+        if (fingerprintManager.isBiometricsAvailable(context!!)
             && fingerprintManager.isFingerprintEnabled()
         ) {
-            fingerprintManager.authenticateAndSetUnlockKey(
+//            fingerprintManager.authenticateAndSetUnlockKey(
+//                context!!,
+//                cancellationSignal,
+//                object : FingerprintAuthenticatedCallback {
+//                    override fun onSuccess() {
+//                        fingerprint_swirl.setState(SwirlView.State.OFF, true)
+//                        attemptUnlock()
+//                    }
+//
+//                    override fun onInvalid() {
+//                        fingerprintNeedsToReSave = true
+//                        showPasswordLayout()
+//                    }
+//                })
+//
+//            fingerprint_swirl.setState(SwirlView.State.ON, true)
+
+            fingerprintManager.authenticateAndSetUnlockKey2(
                 context!!,
-                cancellationSignal,
+                this,
                 object : FingerprintAuthenticatedCallback {
                     override fun onSuccess() {
                         fingerprint_swirl.setState(SwirlView.State.OFF, true)
@@ -103,12 +120,16 @@ class UnlockFragment : BaseFragment() {
                         fingerprintNeedsToReSave = true
                         showPasswordLayout()
                     }
-                })
-
-            fingerprint_swirl.setState(SwirlView.State.ON, true)
+                }
+            )
+            showPasswordLayout()
         } else {
             showPasswordLayout()
         }
+    }
+
+    private fun showBiometricPrompt() {
+
     }
 
     private fun showPasswordLayout() {
@@ -145,7 +166,7 @@ class UnlockFragment : BaseFragment() {
                     hideKeyboard()
                     dataViewModel.categoryCollectionLink.update()
                     if (fingerprintNeedsToReSave) {
-                        fingerprintManager.enableFingerprint(context!!)
+                        fingerprintManager.enableFingerprint2(context!!)
                     }
                 } else {
                     if (isPasswordLayoutShowing()) {

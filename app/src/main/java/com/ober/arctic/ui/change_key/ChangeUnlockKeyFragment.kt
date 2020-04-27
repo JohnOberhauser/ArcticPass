@@ -54,7 +54,7 @@ class ChangeUnlockKeyFragment : BaseFragment() {
                 keyManager.unlockKey = unlock_password_field.text.toString().trim()
                 keyManager.saveEncryptionKey(encryptionKey)
                 if (fingerprintManager.isFingerprintEnabled()) {
-                    fingerprintManager.enableFingerprint(context!!)
+                    fingerprintManager.enableFingerprint2(context!!)
                 }
                 appExecutors.mainThread().execute {
                     mainActivity?.onBackPressed()

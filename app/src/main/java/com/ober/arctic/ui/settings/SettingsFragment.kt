@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.biometric.BiometricManager
 import com.mtramin.rxfingerprint.RxFingerprint
 import com.ober.arctic.App
 import com.ober.arctic.ui.BaseFragment
@@ -49,7 +50,7 @@ class SettingsFragment : BaseFragment() {
             lock_when_screen_off_check_box.isChecked = true
         }
 
-        if (RxFingerprint.isUnavailable(context!!)) {
+        if (!fingerprintManager.isBiometricsAvailable(context!!)) {
             enable_fingerprint_checkbox.visibility = View.GONE
         } else if (fingerprintManager.isFingerprintEnabled()) {
             enable_fingerprint_checkbox.isChecked = true
@@ -112,7 +113,7 @@ class SettingsFragment : BaseFragment() {
     }
 
     private fun onEnableFingerprint() {
-        fingerprintManager.enableFingerprint(context!!, object : FingerprintEnabledCallback {
+        fingerprintManager.enableFingerprint2(context!!, object : FingerprintEnabledCallback {
             override fun onFailure() {
                 enable_fingerprint_checkbox.isChecked = false
                 Toast.makeText(context, getString(R.string.failed), Toast.LENGTH_SHORT).show()

@@ -127,6 +127,9 @@ dependencies {
     // Fingerprint Animation
     implementation 'com.mattprecious.swirl:swirl:1.2.0'
 
+    // Biometrics
+    implementation 'androidx.biometric:biometric:1.0.1'
+
     // Google drive/login
     implementation "com.google.android.gms:play-services-auth:18.0.0"
     implementation 'com.google.http-client:google-http-client-gson:1.26.0'
