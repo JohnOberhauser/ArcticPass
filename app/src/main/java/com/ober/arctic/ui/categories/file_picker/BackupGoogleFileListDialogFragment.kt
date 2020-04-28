@@ -1,5 +1,7 @@
 package com.ober.arctic.ui.categories.file_picker
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,13 +14,14 @@ import com.google.api.services.drive.model.File
 import com.ober.arctic.ui.BaseDialogFragment
 import com.ober.arctic.ui.DataViewModel
 import com.ober.arctic.util.ui.ViewState
+import com.ober.arcticpass.BuildConfig
 import com.ober.arcticpass.R
 import com.ober.vmrlink.Error
 import com.ober.vmrlink.Loading
 import com.ober.vmrlink.Success
 import kotlinx.android.synthetic.main.fragment_file_list.*
 
-class BackupGoogleFileListDialogFragment : BaseDialogFragment() {
+class BackupGoogleFileListDialogFragment : BaseDialogFragment(), FileSelectedListener {
 
     private lateinit var adapter: FileListAdapter
 
@@ -29,12 +32,23 @@ class BackupGoogleFileListDialogFragment : BaseDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view: View = setAndBindContentView(inflater, container, R.layout.fragment_file_list)
         dataViewModel = ViewModelProviders.of(this, viewModelFactory)[DataViewModel::class.java]
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         return view
     }
 
+    @Suppress("ConstantConditionIf")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupRecyclerView()
-        setupObservers()
+        if (BuildConfig.BUILD_TYPE == "debug") {
+            setupTestList()
+        } else {
+            setupObservers()
+        }
+        import_button.isEnabled = false
+    }
+
+    override fun onFileSelected() {
+        import_button.isEnabled = true
     }
 
     @OnClick(R.id.cancel_button)
@@ -49,7 +63,7 @@ class BackupGoogleFileListDialogFragment : BaseDialogFragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = FileListAdapter()
+        adapter = FileListAdapter(this)
         files_recycler_view.adapter = adapter
         files_recycler_view.layoutManager = LinearLayoutManager(context)
     }
@@ -85,6 +99,17 @@ class BackupGoogleFileListDialogFragment : BaseDialogFragment() {
             }
         })
         dataViewModel.backupFilesLink.update()
+    }
+
+    private fun setupTestList() {
+        val fileList = mutableListOf<File>()
+        for (i in 0 until 10) {
+            val file = File()
+            file.name = i.toString()
+            fileList.add(file)
+        }
+        adapter.files = fileList
+        setViewState(ViewState.DATA)
     }
 
     private fun setViewState(viewState: ViewState) {

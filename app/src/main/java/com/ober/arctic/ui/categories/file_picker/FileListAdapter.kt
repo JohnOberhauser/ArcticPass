@@ -9,13 +9,15 @@ import com.ober.arctic.util.FileUtil
 import com.ober.arcticpass.R
 import kotlinx.android.synthetic.main.cell_file.view.*
 
-class FileListAdapter : RecyclerView.Adapter<FileListAdapter.FileViewHolder>() {
+class FileListAdapter(
+    private val fileSelectedListener: FileSelectedListener
+) : RecyclerView.Adapter<FileListAdapter.FileViewHolder>() {
 
     var files: List<File> = arrayListOf()
         set(value) {
             field = value.sortedWith(
                 compareBy {
-                    FileUtil.getDateFromFileName(it.name).time
+                    FileUtil.getDateFromFileName(it.name)?.time
                 }
             ).reversed()
             notifyDataSetChanged()
@@ -44,8 +46,19 @@ class FileListAdapter : RecyclerView.Adapter<FileListAdapter.FileViewHolder>() {
         holder.view.setOnClickListener {
             selectedFile = files[position]
             notifyDataSetChanged()
+            fileSelectedListener.onFileSelected()
+        }
+
+        if (position == itemCount - 1) {
+            holder.view.bottom_divider.visibility = View.GONE
+        } else {
+            holder.view.bottom_divider.visibility = View.VISIBLE
         }
     }
 
     inner class FileViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+}
+
+interface FileSelectedListener {
+    fun onFileSelected()
 }

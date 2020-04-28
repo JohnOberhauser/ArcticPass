@@ -67,12 +67,9 @@
     <string name="lock_when_screen_off">Lock when screen is turned off</string>
     <string name="auto_lock_time">Auto Lock Time</string>
     <string name="settings">Settings</string>
-    <string name="enable_fingerprint">Enable Fingerprint Unlock</string>
-    <string name="disable_fingerprint">Disable Fingerprint Unlock</string>
+    <string name="enable_fingerprint">Enable Biometric Unlock</string>
     <string name="failed">Failed</string>
-    <string name="fingerprint_enabled">Fingerprint Enabled</string>
     <string name="enter_password">Enter Password</string>
-    <string name="confirm_fingerprint">Confirm fingerprint to continue</string>
     <string name="select_new_location">Select the category to move this entry to</string>
     <string name="move_failed">Error: An entry with this description already exists in that category</string>
     <string name="change">Change</string>

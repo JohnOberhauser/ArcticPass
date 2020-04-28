@@ -177,9 +177,5 @@ class DataRepository @Inject constructor(
         return liveData
     }
 
-//    fun getCategoryCollectionLiveData(): LiveData<CategoryCollection> {
-//        return liveDataHolder.getCategoryCollection()
-//    }
-
     private inline fun <reified T> genericType() = object : TypeToken<T>() {}.type
 }

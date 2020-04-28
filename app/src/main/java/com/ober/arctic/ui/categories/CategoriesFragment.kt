@@ -37,6 +37,7 @@ import com.ober.arctic.ui.categories.file_picker.BackupGoogleFileListDialogFragm
 import com.ober.arctic.util.*
 import com.ober.arctic.util.security.Encryption
 import com.ober.arctic.util.security.KeyManager
+import com.ober.arcticpass.BuildConfig
 import com.ober.arcticpass.R
 import com.ober.vmrlink.Success
 import kotlinx.android.synthetic.main.fragment_landing.*
@@ -151,6 +152,7 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         navController?.navigate(R.id.action_categoriesFragment_to_entryFragment, bundle)
     }
 
+    @Suppress("ConstantConditionIf")
     private fun setupDrawerClickListeners() {
         mainActivity?.getDrawerView()?.export_file_layout?.setOnClickListener {
             exportFile()
@@ -161,7 +163,11 @@ class CategoriesFragment : BaseFragment(), CategoryRecyclerAdapter.CategoryClick
         }
         mainActivity?.onSyncWithGoogleListener = this
         mainActivity?.getDrawerView()?.google_sign_in_layout?.setOnClickListener {
-            signInToGoogle()
+            if (BuildConfig.BUILD_TYPE == "debug") {
+                restoreFilesFromGoogle()
+            } else {
+                signInToGoogle()
+            }
         }
         mainActivity?.getDrawerView()?.google_restore_layout?.setOnClickListener {
             restoreFilesFromGoogle()

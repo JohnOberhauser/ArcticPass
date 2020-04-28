@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     android:background="?android:attr/selectableItemBackground"
-    android:layout_marginBottom="1dp">
+    android:layout_margin="3dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/white">
 
         <TextView
             android:id="@+id/file_name"
@@ -22,6 +23,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:textSize="14sp"
+            android:layout_gravity="center_vertical"
             tools:text="backup_2019-04-12 03:15:33"/>
 
         <ImageView
@@ -36,4 +38,11 @@
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+    <View
+        android:id="@+id/bottom_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#cccccc"
+        android:layout_gravity="bottom"/>
+
+</FrameLayout>

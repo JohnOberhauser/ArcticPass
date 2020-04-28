@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
-    android:background="@color/teal8">
+    android:background="@drawable/background_white_rounded">
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,8 +16,13 @@
         android:layout_marginBottom="16dp"
         android:textSize="16sp"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/white"
+        android:textColor="@color/teal6"
         android:text="@string/select_file"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/teal6"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -26,10 +32,8 @@
             android:id="@+id/files_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:visibility="visible"/>
 
         <ProgressBar
             android:id="@+id/loading_spinner"
@@ -44,7 +48,7 @@
             android:textSize="16sp"
             android:layout_gravity="center"
             android:fontFamily="sans-serif-medium"
-            android:textColor="@color/white"
+            android:textColor="@color/teal6"
             android:text="@string/failed_to_download"
             android:visibility="gone"/>
 
@@ -55,24 +59,28 @@
             android:textSize="16sp"
             android:layout_gravity="center"
             android:fontFamily="sans-serif-medium"
-            android:textColor="@color/white"
+            android:textColor="@color/teal6"
             android:text="@string/failed_to_download"
             android:visibility="gone"/>
 
     </FrameLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/teal6"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="20dp"
         android:gravity="end">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/teal6"
             android:background="?android:attr/selectableItemBackground"
             android:text="@string/cancel"/>
 
@@ -81,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textColor="@color/white"
+            android:textColor="@color/button_text_color"
             android:background="?android:attr/selectableItemBackground"
             android:text="@string/import_"/>
 
